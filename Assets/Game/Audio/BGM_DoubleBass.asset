@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac876930d6499004d9e19dd116f29030, type: 3}
+  m_Name: BGM_DoubleBass
+  m_EditorClassIdentifier: 
+  AudioType: 1
+  Clip: {fileID: 8300000, guid: db834763f225bb645ba62bab8041c766, type: 3}
+  LoopType: 2
+  LoopStartTime: 12.74
+  LoopEndTime: 86.29
+  StartTimes:
+  - 0
+  - 10.32
+  - 30.96
+  - 49.03
+  - 72.25
+  Name: Double Bass
+  Author: Ulikander
+  Url: 

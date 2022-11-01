@@ -8,7 +8,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - PostProcess
   - Water
   - UI
   - 
@@ -40,4 +40,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 3202111651
+    locked: 0
+  - name: Main
+    uniqueID: 1415945731
+    locked: 0
+  - name: Popups
+    uniqueID: 1272091479
+    locked: 0
+  - name: SceneTransitions
+    uniqueID: 2419678135
     locked: 0

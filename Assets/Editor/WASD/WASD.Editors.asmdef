@@ -1,0 +1,17 @@
+{
+    "name": "WASD.Editors",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0a23163c2417ae14fab122ea4f71c340",
+        "GUID:f5a816ff534b7b840888954936faaf0e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

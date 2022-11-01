@@ -1,0 +1,29 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/WASD/AudioContainerEditor/AudioContinerEditor.uss?fileID=7433441132597879392&amp;guid=6657552cdcc779d4fb39dfabe69aa436&amp;type=3#AudioContinerEditor" />
+    <ui:Label text="Audio Container" display-tooltip-when-elided="true" class="title-label" />
+    <ui:ScrollView horizontal-scroller-visibility="Hidden">
+        <ui:VisualElement name="MainInfo">
+            <ui:Label text="General" display-tooltip-when-elided="true" class="subtitle-label" />
+            <uie:ObjectField label="Audio Clip" allow-scene-objects="false" type="UnityEngine.AudioClip, UnityEngine.AudioModule" binding-path="Clip" />
+            <uie:EnumField label="Audio Type" binding-path="AudioType" type="WASD.Enums.AudioContainerType, WASD.Enums" name="AudioType" />
+            <ui:VisualElement name="BgmFields" style="display: flex;">
+                <ui:TextField picking-mode="Ignore" label="Audio Name" value="filler text" binding-path="Name" />
+                <ui:TextField picking-mode="Ignore" label="Author" value="filler text" binding-path="Author" />
+                <ui:TextField label="Source Url" value="Url" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="Looping">
+            <ui:Label text="Looping" display-tooltip-when-elided="true" class="subtitle-label" />
+            <uie:EnumField label="Loop Type" value="NoLoop" type="WASD.Enums.AudioLoopType, WASD.Enums" binding-path="LoopType" name="LoopType" style="height: -13px;" />
+            <ui:VisualElement name="CustomLoopFields">
+                <uie:FloatField label="Loop Start Time" value="0" binding-path="LoopStartTime" style="height: 18px;" />
+                <uie:FloatField label="Loop End Time" value="0" binding-path="LoopEndTime" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="StartTimes">
+            <ui:Label text="Other Start Times" display-tooltip-when-elided="true" class="subtitle-label" />
+            <uie:PropertyField binding-path="StartTimes" />
+        </ui:VisualElement>
+        <ui:Button text="Button" display-tooltip-when-elided="true" />
+    </ui:ScrollView>
+</ui:UXML>

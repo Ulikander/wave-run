@@ -1,0 +1,17 @@
+.title-label {
+    -unity-text-align: middle-center;
+    font-size: 16px;
+    -unity-font-style: bold;
+}
+
+.subtitle-label {
+    -unity-text-align: middle-left;
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-bottom: 0;
+    margin-top: 10px;
+}
+
+.other-start-times-field {
+    height: 80px;
+}
