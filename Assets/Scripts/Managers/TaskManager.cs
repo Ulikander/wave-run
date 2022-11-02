@@ -92,16 +92,13 @@ namespace WASD.Runtime
         /// Termination event.  Triggered when the coroutine completes execution.
         public event FinishedHandler Finished;
 
-        private TaskManager _TaskManager;
-
         /// Creates a new Task object for the given coroutine.
         ///
         /// If autoStart is true (default) the task is automatically started
         /// upon construction.
-        public UnityTask(TaskManager manager, IEnumerator c, bool autoStart = true)
+        public UnityTask(IEnumerator c, bool autoStart = true)
         {
-            _TaskManager = manager;
-            task = _TaskManager.CreateTask(c);
+            task = GameManager.Tasks.CreateTask(c);
             task.Finished += TaskFinished;
             if (autoStart)
                 Start();

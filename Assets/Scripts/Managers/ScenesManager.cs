@@ -1,10 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 using WASD.Interfaces;
-using Zenject;
+
 
 namespace WASD.Runtime.Managers
 {
@@ -23,13 +24,11 @@ namespace WASD.Runtime.Managers
         [SerializeField] private float _BgFadeTime = 0.75f;
         [SerializeField] private float _TextAndSliderFadeTime = .35f;
 
+        private Queue<string> _QueuedScenes = new Queue<string>(capacity: 1);
         private UnityTask _LoadSceneCoroutine;
         private WaitForSeconds _WaitForBackgroundFade;
         private WaitForSeconds _WaitForTextFade;
-
-        [Inject] private readonly TaskManager _TaskManager;
-        [Inject] private readonly GameManager _GameManager;
-        [Inject] private readonly ZenjectSceneLoader _ZenjectSceneLoader;
+        //private string _QueuedScene;
         #endregion
 
         #region MonoBehaviour
@@ -49,30 +48,30 @@ namespace WASD.Runtime.Managers
                 return;
             }
 
-            if(Utils.IsUnityTaskRunning(task: ref _LoadSceneCoroutine))
+            if (Utils.IsUnityTaskRunning(task: ref _LoadSceneCoroutine))
             {
-                Debug.LogError(message: "Tried to load a scene when another is being loaded! Stupeh!");
-                return;
+                if(_QueuedScenes.Count == 0)
+                {
+                    _QueuedScenes.Enqueue(item: sceneId);
+                }
+                else
+                {
+                    Debug.LogError(message: "Tried to queue more than one scene! Stupeh!");
+                    return;
+                }
             }
 
             if (doSynchronously)
             {
-                _ZenjectSceneLoader.LoadScene(sceneName: sceneId, extraBindings: ExtraBindings);
+                SceneManager.LoadScene(sceneName: sceneId);
             }
             else
             {
-                _LoadSceneCoroutine = new UnityTask(
-                    manager: _TaskManager,
-                    c: LoadSceneAsync(sceneId: sceneId));
+                _LoadSceneCoroutine = new UnityTask(c: LoadSceneAsync(sceneId: sceneId));
             }
 
         }
 
-        private void ExtraBindings(DiContainer container)
-        {
-            container.Bind<ScenesManager>();
-            container.Bind<AudioManager>();
-        }
 
         private IEnumerator LoadSceneAsync(string sceneId)
         {
@@ -81,17 +80,17 @@ namespace WASD.Runtime.Managers
             _ProgressSlider.value = 0f;
 
             _Canvas.enabled = true;
-            
+
             LeanTween.alphaCanvas(canvasGroup: _MainCanvasGroup, to: 1f, time: _BgFadeTime);
             yield return _WaitForBackgroundFade;
 
             LeanTween.alphaCanvas(canvasGroup: _TextAndSliderCanvasGroup, to: 1f, time: _TextAndSliderFadeTime);
             yield return _WaitForTextFade;
 
-            AsyncOperation asyncSceneLoading = _ZenjectSceneLoader.LoadSceneAsync(sceneName: sceneId, extraBindings: ExtraBindings);
+            AsyncOperation asyncSceneLoading = SceneManager.LoadSceneAsync(sceneName: sceneId);
             asyncSceneLoading.allowSceneActivation = false;
 
-            while(asyncSceneLoading.progress < 0.9f)
+            while (asyncSceneLoading.progress < 0.9f)
             {
                 yield return null;
                 _ProgressSlider.value = asyncSceneLoading.progress;
@@ -103,12 +102,20 @@ namespace WASD.Runtime.Managers
             yield return _WaitForTextFade;
 
             asyncSceneLoading.allowSceneActivation = true;
-            _GameManager.RefreshMainCamera();
+
+            yield return new WaitUntil(predicate: () => asyncSceneLoading.isDone);
+            GameManager.RefreshMainCamera();
 
             LeanTween.alphaCanvas(canvasGroup: _MainCanvasGroup, to: 0f, time: _BgFadeTime);
             yield return _WaitForBackgroundFade;
 
             _Canvas.enabled = false;
+
+            if(_QueuedScenes.Count != 0)
+            {
+                _LoadSceneCoroutine = null;
+                LoadScene(sceneId: _QueuedScenes.Dequeue());
+            }
         }
 
         public void StopAllTasks()

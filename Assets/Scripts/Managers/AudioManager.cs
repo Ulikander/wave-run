@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using WASD.Runtime.Audio;
-using Zenject;
 
 namespace WASD.Runtime.Managers
 {
@@ -49,10 +48,6 @@ namespace WASD.Runtime.Managers
         //private WaitForSeconds _WaitForDefaultFateOut;
         private UnityTask _BgmLoopTask;
         private WaitWhile _WaitForLoopEndReached;
-
-        [Inject]
-        private TaskManager _TaskManager;
-       
         #endregion
 
         #region MonoBehaviour
@@ -110,7 +105,7 @@ namespace WASD.Runtime.Managers
                 Utils.StopUnityTask(ref _BgmFadeTask);
             }
 
-            _BgmFadeTask = new(manager: _TaskManager, c: FadeBgmRoutine(audioContainer: audioContainer, skipFades: skipFades, randomizeStart: randomizeStart));
+            _BgmFadeTask = new(c: FadeBgmRoutine(audioContainer: audioContainer, skipFades: skipFades, randomizeStart: randomizeStart));
         }
 
         private IEnumerator FadeBgmRoutine(AudioContainer audioContainer, bool[] skipFades, bool randomizeStart)
@@ -153,7 +148,7 @@ namespace WASD.Runtime.Managers
             
             if(audioContainer.LoopType == Enums.AudioLoopType.Custom)
             {
-                _BgmLoopTask = new UnityTask(manager: _TaskManager, c: LoopBgmRoutine());
+                _BgmLoopTask = new UnityTask(c: LoopBgmRoutine());
             }
 
             if (!skipFades[0])

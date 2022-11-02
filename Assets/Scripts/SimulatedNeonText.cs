@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using WASD.Runtime.Managers;
-using Zenject;
+
 using WASD.Interfaces;
 
 namespace WASD.Runtime
@@ -63,9 +63,6 @@ namespace WASD.Runtime
         private UnityTask _PulsingTask;
         private UnityTask _LitAndUnlitTask;
 
-        [Inject]
-        private TaskManager _TaskManager;
-
         #region MonoBehaviour
         private void Start()
         {
@@ -102,7 +99,7 @@ namespace WASD.Runtime
                 ValidateRange(ranges: ref _LitDurationRange) &&
                 ValidateRange(ranges: ref _UnLitDurationRange))
             {
-                _LitAndUnlitTask = new (manager: _TaskManager, c: LitAndUnlitControl());
+                _LitAndUnlitTask = new (c: LitAndUnlitControl());
             }
 
             if (
@@ -110,7 +107,7 @@ namespace WASD.Runtime
                 ValidateRange(ranges: ref _PulsingRange) &&
                 _PulsingTime > 0f)
             {
-                _PulsingTask = new(manager: _TaskManager, c: PulsingControl());
+                _PulsingTask = new(c: PulsingControl());
             }
         }
 

@@ -1,16 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
 using WASD.Runtime.Managers;
 
 namespace WASD.Runtime
 {
+    [RequireComponent(typeof(AudioManager), typeof(InputManager), typeof(ScenesManager))]
+    [RequireComponent(typeof(TaskManager))]
     public class GameManager : MonoBehaviour
     {
         #region Properties
-        public Camera MainCamera { get => _MainCamera; }
+        public static GameManager Instance { get; private set; }
+        public static AudioManager Audio { get => Instance._AudioManager; }
+        public static InputManager Input { get => Instance._InputManager; }
+        public static ScenesManager Scenes { get => Instance._ScenesManager; }
+        public static TaskManager Tasks { get => Instance._TaskManager; }
+
+        public static Camera MainCamera { get => Instance._MainCamera; }
         #endregion
 
         #region Constants
@@ -19,6 +26,13 @@ namespace WASD.Runtime
         #endregion
 
         #region Fields
+        [Header("Managers")]
+        [SerializeField] private AudioManager _AudioManager;
+        [SerializeField] private InputManager _InputManager;
+        [SerializeField] private ScenesManager _ScenesManager;
+        [SerializeField] private TaskManager _TaskManager;
+
+        [Header("Other Stuff")]
         [SerializeField] private Camera _MainCamera;
         [SerializeField] private int _TargetFrameRate = 60;
         #endregion
@@ -26,14 +40,23 @@ namespace WASD.Runtime
         #region MonoBehaviour
         private void Awake()
         {
-            RefreshMainCamera();
-          
+            if(Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(target: gameObject);
+
+                RefreshMainCamera();
+            }
+            else
+            {
+                Destroy(obj: gameObject);
+            }
         }
         #endregion
 
-        public void RefreshMainCamera()
+        public static void RefreshMainCamera()
         {
-            _MainCamera = GameObject.FindGameObjectWithTag(tag: "MainCamera").GetComponent<Camera>();
+            Instance._MainCamera = GameObject.FindGameObjectWithTag(tag: "MainCamera").GetComponent<Camera>();
         }
     }
 }

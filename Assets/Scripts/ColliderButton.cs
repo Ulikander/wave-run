@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using WASD.Runtime.Audio;
 using WASD.Runtime.Managers;
-using Zenject;
+
 
 namespace WASD.Runtime
 {
@@ -22,21 +22,17 @@ namespace WASD.Runtime
         [SerializeField] private AudioContainer _TapSound;
         [SerializeField] private Collider _Collider;
         [SerializeField] private UnityEvent _OnTap;
-
-        [Inject] private readonly AudioManager _AudioManager;
-        [Inject] private readonly InputManager _InputManager;
-        [Inject] private readonly GameManager _GameManager;
         #endregion
 
         #region MonoBehaviour
         private void OnEnable()
         {
-            _InputManager.OnTap += Tap;
+            GameManager.Input.OnTap += Tap;
         }
 
         private void OnDisable()
         {
-            _InputManager.OnTap -= Tap;
+            GameManager.Input.OnTap -= Tap;
         }
 
         private void Tap(Vector2 position)
@@ -48,14 +44,14 @@ namespace WASD.Runtime
 
             if(Interactable &&
                 Utils.IsTouchPositionHittingCollider(
-                    camera: _GameManager.MainCamera,
+                    camera: GameManager.MainCamera,
                     position: position,
                     collider: _Collider))
             {
                 _OnTap.Invoke();
                 if(_TapSound != null)
                 {
-                    _AudioManager.PlaySFX(audioContainer: _TapSound);
+                    GameManager.Audio.PlaySFX(audioContainer: _TapSound);
                 }
             }
         }

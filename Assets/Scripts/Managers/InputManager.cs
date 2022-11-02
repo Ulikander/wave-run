@@ -1,11 +1,7 @@
-using PlasticPipe.PlasticProtocol.Messages;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
-using UnityEngine.UIElements;
+
 using WASD.Input;
 
 namespace WASD.Runtime.Managers

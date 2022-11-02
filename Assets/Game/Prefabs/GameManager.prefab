@@ -347,7 +347,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8742926422063598739}
-  - component: {fileID: 2522441169289439868}
   - component: {fileID: 8765529244332866550}
   - component: {fileID: 3617501214285546622}
   - component: {fileID: 5124990775887018078}
@@ -377,18 +376,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2522441169289439868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8928613129029585838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a5ff27f4a74a0b43a5b8b0c8fe71eef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8765529244332866550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,6 +388,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b04694bd51e94940a0b290045a34091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _AudioManager: {fileID: 5124990775887018078}
+  _InputManager: {fileID: 3617501214285546622}
+  _ScenesManager: {fileID: 3710910772359819048}
+  _TaskManager: {fileID: 5155875382847502498}
   _MainCamera: {fileID: 0}
   _TargetFrameRate: 60
 --- !u!114 &3617501214285546622

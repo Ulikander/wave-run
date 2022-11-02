@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 using WASD.Interfaces;
 using WASD.Runtime.Audio;
 using WASD.Runtime.Managers;
-using Zenject;
 
 namespace WASD.Runtime.SceneControllers
 {
@@ -60,11 +59,6 @@ namespace WASD.Runtime.SceneControllers
 
         private UnityTask _CameraTransitionTask;
         private WaitForSeconds _WaitForCameraTransitionDelay;
-
-        [Inject] private readonly ScenesManager _ScenesManager;
-        [Inject] private readonly AudioManager _AudioManager;
-        [Inject] private readonly GameManager _GameManager;
-        [Inject] private readonly TaskManager _TaskManager;
         #endregion
 
         #region MonoBehaviour
@@ -76,9 +70,9 @@ namespace WASD.Runtime.SceneControllers
 
             _WaitForCameraTransitionDelay = new WaitForSeconds(seconds: _CameraPositionTransitionDelay);
 
-            _AudioManager.PlayBGM(audioContainer: _Music, skipFades: new bool[] { false, false }, randomizeStart: true);
-            _MusicText.IsOn = !_AudioManager.BgmMuted;
-            _SfxText.IsOn = !_AudioManager.SfxMuted;
+            GameManager.Audio.PlayBGM(audioContainer: _Music, skipFades: new bool[] { false, false }, randomizeStart: true);
+            _MusicText.IsOn = !GameManager.Audio.BgmMuted;
+            _SfxText.IsOn = !GameManager.Audio.SfxMuted;
 
             SetAllColliderButtonsInteractability(value: true, target: _MainOptionsCameraPosition);
         }
@@ -134,7 +128,7 @@ namespace WASD.Runtime.SceneControllers
         public void OnNewCameraPositionButtonTap(Transform target)
         {
             Utils.StopUnityTask(task: ref _CameraTransitionTask);
-            _CameraTransitionTask = new(manager: _TaskManager, c: CameraTransitionRoutine(target: target));
+            _CameraTransitionTask = new(c: CameraTransitionRoutine(target: target));
         }
 
         public void OnOpenUrlButtonTap(string url)
@@ -154,14 +148,14 @@ namespace WASD.Runtime.SceneControllers
 
         public void OnMusicButtonTap()
         {
-            _AudioManager.BgmMuted = !_AudioManager.BgmMuted;
-            _MusicText.IsOn = !_AudioManager.BgmMuted;
+            GameManager.Audio.BgmMuted = !GameManager.Audio.BgmMuted;
+            _MusicText.IsOn = !GameManager.Audio.BgmMuted;
         }
 
         public void OnSfxButtonTap()
         {
-            _AudioManager.SfxMuted = !_AudioManager.SfxMuted;
-            _SfxText.IsOn = !_AudioManager.SfxMuted;
+            GameManager.Audio.SfxMuted = !GameManager.Audio.SfxMuted;
+            _SfxText.IsOn = !GameManager.Audio.SfxMuted;
         }
 
         
@@ -182,7 +176,7 @@ namespace WASD.Runtime.SceneControllers
 
         public void GoToInitScene()
         {
-            _ScenesManager.LoadScene(sceneId: ScenesManager.cSCENEID_INIT);
+            GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_INIT);
         }
 
         public void StopAllTasks()
