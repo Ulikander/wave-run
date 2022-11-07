@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace WASD.Runtime
+namespace WASD.Runtime.ThirdParty
 {
     /// <summary>
     /// Safe area implementation for notched mobile devices. Usage:

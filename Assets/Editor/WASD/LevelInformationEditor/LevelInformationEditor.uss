@@ -1,0 +1,27 @@
+.container-main {
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.container-properties {
+    width: 70%;
+    height: 100%;
+}
+
+.container-visualizer {
+    width: 40%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 255);
+}
+
+.label-title {
+    width: 100%;
+    font-size: 24px;
+    -unity-text-align: middle-center;
+}
+
+.button-clear-unused-properties {
+    color: rgba(255, 181, 181, 255);
+    background-color: rgba(101, 22, 22, 255);
+}

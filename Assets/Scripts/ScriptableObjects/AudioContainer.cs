@@ -16,7 +16,7 @@ namespace WASD.Runtime.Audio
         public float[] StartTimes;
         public string Name;
         public string Author;
-        public string Url;
+        public string SourceUrl;
     }
 }
 

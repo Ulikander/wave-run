@@ -18,11 +18,13 @@ namespace WASD.Runtime
         public static TaskManager Tasks { get => Instance._TaskManager; }
 
         public static Camera MainCamera { get => Instance._MainCamera; }
+        public static int LastCoreLevelUnlocked { get => Instance._LastCoreLevelUnlocked; }
         #endregion
 
         #region Constants
         public const string cPprefBgmMuted = "mute_bgm";
         public const string cPprefSFXMuted = "mute_sfx";
+        public const string cPprefCoreLevel = "level_lastunlock";
         #endregion
 
         #region Fields
@@ -32,9 +34,12 @@ namespace WASD.Runtime
         [SerializeField] private ScenesManager _ScenesManager;
         [SerializeField] private TaskManager _TaskManager;
 
-        [Header("Other Stuff")]
+        [Header("Camera")]
+        [SerializeField] private Canvas _MainCanvas;
         [SerializeField] private Camera _MainCamera;
         [SerializeField] private int _TargetFrameRate = 60;
+
+        private int _LastCoreLevelUnlocked;
         #endregion
 
         #region MonoBehaviour
@@ -45,7 +50,10 @@ namespace WASD.Runtime
                 Instance = this;
                 DontDestroyOnLoad(target: gameObject);
 
+                Destroy(obj: _MainCanvas.worldCamera.gameObject);
+                Application.targetFrameRate = _TargetFrameRate;
                 RefreshMainCamera();
+                _LastCoreLevelUnlocked = PlayerPrefs.GetInt(key: cPprefCoreLevel, defaultValue: 1);
             }
             else
             {
@@ -57,6 +65,7 @@ namespace WASD.Runtime
         public static void RefreshMainCamera()
         {
             Instance._MainCamera = GameObject.FindGameObjectWithTag(tag: "MainCamera").GetComponent<Camera>();
+            Instance._MainCanvas.worldCamera = Instance._MainCamera;
         }
     }
 }

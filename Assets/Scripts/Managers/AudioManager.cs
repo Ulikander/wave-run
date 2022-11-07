@@ -72,7 +72,7 @@ namespace WASD.Runtime.Managers
 
         public void StopBGM(bool skipFadeOut = true)
         {
-            PlayBGM(audioContainer: null, skipFades: new bool[] { true, skipFadeOut });
+            PlayBGM(bgm: null, skipFades: new bool[] { true, skipFadeOut });
         }
 
         /// <summary>
@@ -80,15 +80,15 @@ namespace WASD.Runtime.Managers
         /// </summary>
         /// <param name="audioContainer"></param>
         /// <param name="skipFades">[0] FadeIn, [1] FadeOut</param>
-        public void PlayBGM(AudioContainer audioContainer, bool[] skipFades, bool randomizeStart = false, bool restartIfSame = false)
+        public void PlayBGM(AudioContainer bgm, bool[] skipFades, bool randomizeStart = false, bool restartIfSame = false)
         {
-            if(audioContainer != null && audioContainer.AudioType != Enums.AudioContainerType.BGM)
+            if(bgm != null && bgm.AudioType != Enums.AudioContainerType.BGM)
             {
                 Debug.LogError(message: $"Tried to play SFX as a BGM, thats not correct. Stupeh!");
                 return;
             }
 
-            if(audioContainer != null && _CurrentBgm != null && audioContainer.Clip == _CurrentBgm.Clip && !restartIfSame)
+            if(bgm != null && _CurrentBgm != null && bgm.Clip == _CurrentBgm.Clip && !restartIfSame)
             {
                 Debug.Log(message: $"Tried to play a BGM that is already playing, but Restart If Same is false");
                 return;
@@ -96,7 +96,7 @@ namespace WASD.Runtime.Managers
 
             if (Utils.IsUnityTaskRunning(task: ref _BgmFadeTask))
             {
-                if(audioContainer != null)
+                if(bgm != null)
                 {
                     Debug.LogError(message: "Tried to play a BGM but another one is currently Fading into the AudioSource");
                     return;
@@ -105,7 +105,7 @@ namespace WASD.Runtime.Managers
                 Utils.StopUnityTask(ref _BgmFadeTask);
             }
 
-            _BgmFadeTask = new(c: FadeBgmRoutine(audioContainer: audioContainer, skipFades: skipFades, randomizeStart: randomizeStart));
+            _BgmFadeTask = new(c: FadeBgmRoutine(audioContainer: bgm, skipFades: skipFades, randomizeStart: randomizeStart));
         }
 
         private IEnumerator FadeBgmRoutine(AudioContainer audioContainer, bool[] skipFades, bool randomizeStart)
@@ -177,11 +177,11 @@ namespace WASD.Runtime.Managers
             }
         }
 
-        public void PlaySFX(AudioContainer audioContainer, bool loop = false)
+        public void PlaySFX(AudioContainer sfx, bool loop = false)
         {
             if (!loop)
             {
-                _SfxAudioSource.PlayOneShot(clip: audioContainer.Clip);
+                _SfxAudioSource.PlayOneShot(clip: sfx.Clip);
             }
         }
 

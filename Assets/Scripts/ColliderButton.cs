@@ -51,7 +51,7 @@ namespace WASD.Runtime
                 _OnTap.Invoke();
                 if(_TapSound != null)
                 {
-                    GameManager.Audio.PlaySFX(audioContainer: _TapSound);
+                    GameManager.Audio.PlaySFX(sfx: _TapSound);
                 }
             }
         }

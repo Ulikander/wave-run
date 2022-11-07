@@ -122,6 +122,12 @@ namespace WASD.Runtime
 
             while (true)
             {
+                if(_PulsingTime == 0)
+                {
+                    yield return null;
+                    continue;
+                }
+
                 counter = 0;
                 while (counter < _PulsingTime / 2f)
                 {

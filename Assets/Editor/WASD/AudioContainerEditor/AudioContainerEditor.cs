@@ -27,7 +27,8 @@ namespace WASD.Editors
             m_Container = target as AudioContainer;
 
             _Root = new VisualElement();
-            VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(assetPath: "Assets/Editor/WASD/AudioContainerEditor/AudioContainerEditor.uxml");
+            VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
+                assetPath: "Assets/Editor/WASD/AudioContainerEditor/AudioContainerEditor.uxml");
             visualTree.CloneTree(target: _Root);
 
             ConfigureElements();

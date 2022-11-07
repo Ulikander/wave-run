@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using WASD.Interfaces;
 using WASD.Runtime.Audio;
 using WASD.Runtime.Managers;
+using WASD.Runtime.Popups;
 
 namespace WASD.Runtime.SceneControllers
 {
@@ -42,7 +43,9 @@ namespace WASD.Runtime.SceneControllers
         [SerializeField] private ColliderButton _TwitterButton;
         [SerializeField] private ColliderButton _FacebookButton;
         [SerializeField] private ColliderButton _InstagramButton;
+        [SerializeField] private ColliderButton _NewgroundsButton;
         [SerializeField] private ColliderButton _ReturnToMainFromCreditsButton;
+        
         [Header("Credits (Neon Text)")]
         [SerializeField] private SimulatedNeonText[] _WASDlogoTexts;
         [SerializeField] private SimulatedNeonText _ReturnToMainFromCreditsText;
@@ -56,9 +59,13 @@ namespace WASD.Runtime.SceneControllers
         [SerializeField] private Transform _PlayLevelsCameraPosition;
         [SerializeField] private Transform _CreditsCameraPosition;
 
+        [Header("Popups")]
+        [SerializeField] LevelSelectorPopup _LevelSelectorPopup;
+
 
         private UnityTask _CameraTransitionTask;
         private WaitForSeconds _WaitForCameraTransitionDelay;
+        private BasePopup.Options _LevelSelectorPopupOptions;
         #endregion
 
         #region MonoBehaviour
@@ -69,8 +76,15 @@ namespace WASD.Runtime.SceneControllers
                 rotation: _MainOptionsCameraPosition.rotation);
 
             _WaitForCameraTransitionDelay = new WaitForSeconds(seconds: _CameraPositionTransitionDelay);
+            _LevelSelectorPopupOptions = new BasePopup.Options
+            {
+                OnHide = delegate
+                {
+                    SetAllColliderButtonsInteractability(value: true, target: _PlayLevelsCameraPosition);
+                },
+            };
 
-            GameManager.Audio.PlayBGM(audioContainer: _Music, skipFades: new bool[] { false, false }, randomizeStart: true);
+            GameManager.Audio.PlayBGM(bgm: _Music, skipFades: new bool[] { false, false }, randomizeStart: true);
             _MusicText.IsOn = !GameManager.Audio.BgmMuted;
             _SfxText.IsOn = !GameManager.Audio.SfxMuted;
 
@@ -104,6 +118,7 @@ namespace WASD.Runtime.SceneControllers
             _TwitterButton.Interactable = value && target == _CreditsCameraPosition;
             _FacebookButton.Interactable = value && target == _CreditsCameraPosition;
             _InstagramButton.Interactable = value && target == _CreditsCameraPosition;
+            _NewgroundsButton.Interactable = value && target == _CreditsCameraPosition;
             _ReturnToMainFromCreditsButton.Interactable = value && target == _CreditsCameraPosition;
             _ReturnToMainFromCreditsText.IsOn = _ReturnToMainFromCreditsButton.Interactable;
 
@@ -166,7 +181,8 @@ namespace WASD.Runtime.SceneControllers
 
         public void OnLevelsButtonTap()
         {
-
+            SetAllColliderButtonsInteractability(value: false, target: null);
+            _LevelSelectorPopup.Show(options: _LevelSelectorPopupOptions);
         }
 
         public void OnInfiniteButtonTap()
