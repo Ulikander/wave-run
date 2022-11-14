@@ -6,8 +6,9 @@
         <ui:VisualElement name="PropertiesContainer" class="container-properties" style="width: 60%;">
             <ui:Label text="Properties" display-tooltip-when-elided="true" class="label-title" />
             <ui:Button text="Clear Unused Properties" display-tooltip-when-elided="true" name="ClearPropertiesButton" class="button-clear-unused-properties" />
-            <uie:EnumField label="Difficulty Rank" value="Core" binding-path="LevelDifficulty" focusable="true" type="WASD.Enums.LevelDifficulty, WASD.Enums" />
+            <uie:EnumField label="Difficulty Rank" value="Core" binding-path="LevelDifficulty" focusable="true" type="WASD.Enums.LevelDifficulty, WASD.Enums" name="DifficultyRank" />
             <uie:IntegerField label="Core Level Value" value="0" name="CoreLevelValue" binding-path="CoreLevelValue" />
+            <ui:ListView focusable="true" name="DataList" class="list-data-properties" />
         </ui:VisualElement>
         <ui:VisualElement name="VisualizerContainer" class="container-visualizer">
             <ui:Label text="Visual" display-tooltip-when-elided="true" class="label-title" />

@@ -14,18 +14,21 @@ namespace WASD.Runtime.Levels
         [Serializable]
         public struct PathData
         {
+            [Header("Size")]
             public LevelPathStep Type;
+            [Space(height: 20f)]
+            [Header("Obstacle")]
             public LevelPathSize Size;
             public float PathCustomSize;
-            public bool UseCustomObstaclePath;
             public ObstaclePathData ObstaclePath;
+            public bool UseCustomObstaclePath;
             public Obstacle[] CustomLeftSide;
             public Obstacle[] CustomRightSide;
-
-            public bool InvertPathValues;
+            public bool InvertObstacleValues;
+            [Space(height: 20f)]
+            [Header("Height")]
             public int SetLeftSideHeight;
             public int SetRightSideHeight;
-            public bool SwitchPathColors;
 
             //No Decoration Options yet
         }

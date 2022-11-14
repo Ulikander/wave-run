@@ -10,11 +10,11 @@ namespace WASD.Runtime.Managers
     {
         #region Events
         public delegate void StartTouchEvent(Vector2 position, float time);
-        public event StartTouchEvent OnStartTouch;
+        public static event StartTouchEvent OnStartTouch;
         public delegate void EndTouchEvent(Vector2 position, float time);
-        public event EndTouchEvent OnEndTouch;
+        public static event EndTouchEvent OnEndTouch;
         public delegate void TapEvent(Vector2 position);
-        public event TapEvent OnTap;
+        public static event TapEvent OnTap;
         #endregion
 
         #region Fields
@@ -47,10 +47,7 @@ namespace WASD.Runtime.Managers
 
         private void StartTouch(InputAction.CallbackContext context)
         {
-            if(OnStartTouch != null)
-            {
-                OnStartTouch(position: _PlayerControls.Touch.TouchPosition.ReadValue<Vector2>(), time: (float)context.startTime);
-            }
+            OnStartTouch?.Invoke(position: _PlayerControls.Touch.TouchPosition.ReadValue<Vector2>(), time: (float)context.startTime);
         }
 
         private void Tap(InputAction.CallbackContext context)
@@ -63,10 +60,7 @@ namespace WASD.Runtime.Managers
 
         private void EndTouch(InputAction.CallbackContext context)
         {
-            if (OnEndTouch != null)
-            {
-                OnEndTouch(position: _PlayerControls.Touch.TouchPosition.ReadValue<Vector2>(), time: (float)context.time);
-            }
+            OnEndTouch?.Invoke(position: _PlayerControls.Touch.TouchPosition.ReadValue<Vector2>(), time: (float)context.time);
         }
         #endregion
 

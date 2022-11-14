@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,6 @@ namespace WASD.Runtime
         #region Properties
         public UnityEvent OnTapEvent { get => _OnTap; }
         public bool Interactable { get => _Interactable; set => _Interactable = value; }
-        public UnityEvent OnTap { get => _OnTap; }
         #endregion
 
         #region Fields
@@ -27,12 +27,12 @@ namespace WASD.Runtime
         #region MonoBehaviour
         private void OnEnable()
         {
-            GameManager.Input.OnTap += Tap;
+            InputManager.OnTap += Tap;
         }
 
         private void OnDisable()
         {
-            GameManager.Input.OnTap -= Tap;
+            InputManager.OnTap -= Tap;
         }
 
         private void Tap(Vector2 position)
@@ -42,7 +42,7 @@ namespace WASD.Runtime
                 Debug.LogWarning("Collider button has a Null 'Collider'");
             }
 
-            if(Interactable &&
+            if (Interactable &&
                 Utils.IsTouchPositionHittingCollider(
                     camera: GameManager.MainCamera,
                     position: position,

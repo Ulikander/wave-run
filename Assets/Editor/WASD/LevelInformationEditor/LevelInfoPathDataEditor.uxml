@@ -1,7 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/Editor/WASD/LevelInformationEditor/LevelInformationEditor.uss?fileID=7433441132597879392&amp;guid=09a5efc970b1f1343add339070fdf93a&amp;type=3#LevelInformationEditor" />
-    <uie:EnumField label="Path Step Value is:" value="Obstacles" type="WASD.Enums.LevelPathStep, WASD.Enums" name="PathStepType" />
-    <ui:VisualElement name="ObstacleContainer" />
-    <ui:VisualElement name="HeightAndColorContainer" />
-    <ui:VisualElement name="Decorations" />
-</ui:UXML>

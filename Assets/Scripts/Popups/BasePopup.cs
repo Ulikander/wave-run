@@ -67,17 +67,17 @@ namespace WASD.Runtime.Popups
             }
             else
             {
-                if(_OnShowSound != null)
+                if (_OnShowSound != null)
                 {
                     GameManager.Audio.PlaySFX(sfx: _OnShowSound);
                 }
                 _Canvas.enabled = true;
                 _Frame.alpha = 1;
-                LeanTween.scale(gameObject: _Frame.gameObject, to: Vector3.one * _FrameTransitionScaleRange.y, time: 0f);
+                _Frame.gameObject.LeanScale(to: Vector3.one * _FrameTransitionScaleRange.y, time: 0f);
                 _Frame.interactable = true;
                 _Canvas.enabled = true;
                 _OnShow?.Invoke();
-                
+
             }
         }
 
@@ -101,7 +101,7 @@ namespace WASD.Runtime.Popups
                     GameManager.Audio.PlaySFX(sfx: _OnHideSound);
                 }
                 _Frame.alpha = 0;
-                LeanTween.scale(gameObject: _Frame.gameObject, to: Vector3.one * _FrameTransitionScaleRange.x, time: 0f);
+                _Frame.gameObject.LeanScale(to: Vector3.one * _FrameTransitionScaleRange.x, time: 0f);
                 _Frame.interactable = false;
                 _Canvas.enabled = false;
                 _OnHide?.Invoke();
@@ -112,25 +112,18 @@ namespace WASD.Runtime.Popups
         {
             _Frame.alpha = isShow ? 0f : 1f;
 
-            LeanTween.scale(
-                gameObject: _Frame.gameObject,
-                to: Vector3.one * (isShow ? _FrameTransitionScaleRange.x : _FrameTransitionScaleRange.y),
-                time: 0f);
+            _Frame.gameObject.LeanScale(to: Vector3.one * (isShow ? _FrameTransitionScaleRange.x : _FrameTransitionScaleRange.y), time: 0f);
 
 
             _Frame.interactable = false;
             _Canvas.enabled = true;
 
-            LeanTween.alphaCanvas(
-                canvasGroup: _Frame,
-                to: isShow ? _FrameAlphaRange.y : _FrameAlphaRange.x,
-                time: _FrameTransitionTime);
+            _Frame.LeanAlpha(to: isShow ? _FrameAlphaRange.y : _FrameAlphaRange.x, time: _FrameTransitionTime);
+
 
             if (isShow)
             {
-                LeanTween.scale(
-               gameObject: _Frame.gameObject,
-               to: Vector3.one * (isShow ? _FrameTransitionScaleRange.y : _FrameTransitionScaleRange.x),
+                _Frame.gameObject.LeanScale(to: Vector3.one * (isShow ? _FrameTransitionScaleRange.y : _FrameTransitionScaleRange.x),
                time: _FrameTransitionTime / 2f);
             }
 

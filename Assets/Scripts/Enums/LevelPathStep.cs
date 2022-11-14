@@ -2,8 +2,9 @@ namespace WASD.Enums
 {
     public enum LevelPathStep
     {
-        NormalPath,
-        HeightAndColor,
+        Path,
+        ChangeHeight,
+        SwitchColors,
         Decorations,
     }
 }

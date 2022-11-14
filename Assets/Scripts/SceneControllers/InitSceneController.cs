@@ -18,7 +18,7 @@ namespace WASD.Runtime
         #region MonoBehaviour
         private void Start()
         {
-            GameManager.Audio.PlayBGM(bgm: _Music, skipFades: new bool[] { true, true }, restartIfSame: true);
+            GameManager.Audio.PlayBGM(bgm: _Music, skipFadeIn: true, skipFadeOut: true, restartIfSame: true);
             GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_MAINMENU);
         }
         #endregion

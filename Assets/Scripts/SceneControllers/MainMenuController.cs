@@ -84,7 +84,7 @@ namespace WASD.Runtime.SceneControllers
                 },
             };
 
-            GameManager.Audio.PlayBGM(bgm: _Music, skipFades: new bool[] { false, false }, randomizeStart: true);
+            GameManager.Audio.PlayBGM(bgm: _Music, randomizeStart: true);
             _MusicText.IsOn = !GameManager.Audio.BgmMuted;
             _SfxText.IsOn = !GameManager.Audio.SfxMuted;
 
@@ -121,7 +121,7 @@ namespace WASD.Runtime.SceneControllers
             _NewgroundsButton.Interactable = value && target == _CreditsCameraPosition;
             _ReturnToMainFromCreditsButton.Interactable = value && target == _CreditsCameraPosition;
             _ReturnToMainFromCreditsText.IsOn = _ReturnToMainFromCreditsButton.Interactable;
-
+            
         }
 
         private IEnumerator CameraTransitionRoutine(Transform target)
@@ -130,8 +130,8 @@ namespace WASD.Runtime.SceneControllers
 
             yield return _WaitForCameraTransitionDelay;
 
-            LeanTween.move(gameObject: _Camera.gameObject, to: target.position, time: _CameraPositionTransitionTime);
-            LeanTween.rotate(gameObject: _Camera.gameObject, to: target.rotation.eulerAngles, time: _CameraPositionTransitionTime);
+            _Camera.transform.LeanMove(to: target.position, time: _CameraPositionTransitionTime);
+            _Camera.transform.LeanRotate(to: target.rotation.eulerAngles, time: _CameraPositionTransitionTime);
 
             yield return new WaitForSeconds(seconds: _CameraPositionTransitionTime);
 

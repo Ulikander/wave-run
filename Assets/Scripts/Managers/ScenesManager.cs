@@ -81,10 +81,10 @@ namespace WASD.Runtime.Managers
 
             _Canvas.enabled = true;
 
-            LeanTween.alphaCanvas(canvasGroup: _MainCanvasGroup, to: 1f, time: _BgFadeTime);
+        _MainCanvasGroup.LeanAlpha(to: 1f, time: _BgFadeTime);
             yield return _WaitForBackgroundFade;
 
-            LeanTween.alphaCanvas(canvasGroup: _TextAndSliderCanvasGroup, to: 1f, time: _TextAndSliderFadeTime);
+        _TextAndSliderCanvasGroup.LeanAlpha(to: 1f, time: _TextAndSliderFadeTime);
             yield return _WaitForTextFade;
 
             AsyncOperation asyncSceneLoading = SceneManager.LoadSceneAsync(sceneName: sceneId);
@@ -98,7 +98,7 @@ namespace WASD.Runtime.Managers
 
             _ProgressSlider.value = 1f;
 
-            LeanTween.alphaCanvas(canvasGroup: _TextAndSliderCanvasGroup, to: 0f, time: _TextAndSliderFadeTime);
+            _TextAndSliderCanvasGroup.LeanAlpha(to: 0f, time: _TextAndSliderFadeTime);
             yield return _WaitForTextFade;
 
             asyncSceneLoading.allowSceneActivation = true;
@@ -106,12 +106,12 @@ namespace WASD.Runtime.Managers
             yield return new WaitUntil(predicate: () => asyncSceneLoading.isDone);
             GameManager.RefreshMainCamera();
 
-            LeanTween.alphaCanvas(canvasGroup: _MainCanvasGroup, to: 0f, time: _BgFadeTime);
+            _MainCanvasGroup.LeanAlpha(to: 0f, time: _BgFadeTime);
             yield return _WaitForBackgroundFade;
 
             _Canvas.enabled = false;
 
-            if(_QueuedScenes.Count != 0)
+            if (_QueuedScenes.Count != 0)
             {
                 _LoadSceneCoroutine = null;
                 LoadScene(sceneId: _QueuedScenes.Dequeue());

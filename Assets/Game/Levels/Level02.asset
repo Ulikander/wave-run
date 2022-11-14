@@ -14,4 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LevelDifficulty: 0
   CoreLevelValue: 2
-  Data: []
+  Data:
+  - Type: 0
+    Size: 0
+    PathCustomSize: 0
+    UseCustomObstaclePath: 0
+    ObstaclePath: {fileID: 0}
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertPathValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0

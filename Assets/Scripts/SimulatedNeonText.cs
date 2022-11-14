@@ -21,7 +21,11 @@ namespace WASD.Runtime
             {
                 _TextOn.enabled = value;
                 _TextOff.enabled = !value;
-                ChangeAllMeshRenderersMaterial(value ? _MeshMaterialLit : _MeshMaterialUnlit);
+
+                Utils.ChangeAllMeshRenderersMaterial(
+                    renderers: _AffectedMeshRenderers,
+                    indexes: _AffectedMeshRenderersMaterialIndex,
+                    material: value ? _MeshMaterialLit : _MeshMaterialUnlit);
 
                 if (value)
                 {
@@ -30,7 +34,6 @@ namespace WASD.Runtime
                 else
                 {
                     StopAllTasks();
-                    
                 }
 
                 _IsOn = value;
@@ -160,34 +163,21 @@ namespace WASD.Runtime
 
                 _TextOff.enabled = false;
                 _TextOn.enabled = true;
-                ChangeAllMeshRenderersMaterial(material: _MeshMaterialLit);
+                Utils.ChangeAllMeshRenderersMaterial(
+                    renderers: _AffectedMeshRenderers,
+                    indexes: _AffectedMeshRenderersMaterialIndex,
+                    material: _MeshMaterialLit);
 
                 yield return new WaitForSeconds(seconds: randomOnTime);
 
                 _TextOff.enabled = true;
                 _TextOn.enabled = false;
-                ChangeAllMeshRenderersMaterial(material: _MeshMaterialUnlit);
+                Utils.ChangeAllMeshRenderersMaterial(
+                    renderers: _AffectedMeshRenderers,
+                    indexes: _AffectedMeshRenderersMaterialIndex,
+                    material: _MeshMaterialUnlit);
 
                 yield return new WaitForSeconds(seconds: randomOffTime);
-            }
-        }
-
-        private void ChangeAllMeshRenderersMaterial(Material material)
-        {
-            if(
-                material == null ||
-                _AffectedMeshRenderers.Length == 0 ||
-                _AffectedMeshRenderersMaterialIndex.Length == 0 ||
-                _AffectedMeshRenderers.Length != _AffectedMeshRenderersMaterialIndex.Length)
-            {
-                return;
-            }
-
-            for(int i = 0; i < _AffectedMeshRenderers.Length; i++)
-            {
-                Material[] newMaterials = _AffectedMeshRenderers[i].sharedMaterials;
-                newMaterials[_AffectedMeshRenderersMaterialIndex[i]] = material;
-                _AffectedMeshRenderers[i].sharedMaterials = newMaterials;
             }
         }
 
@@ -209,7 +199,10 @@ namespace WASD.Runtime
                 _TextOff.enabled = !_IsOn;
             }
 
-            ChangeAllMeshRenderersMaterial(material: _IsOn ? _MeshMaterialLit : _MeshMaterialUnlit);
+            Utils.ChangeAllMeshRenderersMaterial(
+                  renderers: _AffectedMeshRenderers,
+                  indexes: _AffectedMeshRenderersMaterialIndex,
+                  material: _IsOn ? _MeshMaterialLit : _MeshMaterialUnlit);
         }
 
         public void ToggleIsOn()

@@ -13,7 +13,6 @@ namespace WASD.Runtime
         #region Properties
         public static GameManager Instance { get; private set; }
         public static AudioManager Audio { get => Instance._AudioManager; }
-        public static InputManager Input { get => Instance._InputManager; }
         public static ScenesManager Scenes { get => Instance._ScenesManager; }
         public static TaskManager Tasks { get => Instance._TaskManager; }
 
@@ -30,7 +29,6 @@ namespace WASD.Runtime
         #region Fields
         [Header("Managers")]
         [SerializeField] private AudioManager _AudioManager;
-        [SerializeField] private InputManager _InputManager;
         [SerializeField] private ScenesManager _ScenesManager;
         [SerializeField] private TaskManager _TaskManager;
 
@@ -67,6 +65,7 @@ namespace WASD.Runtime
             Instance._MainCamera = GameObject.FindGameObjectWithTag(tag: "MainCamera").GetComponent<Camera>();
             Instance._MainCanvas.worldCamera = Instance._MainCamera;
         }
+
     }
 }
 

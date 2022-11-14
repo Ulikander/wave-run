@@ -5,6 +5,7 @@ using WASD.Enums;
 namespace WASD.Runtime.Levels
 {
     [CreateAssetMenu(fileName = "ObstacleData_", menuName = "WASD/Create Obstacle Data")]
+    [Serializable]
     public class ObstaclePathData : ScriptableObject
     {
         #region Types

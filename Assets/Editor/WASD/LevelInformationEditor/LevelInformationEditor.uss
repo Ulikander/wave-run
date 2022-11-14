@@ -2,6 +2,7 @@
     flex-direction: row;
     width: 100%;
     height: 100%;
+    justify-content: center;
 }
 
 .container-properties {
@@ -12,16 +13,98 @@
 .container-visualizer {
     width: 40%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 255);
+    background-color: rgb(0, 0, 0);
 }
 
 .label-title {
     width: 100%;
     font-size: 24px;
     -unity-text-align: middle-center;
+    -unity-font-style: bold;
 }
 
 .button-clear-unused-properties {
-    color: rgba(255, 181, 181, 255);
-    background-color: rgba(101, 22, 22, 255);
+    color: rgb(255, 181, 181);
+    background-color: rgb(101, 22, 22);
+}
+
+.border-darkblue {
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-left-color: rgb(0, 49, 67);
+    border-right-color: rgb(0, 49, 67);
+    border-top-color: rgb(0, 49, 67);
+    border-bottom-color: rgb(0, 49, 67);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: rgba(0, 0, 0, 0.35);
+    height: 100%;
+}
+
+.text-with-padding {
+    -unity-text-align: upper-center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    -unity-font-style: normal;
+}
+
+.button-custom {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.obstacle-read-container {
+}
+
+.container-50per-width {
+    width: 50%;
+}
+
+.list-data-properties {
+    background-color: rgba(0, 0, 0, 0.15);
+    margin-top: 15px;
+    margin-bottom: 10px;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.border-red {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: rgb(125, 9, 0);
+    border-right-color: rgb(125, 9, 0);
+    border-top-color: rgb(125, 9, 0);
+    border-bottom-color: rgb(125, 9, 0);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-color: rgba(0, 0, 0, 0.35);
+    height: 100%;
 }

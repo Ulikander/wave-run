@@ -26,6 +26,25 @@ namespace WASD.Runtime
             return false;
         }
 
+        public static void ChangeAllMeshRenderersMaterial(Renderer[] renderers, int[] indexes, Material material)
+        {
+            if (
+               material == null ||
+               renderers.Length == 0 ||
+               indexes.Length == 0 ||
+               renderers.Length != indexes.Length)
+            {
+                return;
+            }
+
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Material[] newMaterials = renderers[i].sharedMaterials;
+                newMaterials[indexes[i]] = material;
+                renderers[i].sharedMaterials = newMaterials;
+            }
+        }
+
         public static bool IsUnityTaskRunning(ref UnityTask task)
         {
             return task != null && task.Running;
