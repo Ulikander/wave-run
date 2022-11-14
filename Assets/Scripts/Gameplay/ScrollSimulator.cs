@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using WASD.Runtime.Levels;
+using static WASD.Runtime.Levels.ObstaclePathData;
 
 namespace WASD.Runtime.Gameplay
 {
@@ -43,6 +44,7 @@ namespace WASD.Runtime.Gameplay
         private readonly List<SpawnableProp> _AirPlatformList = new();
         private readonly List<SpawnableProp> _DecorationsList = new();
         private readonly List<SpawnableProp> _ActiveProps = new();
+        private int _ActiveDecorations;
 
         private readonly List<SpawnableProp> _ObstacleJumpList = new();
         private readonly List<SpawnableProp> _ObstacleSlideList = new();
@@ -89,6 +91,7 @@ namespace WASD.Runtime.Gameplay
 
         private void Update()
         {
+            DecorationsRefresher();
             TryExecuteNextLevelPathStep();
         }
         #endregion
@@ -131,6 +134,21 @@ namespace WASD.Runtime.Gameplay
             }
         }
 
+        private void DecorationsRefresher()
+        {
+            if (!_IsActive)
+            {
+                return;
+            }
+
+            if(_ActiveDecorations < _MaxActiveDecorations && _DecorationsList.Count != 0)
+            {
+                SpawnableProp newDecoration = _DecorationsList[0];
+                newDecoration.Show(position: _LastDecoration == null ? _DecorationsOrigin.position : _LastDecoration.EndingPoint);
+                _LastDecoration = newDecoration;
+            }
+        }
+
         private void TryExecuteNextLevelPathStep()
         {
             if (!_IsActive)
@@ -140,16 +158,14 @@ namespace WASD.Runtime.Gameplay
 
             //Decoration
 
-
-            if (_CurrentLevel.Data != null && _CurrentLevel.Data == null && _LastLevelInformationPathData >= _CurrentLevel.Data.Length)
-            {
-                _CurrentLevel = _NextLevel;
-                _LastLevelInformationPathData = 0;
-            }
-
             if(_CurrentLevel == null || _CurrentLevel.Data == null || _CurrentLevel.Data.Length == 0)
             {
                 return;
+            }
+
+            if(_LastLevelInformationPathData >= _CurrentLevel.Data.Length)
+            {
+                _LastLevelInformationPathData = 0;
             }
 
             bool success = false;
@@ -196,34 +212,43 @@ namespace WASD.Runtime.Gameplay
             listsCounts[2] = _ObstacleCubesList.Count;
             listsCounts[3] = _EndPortalList.Count;
 
-            List<Enums.LevelObstacleType> requiredObstacles = new();
-            bool fValidateObstacleAvailability(ObstaclePathData.Obstacle[] obstacles)
+            bool fValidateObstacleAvailability(Obstacle[] obstacles)
             {
-                foreach (ObstaclePathData.Obstacle obstacle in obstacles)
+                foreach (Obstacle obstacle in obstacles)
                 {
                     int id =
                         obstacle.Type == Enums.LevelObstacleType.Jump ? 0 :
                         obstacle.Type == Enums.LevelObstacleType.Slide ? 1 :
                         obstacle.Type == Enums.LevelObstacleType.Cubes ? 2 :
+                        obstacle.Type == Enums.LevelObstacleType.Ship ? -1 :
                         obstacle.Type == Enums.LevelObstacleType.EndPortal ? 3 :
-                        0;
+                        -1;
+
+                    if(id == -1)
+                    {
+                        continue;
+                    }
 
                     listsCounts[id]--;
                     if (listsCounts[id] <= 0)
                     {
                         return false;
                     }
-                    requiredObstacles.Add(item: obstacle.Type);
                 }
 
                 return true;
             }
 
-            bool canSpawnLeftObstacles = fValidateObstacleAvailability(obstacles: pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
-                    pathData.CustomLeftSide : pathData.ObstaclePath.LeftSide);
+            Obstacle[] leftObstacles =
+                pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
+                pathData.CustomLeftSide : pathData.ObstaclePath.LeftSide;
 
-            bool canSpawnRightObstacles = fValidateObstacleAvailability(obstacles: pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
-               pathData.CustomRightSide : pathData.ObstaclePath.RightSide);
+            Obstacle[] rightObstacles =
+                pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
+               pathData.CustomRightSide : pathData.ObstaclePath.RightSide;
+
+            bool canSpawnLeftObstacles = fValidateObstacleAvailability(obstacles: leftObstacles);
+            bool canSpawnRightObstacles = fValidateObstacleAvailability(obstacles: rightObstacles);
 
             if(!canSpawnLeftObstacles && !canSpawnRightObstacles)
             {
@@ -244,7 +269,8 @@ namespace WASD.Runtime.Gameplay
             }
 
             ShowSpawnablePlatforms(size: fGetSize(pathData.Size));
-            ShowSpawnableObstacles(types: requiredObstacles);
+            ShowSpawnableObstacles(obstacles: leftObstacles, platform: _LastLeftPlatform);
+            ShowSpawnableObstacles(obstacles: rightObstacles, platform: _LastRightPlatform);
 
             return true;
         }
@@ -259,43 +285,71 @@ namespace WASD.Runtime.Gameplay
 
             bool invertPlatformColors = _LevelPathDataFlags[2] == "true";
 
-            float heightLeftValue = _LeftPathOrigin.position.y + (heightLeft * _HeightValue);
-            float heightRightValue = _RightPathOrigin.position.y + (heightRight * _HeightValue);
+            Vector3 leftPosition = _LastLeftPlatform != null ? _LastLeftPlatform.EndingPoint : _LeftPathOrigin.position;
+            leftPosition.y = _LeftPathOrigin.position.y + (heightLeft * _HeightValue);
+            Vector3 rightPosition = _LastRightPlatform != null ? _LastRightPlatform.EndingPoint : _RightPathOrigin.position;
+            rightPosition.y = _RightPathOrigin.position.y + (heightRight * _HeightValue);
 
             spawnedLeft.SetPlayerCollisionConcept(concept: !invertPlatformColors ? "LeftPlatform" : "RightPlatform");
             spawnedLeft.Show(
-                position: _LastLeftPlatform != null ? _LastLeftPlatform.EndingPoint : _LeftPathOrigin.position,
-                height: heightLeftValue,
+                position: leftPosition,
                 size: size,
                 neonMaterial: !invertPlatformColors ? _LeftMaterial : _RightMaterial);
             _LastLeftPlatform = spawnedLeft;
 
             spawnedRight.SetPlayerCollisionConcept(concept: invertPlatformColors ? "LeftPlatform" : "RightPlatform");
             spawnedRight.Show(
-                position: _LastRightPlatform != null ? _LastRightPlatform.EndingPoint : _RightPathOrigin.position,
-                height: heightRightValue,
+                position: rightPosition,
                 size: size,
                 neonMaterial: invertPlatformColors ? _LeftMaterial : _RightMaterial);
             _LastRightPlatform = spawnedRight;
         }
 
-        private void ShowSpawnableObstacles(List<Enums.LevelObstacleType> types)
+        private void ShowSpawnableObstacles(Obstacle[] obstacles, SpawnableProp platform)
         {
-            foreach(Enums.LevelObstacleType type in types)
+            if(obstacles.Length == 0)
             {
-                switch (type)
+                return;
+            }
+
+            bool isCountEven = obstacles.Length % 2 == 0;
+            float inbetween = obstacles.Length == 1 || isCountEven ? platform.EndingPoint.z / (obstacles.Length + 1) : platform.EndingPoint.z / (obstacles.Length - 1);
+
+            for (int i = 0; i < obstacles.Length; i++)
+            {
+                SpawnableProp obstacle = null;
+                switch (obstacles[i].Type)
                 {
                     case Enums.LevelObstacleType.Jump:
+                        obstacle = _ObstacleJumpList[i];
                         break;
                     case Enums.LevelObstacleType.Slide:
+                        obstacle = _ObstacleSlideList[0];
                         break;
                     case Enums.LevelObstacleType.Cubes:
+                        obstacle = _ObstacleCubesList[0];
                         break;
                     case Enums.LevelObstacleType.Ship:
-                        break;
+                        continue;
+                    //break;
                     case Enums.LevelObstacleType.EndPortal:
+                        obstacle = _EndPortalList[0];
                         break;
                 }
+
+                Vector3 position = platform.transform.position;
+                if (obstacles[i].AutomaticPosition)
+                {
+                    position.z += inbetween * (i + (isCountEven ? 1 : 0));
+                }
+                else
+                {
+                    position.z = platform.EndingPoint.z * obstacles[i].PositionOnPath;
+                }
+                
+                    
+                
+                obstacle.Show(position: position);
             }
         }
 
@@ -319,6 +373,10 @@ namespace WASD.Runtime.Gameplay
                         if (!prop.IgnoreSimulation)
                         {
                             _ActiveProps.Add(item: prop);
+                            if(prop.Identifier == _DecorationsIdentifier)
+                            {
+                                _ActiveDecorations++;
+                            }
                         }
                         list.Remove(item: prop);
                     };
@@ -327,6 +385,10 @@ namespace WASD.Runtime.Gameplay
                         if (!prop.IgnoreSimulation)
                         {
                             _ActiveProps.Remove(item: prop);
+                            if (prop.Identifier == _DecorationsIdentifier)
+                            {
+                                _ActiveDecorations--;
+                            }
                         }
                         list.Add(item: prop);
                     };

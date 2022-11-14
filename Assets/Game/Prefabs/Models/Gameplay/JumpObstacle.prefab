@@ -48,11 +48,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Identifier: ObstacleJump
-  _IgnoreSimulation: 1
+  _IgnoreSimulation: 0
   _EndingPoint: {fileID: 0}
   _DefaultNeonMaterial: {fileID: 0}
   _NeonAffectedRenderer: []
   _NeonAffectedRendererIndex: 
+  _PlayerCollision: {fileID: 320296289986439421}
 --- !u!114 &320296289986439421
 MonoBehaviour:
   m_ObjectHideFlags: 0

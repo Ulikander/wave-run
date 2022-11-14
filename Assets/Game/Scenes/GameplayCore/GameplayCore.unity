@@ -18,8 +18,8 @@ RenderSettings:
   m_FogColor: {r: 0.6792453, g: 0.101569384, b: 0, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.011
-  m_LinearFogStart: 50
-  m_LinearFogEnd: 200
+  m_LinearFogStart: 30
+  m_LinearFogEnd: 125
   m_AmbientSkyColor: {r: 0.9245283, g: 0.5308368, b: 0.50936276, a: 1}
   m_AmbientEquatorColor: {r: 0.057843138, g: 0.033333335, b: 0.03137255, a: 1}
   m_AmbientGroundColor: {r: 0.028921569, g: 0.016544119, b: 0.015931373, a: 1}
@@ -328,7 +328,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 300
+  far clip plane: 200
   field of view: 88.8
   orthographic: 0
   orthographic size: 5
@@ -479,8 +479,8 @@ MonoBehaviour:
     type: 3}
   _MinimumPlatformCount: 16
   _DecorationPrefabs:
-  - {fileID: 7412265847750442128, guid: a845d5c34c1f2b9439daa94837c5224c, type: 3}
-  _MinimumDecorationCount: 3
+  - {fileID: 9199364682466529509, guid: 38b4275636a63ba45aaa05615b11d884, type: 3}
+  _MinimumDecorationCount: 2
   _ObstaclePrefabs:
   - {fileID: 6640940444831940416, guid: 3e853152f538a0246bacaa312812e38f, type: 3}
   - {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534, type: 3}
@@ -948,7 +948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5c43f818faa414bbe13c50dde1f250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MaxActiveDecorations: 3
+  _MaxActiveDecorations: 2
   _HeightValue: 3
   _PlatformSizeNormal: 1
   _PlatformSizeShort: 0.5

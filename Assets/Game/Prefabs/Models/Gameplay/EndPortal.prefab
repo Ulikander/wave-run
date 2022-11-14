@@ -48,13 +48,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Identifier: EndPortal
-  _IgnoreSimulation: 1
+  _IgnoreSimulation: 0
   _EndingPoint: {fileID: 0}
   _DefaultNeonMaterial: {fileID: 2100000, guid: a9b623d40f71252498fb8ee84349dda1,
     type: 2}
   _NeonAffectedRenderer:
   - {fileID: 5593034583861750538}
   _NeonAffectedRendererIndex: 00000000
+  _PlayerCollision: {fileID: 0}
 --- !u!114 &320296289986439421
 MonoBehaviour:
   m_ObjectHideFlags: 0

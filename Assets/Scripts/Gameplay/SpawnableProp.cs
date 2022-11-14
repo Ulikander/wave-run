@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace WASD.Runtime.Gameplay
 {
@@ -11,7 +12,7 @@ namespace WASD.Runtime.Gameplay
         public string Identifier { get => _Identifier; }
         public bool IgnoreSimulation { get => _IgnoreSimulation; }
         public bool IsActive { get; private set; }
-        public Vector3 EndingPoint { get => _EndingPoint.position; }
+        public Vector3 EndingPoint { get => _EndingPoint != null ? _EndingPoint.position : transform.position; }
 
         #endregion
 
@@ -49,7 +50,7 @@ namespace WASD.Runtime.Gameplay
             SetRenderersAndCollidersEnabled(value: false);
         }
 
-        public void Show(Vector3 position, float height, float size, Material neonMaterial = null)
+        public void Show(Vector3 position, float size = 1f, Material neonMaterial = null)
         {
             if(neonMaterial != null)
             {
@@ -66,8 +67,8 @@ namespace WASD.Runtime.Gameplay
                     material: _DefaultNeonMaterial);
             }
 
-            position.y = 0;
-            position.y += height;
+            //position.y = 0;
+            //position.y += height;
             gameObject.transform.position = position;
 
             Vector3 newSize = gameObject.transform.localScale;
@@ -76,6 +77,8 @@ namespace WASD.Runtime.Gameplay
 
             SetRenderersAndCollidersEnabled(value: true);
         }
+
+        
 
         public void SetPlayerCollisionConcept(string concept)
         {

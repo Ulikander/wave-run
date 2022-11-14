@@ -72,7 +72,7 @@ namespace WASD.Runtime.Gameplay
                 fSpawnProp(
                     container: obstacleContainer,
                     original: obstacle,
-                    amount: _MinimumDecorationCount);
+                    amount: _MinimumObstacleCount);
             }
 
             fSpawnProp(

@@ -122,11 +122,6 @@ PrefabInstance:
       propertyPath: _Identifier
       value: ObstacleCubes
       objectReference: {fileID: 0}
-    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
-        type: 3}
-      propertyPath: _IgnoreSimulation
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1418772863223520502, guid: 9c29af7f5c381ae4c86022b6eec34534, type: 3}
     - {fileID: 3770789623433144380, guid: 9c29af7f5c381ae4c86022b6eec34534, type: 3}

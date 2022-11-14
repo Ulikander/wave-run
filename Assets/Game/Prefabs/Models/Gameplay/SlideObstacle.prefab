@@ -107,10 +107,5 @@ PrefabInstance:
       propertyPath: _Identifier
       value: ObstacleSlide
       objectReference: {fileID: 0}
-    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
-        type: 3}
-      propertyPath: _IgnoreSimulation
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c29af7f5c381ae4c86022b6eec34534, type: 3}
