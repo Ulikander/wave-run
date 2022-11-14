@@ -67,8 +67,6 @@ namespace WASD.Runtime.Gameplay
                     material: _DefaultNeonMaterial);
             }
 
-            //position.y = 0;
-            //position.y += height;
             gameObject.transform.position = position;
 
             Vector3 newSize = gameObject.transform.localScale;

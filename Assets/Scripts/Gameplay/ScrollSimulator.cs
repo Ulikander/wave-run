@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using WASD.Runtime.Levels;
+using static WASD.Runtime.Levels.LevelInformation;
 using static WASD.Runtime.Levels.ObstaclePathData;
 
 namespace WASD.Runtime.Gameplay
@@ -60,6 +61,8 @@ namespace WASD.Runtime.Gameplay
         /// 0: LeftHeight, 1: RightHeight, 2: InvertedColors
         /// </summary>
         private string[] _LevelPathDataFlags = new string[3];
+        private int[] _PropListsCounts = new int[4];
+        private bool ExecuteNextLevelPathStepSuccess;
 
         private SpawnableProp _LastLeftPlatform;
         private SpawnableProp _LastRightPlatform;
@@ -91,8 +94,8 @@ namespace WASD.Runtime.Gameplay
 
         private void Update()
         {
-            DecorationsRefresher();
-            TryExecuteNextLevelPathStep();
+                DecorationsRefresher();
+                TryExecuteNextLevelPathStep();
         }
         #endregion
         private void Acceleration()
@@ -115,9 +118,11 @@ namespace WASD.Runtime.Gameplay
             }
 
             Vector3 newPos;
+            SpawnableProp prop;
+
             for (int i = 0; i < _ActiveProps.Count; i++)
             {
-                SpawnableProp prop = _ActiveProps[i];
+                prop = _ActiveProps[i];
                 newPos = prop.transform.position;
                 newPos.z -= _GlobalVelocity * Time.fixedDeltaTime;
 
@@ -168,30 +173,27 @@ namespace WASD.Runtime.Gameplay
                 _LastLevelInformationPathData = 0;
             }
 
-            bool success = false;
-
-            LevelInformation.PathData pathData = _CurrentLevel.Data[_LastLevelInformationPathData];
-
-            switch (pathData.Type)
+            ExecuteNextLevelPathStepSuccess = false;
+            switch (_CurrentLevel.Data[_LastLevelInformationPathData].Type)
             {
                 case Enums.LevelPathStep.Path:
-                    success = HandlePathLevelStep(pathData: pathData);
+                    ExecuteNextLevelPathStepSuccess = HandlePathLevelStep(pathData: _CurrentLevel.Data[_LastLevelInformationPathData]);
                     break;
                 case Enums.LevelPathStep.ChangeHeight:
-                    _LevelPathDataFlags[0] = $"{pathData.SetLeftSideHeight}";
-                    _LevelPathDataFlags[1] = $"{pathData.SetRightSideHeight}";
-                    success = true;
+                    _LevelPathDataFlags[0] = $"{_CurrentLevel.Data[_LastLevelInformationPathData].SetLeftSideHeight}";
+                    _LevelPathDataFlags[1] = $"{_CurrentLevel.Data[_LastLevelInformationPathData].SetRightSideHeight}";
+                    ExecuteNextLevelPathStepSuccess = true;
                     break;
                 case Enums.LevelPathStep.SwitchColors:
                     _LevelPathDataFlags[2] = _LevelPathDataFlags[2] == "true" ? "false" : "true";
-                    success = true;
+                    ExecuteNextLevelPathStepSuccess = true;
                     break;
                 case Enums.LevelPathStep.Decorations:
-                    success = true;
+                    ExecuteNextLevelPathStepSuccess = true;
                     break;
             }
 
-            if (success)
+            if (ExecuteNextLevelPathStepSuccess)
             {
                 _LastLevelInformationPathData++;
             }
@@ -206,17 +208,17 @@ namespace WASD.Runtime.Gameplay
                 return false;
             }
 
-            int[] listsCounts = new int[4];
-            listsCounts[0] = _ObstacleJumpList.Count;
-            listsCounts[1] = _ObstacleSlideList.Count;
-            listsCounts[2] = _ObstacleCubesList.Count;
-            listsCounts[3] = _EndPortalList.Count;
+            _PropListsCounts[0] = _ObstacleJumpList.Count;
+            _PropListsCounts[1] = _ObstacleSlideList.Count;
+            _PropListsCounts[2] = _ObstacleCubesList.Count;
+            _PropListsCounts[3] = _EndPortalList.Count;
 
             bool fValidateObstacleAvailability(Obstacle[] obstacles)
             {
+                int id;
                 foreach (Obstacle obstacle in obstacles)
                 {
-                    int id =
+                     id =
                         obstacle.Type == Enums.LevelObstacleType.Jump ? 0 :
                         obstacle.Type == Enums.LevelObstacleType.Slide ? 1 :
                         obstacle.Type == Enums.LevelObstacleType.Cubes ? 2 :
@@ -229,8 +231,8 @@ namespace WASD.Runtime.Gameplay
                         continue;
                     }
 
-                    listsCounts[id]--;
-                    if (listsCounts[id] <= 0)
+                    _PropListsCounts[id]--;
+                    if (_PropListsCounts[id] <= 0)
                     {
                         return false;
                     }
@@ -239,16 +241,12 @@ namespace WASD.Runtime.Gameplay
                 return true;
             }
 
-            Obstacle[] leftObstacles =
-                pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
-                pathData.CustomLeftSide : pathData.ObstaclePath.LeftSide;
-
-            Obstacle[] rightObstacles =
-                pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
-               pathData.CustomRightSide : pathData.ObstaclePath.RightSide;
-
-            bool canSpawnLeftObstacles = fValidateObstacleAvailability(obstacles: leftObstacles);
-            bool canSpawnRightObstacles = fValidateObstacleAvailability(obstacles: rightObstacles);
+            bool canSpawnLeftObstacles = fValidateObstacleAvailability(
+                obstacles: pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
+                pathData.CustomLeftSide : pathData.ObstaclePath.LeftSide);
+            bool canSpawnRightObstacles = fValidateObstacleAvailability(
+                obstacles: pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
+                pathData.CustomRightSide : pathData.ObstaclePath.RightSide);
 
             if(!canSpawnLeftObstacles && !canSpawnRightObstacles)
             {
@@ -256,21 +254,20 @@ namespace WASD.Runtime.Gameplay
                 return false;
             }
 
-            float fGetSize(Enums.LevelPathSize enumSize)
-            {
-                return enumSize switch
-                {
-                    Enums.LevelPathSize.Short => _PlatformSizeShort,
-                    Enums.LevelPathSize.Normal => _PlatformSizeNormal,
-                    Enums.LevelPathSize.Long => _PlatformSizeLong,
-                    Enums.LevelPathSize.Custom => pathData.PathCustomSize,
-                    _ => 1,
-                };
-            }
+            ShowSpawnablePlatforms(size:
+                pathData.Size == Enums.LevelPathSize.Short ? _PlatformSizeShort :
+                pathData.Size == Enums.LevelPathSize.Normal ? _PlatformSizeNormal :
+                pathData.Size == Enums.LevelPathSize.Long ? _PlatformSizeLong :
+                pathData.Size == Enums.LevelPathSize.Custom ? pathData.PathCustomSize : _PlatformSizeNormal);
 
-            ShowSpawnablePlatforms(size: fGetSize(pathData.Size));
-            ShowSpawnableObstacles(obstacles: leftObstacles, platform: _LastLeftPlatform);
-            ShowSpawnableObstacles(obstacles: rightObstacles, platform: _LastRightPlatform);
+            ShowSpawnableObstacles(
+                obstacles: pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
+                pathData.CustomLeftSide : pathData.ObstaclePath.LeftSide,
+                platform: _LastLeftPlatform);
+            ShowSpawnableObstacles(
+                obstacles: pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
+                pathData.CustomRightSide : pathData.ObstaclePath.RightSide,
+                platform: _LastRightPlatform);
 
             return true;
         }
@@ -315,9 +312,12 @@ namespace WASD.Runtime.Gameplay
             bool isCountEven = obstacles.Length % 2 == 0;
             float inbetween = obstacles.Length == 1 || isCountEven ? platform.EndingPoint.z / (obstacles.Length + 1) : platform.EndingPoint.z / (obstacles.Length - 1);
 
+            SpawnableProp obstacle;
+            Vector3 position;
+
             for (int i = 0; i < obstacles.Length; i++)
             {
-                SpawnableProp obstacle = null;
+                obstacle = null;
                 switch (obstacles[i].Type)
                 {
                     case Enums.LevelObstacleType.Jump:
@@ -337,7 +337,7 @@ namespace WASD.Runtime.Gameplay
                         break;
                 }
 
-                Vector3 position = platform.transform.position;
+                position = platform.transform.position;
                 if (obstacles[i].AutomaticPosition)
                 {
                     position.z += inbetween * (i + (isCountEven ? 1 : 0));
