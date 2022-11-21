@@ -5,15 +5,22 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using WASD.Runtime.Levels;
+
 using static WASD.Runtime.Levels.LevelInformation;
 using static WASD.Runtime.Levels.ObstaclePathData;
+using static WASD.Runtime.Gameplay.PlayerCollisionDetector;
 
 namespace WASD.Runtime.Gameplay
 {
     public class ScrollSimulator : MonoBehaviour
     {
         #region Fields
-        public bool IsActive { get => _IsActive; set => _IsActive = value; }
+        public bool IsActive { get => _IsActive; set
+            {
+                _IsActive = value;
+                _OnChangeActiveState.Invoke(arg0: _IsActive);
+            }
+        }
 
         //[SerializeField] private bool _DecorationOrderIsRandom;
         [Header("Simulation")]
@@ -71,20 +78,11 @@ namespace WASD.Runtime.Gameplay
 
         #region Events
         [SerializeField] private UnityEvent _OnFinishPrepare;
+        [SerializeField] private UnityEvent<bool> _OnChangeActiveState;
         #endregion
 
         #region MonoBehaviour
-        private void OnEnable()
-        {
-            PlayerCollisionDetector.OnTriggerEnterEvent += PlayerCollisionConceptHandler;
-            PlayerCollisionDetector.OnCollisionEnterEvent += PlayerCollisionConceptHandler;
-        }
-
-        private void OnDisable()
-        {
-            PlayerCollisionDetector.OnTriggerEnterEvent -= PlayerCollisionConceptHandler;
-            PlayerCollisionDetector.OnCollisionEnterEvent -= PlayerCollisionConceptHandler;
-        }
+       
 
         private void FixedUpdate()
         {
@@ -98,6 +96,7 @@ namespace WASD.Runtime.Gameplay
                 TryExecuteNextLevelPathStep();
         }
         #endregion
+
         private void Acceleration()
         {
             if (!_IsActive)
@@ -287,14 +286,14 @@ namespace WASD.Runtime.Gameplay
             Vector3 rightPosition = _LastRightPlatform != null ? _LastRightPlatform.EndingPoint : _RightPathOrigin.position;
             rightPosition.y = _RightPathOrigin.position.y + (heightRight * _HeightValue);
 
-            spawnedLeft.SetPlayerCollisionConcept(concept: !invertPlatformColors ? "LeftPlatform" : "RightPlatform");
+            spawnedLeft.SetPlayerCollisionConcept(concept: !invertPlatformColors ? CollisionConcept.BluePlatform : CollisionConcept.RedPlatform);
             spawnedLeft.Show(
                 position: leftPosition,
                 size: size,
                 neonMaterial: !invertPlatformColors ? _LeftMaterial : _RightMaterial);
             _LastLeftPlatform = spawnedLeft;
 
-            spawnedRight.SetPlayerCollisionConcept(concept: invertPlatformColors ? "LeftPlatform" : "RightPlatform");
+            spawnedRight.SetPlayerCollisionConcept(concept: invertPlatformColors ? CollisionConcept.BluePlatform : CollisionConcept.RedPlatform);
             spawnedRight.Show(
                 position: rightPosition,
                 size: size,
@@ -417,12 +416,7 @@ namespace WASD.Runtime.Gameplay
             _CurrentLevel = levelInfo;
             _NextLevel = nextLevelInfo;
             _IsActive = true;
-        }
-
-        public void PlayerCollisionConceptHandler(GameObject obj, string concept)
-        {
-
-        }
+        } 
     }
 }
 

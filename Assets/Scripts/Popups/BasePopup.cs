@@ -1,5 +1,3 @@
-using Codice.CM.Common;
-using PlasticPipe.PlasticProtocol.Messages;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,13 +19,13 @@ namespace WASD.Runtime.Popups
         #endregion
 
         #region Fields
-        [SerializeField] private Canvas _Canvas;
-        [SerializeField] private CanvasGroup _Frame;
+        [SerializeField] protected Canvas _Canvas;
+        [SerializeField] protected CanvasGroup _Frame;
         [SerializeField] private Vector2 _FrameTransitionScaleRange;
         [SerializeField] private Vector2 _FrameAlphaRange;
         [SerializeField] private float _FrameTransitionTime = 0.4f;
-        [SerializeField] private AudioContainer _OnShowSound;
-        [SerializeField] private AudioContainer _OnHideSound;
+        [SerializeField] protected AudioContainer _OnShowSound;
+        [SerializeField] protected AudioContainer _OnHideSound;
 
         protected Action _OnShow;
         protected Action _OnHide;
@@ -38,13 +36,14 @@ namespace WASD.Runtime.Popups
         #endregion
 
         #region MonoBehaviour
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             _Canvas.enabled = false;
             _WaitForFrameTransition = new WaitForSeconds(seconds: _FrameTransitionTime);
         }
         #endregion
 
+        public void Show() => Show(options: null);
         public virtual void Show(Options options = null)
         {
             if (Utils.IsUnityTaskRunning(task: ref _FrameTransitionTask))

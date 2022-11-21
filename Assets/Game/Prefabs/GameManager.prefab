@@ -499,7 +499,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _AudioManager: {fileID: 5124990775887018078}
-  _InputManager: {fileID: 3617501214285546622}
   _ScenesManager: {fileID: 3710910772359819048}
   _TaskManager: {fileID: 5155875382847502498}
   _MainCanvas: {fileID: 2805567387479101908}
@@ -614,15 +613,15 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 8832897297451402488}
-  m_PlaneDistance: 0.3
+  m_PlaneDistance: 0.31
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1875289161
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!114 &6746971871097855498
 MonoBehaviour:

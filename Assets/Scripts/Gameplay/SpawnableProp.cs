@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+using static WASD.Runtime.Gameplay.PlayerCollisionDetector;
+
 namespace WASD.Runtime.Gameplay
 {
     public class SpawnableProp : MonoBehaviour
@@ -76,9 +78,7 @@ namespace WASD.Runtime.Gameplay
             SetRenderersAndCollidersEnabled(value: true);
         }
 
-        
-
-        public void SetPlayerCollisionConcept(string concept)
+        public void SetPlayerCollisionConcept(CollisionConcept concept)
         {
             if(_PlayerCollision != null)
             {

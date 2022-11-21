@@ -158,7 +158,7 @@ namespace WASD.Runtime.SceneControllers
 
         public void OnExitButtonTap()
         {
-
+            Application.Quit();
         }
 
         public void OnMusicButtonTap()

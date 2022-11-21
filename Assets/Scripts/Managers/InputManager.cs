@@ -18,7 +18,6 @@ namespace WASD.Runtime.Managers
         #endregion
 
         #region Fields
-
         private PlayerControls _PlayerControls;
         #endregion
 
@@ -44,6 +43,7 @@ namespace WASD.Runtime.Managers
             _PlayerControls.Touch.TouchPress.performed += ctx => Tap(context: ctx);
             _PlayerControls.Touch.TouchPress.canceled += ctx => EndTouch(context: ctx);
         }
+        #endregion
 
         private void StartTouch(InputAction.CallbackContext context)
         {
@@ -52,7 +52,7 @@ namespace WASD.Runtime.Managers
 
         private void Tap(InputAction.CallbackContext context)
         {
-            if(OnTap != null && context.interaction is TapInteraction)
+            if (OnTap != null && context.interaction is TapInteraction)
             {
                 OnTap(position: _PlayerControls.Touch.TouchPosition.ReadValue<Vector2>());
             }
@@ -62,9 +62,6 @@ namespace WASD.Runtime.Managers
         {
             OnEndTouch?.Invoke(position: _PlayerControls.Touch.TouchPosition.ReadValue<Vector2>(), time: (float)context.time);
         }
-        #endregion
-
-
     }
 }
 
