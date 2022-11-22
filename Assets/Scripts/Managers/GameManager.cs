@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using WASD.Runtime.Levels;
 using WASD.Runtime.Managers;
 
-namespace WASD.Runtime
+namespace WASD.Runtime.Managers
 {
     [RequireComponent(typeof(AudioManager), typeof(InputManager), typeof(ScenesManager))]
     [RequireComponent(typeof(TaskManager))]
@@ -18,6 +18,7 @@ namespace WASD.Runtime
 
         public static Camera MainCamera { get => Instance._MainCamera; }
         public static int LastCoreLevelUnlocked { get => Instance._LastCoreLevelUnlocked; }
+        public static LevelInformation LevelToPlayOnLoad { get; set; }
         #endregion
 
         #region Constants
@@ -38,6 +39,7 @@ namespace WASD.Runtime
         [SerializeField] private int _TargetFrameRate = 60;
 
         private int _LastCoreLevelUnlocked;
+        
         #endregion
 
         #region MonoBehaviour
@@ -48,7 +50,7 @@ namespace WASD.Runtime
                 Instance = this;
                 DontDestroyOnLoad(target: gameObject);
 
-                Destroy(obj: _MainCanvas.worldCamera.gameObject);
+                //Destroy(obj: _MainCanvas.worldCamera.gameObject);
                 Application.targetFrameRate = _TargetFrameRate;
                 RefreshMainCamera();
                 _LastCoreLevelUnlocked = PlayerPrefs.GetInt(key: cPprefCoreLevel, defaultValue: 1);
@@ -63,7 +65,7 @@ namespace WASD.Runtime
         public static void RefreshMainCamera()
         {
             Instance._MainCamera = GameObject.FindGameObjectWithTag(tag: "MainCamera").GetComponent<Camera>();
-            Instance._MainCanvas.worldCamera = Instance._MainCamera;
+            //Instance._MainCanvas.worldCamera = Instance._MainCamera;
         }
 
     }

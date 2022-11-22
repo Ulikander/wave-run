@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using WASD.Enums;
+using WASD.Runtime.Audio;
 using static WASD.Runtime.Levels.ObstaclePathData;
 
 namespace WASD.Runtime.Levels
@@ -37,6 +39,7 @@ namespace WASD.Runtime.Levels
         #region Fields
         public LevelDifficulty LevelDifficulty;
         public int CoreLevelValue;
+        public AudioContainer Music;
         public PathData[] Data;
         #endregion
 

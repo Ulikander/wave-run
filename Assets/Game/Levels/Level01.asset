@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LevelDifficulty: 0
   CoreLevelValue: 1
+  Music: {fileID: 11400000, guid: d49a39cad62cc0d47ae34c4e97c3b4ea, type: 2}
   Data:
   - Type: 0
     Size: 1

@@ -9,8 +9,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 286913961653774233, guid: 9c29af7f5c381ae4c86022b6eec34534,
         type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.0588975
+      objectReference: {fileID: 0}
+    - target: {fileID: 286913961653774233, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 286913961653774233, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.181
+      value: 1.18
       objectReference: {fileID: 0}
     - target: {fileID: 286913961653774233, guid: 9c29af7f5c381ae4c86022b6eec34534,
         type: 3}
@@ -31,6 +41,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SlideObstacle
+      objectReference: {fileID: 0}
+    - target: {fileID: 320296289986439418, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 320296289986439419, guid: 9c29af7f5c381ae4c86022b6eec34534,
         type: 3}
@@ -87,6 +102,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 626143382557261091, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5683237076698987593, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8123975854828378039, guid: 9c29af7f5c381ae4c86022b6eec34534,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -95,12 +120,12 @@ PrefabInstance:
     - target: {fileID: 8597981450158312068, guid: 9c29af7f5c381ae4c86022b6eec34534,
         type: 3}
       propertyPath: m_Size.y
-      value: 2.387311
+      value: 5.7544646
       objectReference: {fileID: 0}
     - target: {fileID: 8597981450158312068, guid: 9c29af7f5c381ae4c86022b6eec34534,
         type: 3}
       propertyPath: m_Center.y
-      value: 2.3699298
+      value: 3.6544173
       objectReference: {fileID: 0}
     - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
         type: 3}

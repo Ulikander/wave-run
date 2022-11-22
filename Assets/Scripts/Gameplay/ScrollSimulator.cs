@@ -35,6 +35,7 @@ namespace WASD.Runtime.Gameplay
         [SerializeField] private Material _RightMaterial;
 
         [Header("Origins")]
+        [SerializeField] private float _OriginsDisappearOffset;
         [SerializeField] private Transform _DecorationsOrigin;
         [SerializeField] private Transform _LeftPathOrigin;
         [SerializeField] private Transform _RightPathOrigin;
@@ -125,7 +126,7 @@ namespace WASD.Runtime.Gameplay
                 newPos = prop.transform.position;
                 newPos.z -= _GlobalVelocity * Time.fixedDeltaTime;
 
-                if (prop.EndingPoint.z < _DecorationsOrigin.position.z)
+                if (prop.EndingPoint.z < _DecorationsOrigin.position.z - _OriginsDisappearOffset)
                 {
                     prop.Hide();
                     i--;
@@ -346,9 +347,10 @@ namespace WASD.Runtime.Gameplay
                     position.z = platform.EndingPoint.z * obstacles[i].PositionOnPath;
                 }
                 
-                    
-                
-                obstacle.Show(position: position);
+                obstacle.Show(
+                    position: position,
+                    neonMaterial: obstacle.Identifier == _EndPortalIdentifier ? null :
+                        platform == _LastLeftPlatform ? _RightMaterial : _LeftMaterial);
             }
         }
 

@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
 using WASD.Runtime.Levels;
+using WASD.Runtime.Managers;
 
 namespace WASD.Runtime
 {
@@ -20,8 +23,14 @@ namespace WASD.Runtime
         private LevelInformation _LevelInfo;
         #endregion
 
-        public void Populate(LevelInformation info)
+        #region Events
+        private Action<LevelInformation> _OnSelect;
+        #endregion
+
+        public void Populate(LevelInformation info, Action<LevelInformation> onSelect)
         {
+            _OnSelect = onSelect;
+
             gameObject.SetActive(value: true);
             _LevelInfo = info;
 
@@ -40,7 +49,7 @@ namespace WASD.Runtime
 
         public void OnMainButtonClick()
         {
-
+            _OnSelect?.Invoke(obj: _LevelInfo);
         }
     }
 }

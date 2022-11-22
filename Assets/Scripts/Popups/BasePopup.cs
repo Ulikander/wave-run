@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using WASD.Runtime.Audio;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
+using WASD.Runtime.Managers;
 
 namespace WASD.Runtime.Popups
 {
@@ -46,7 +47,7 @@ namespace WASD.Runtime.Popups
         public void Show() => Show(options: null);
         public virtual void Show(Options options = null)
         {
-            if (Utils.IsUnityTaskRunning(task: ref _FrameTransitionTask))
+            if (Utils.IsUnityTaskRunning(task: ref _FrameTransitionTask) || _Canvas.enabled)
             {
                 return;
             }
@@ -84,7 +85,7 @@ namespace WASD.Runtime.Popups
 
         public virtual void Hide()
         {
-            if (Utils.IsUnityTaskRunning(task: ref _FrameTransitionTask))
+            if (Utils.IsUnityTaskRunning(task: ref _FrameTransitionTask) || !_Canvas.enabled)
             {
                 return;
             }
@@ -139,6 +140,20 @@ namespace WASD.Runtime.Popups
             {
                 _OnHide?.Invoke();
             }
+        }
+
+        public virtual void GoToMainMenuScene(bool closePopup = false)
+        {
+            if (closePopup)
+            {
+                Hide();
+            }
+            else
+            {
+                _Frame.interactable = false;
+            }
+
+            GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_MAINMENU);
         }
     }
 }

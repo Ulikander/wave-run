@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WASD.Runtime.Levels;
+using WASD.Runtime.Managers;
 
 namespace WASD.Runtime.Popups
 {
@@ -22,8 +23,16 @@ namespace WASD.Runtime.Popups
                     continue;
                 }
 
-                _LevelInfoDisplayButtons[i].Populate(info: _AllLevelsInformation[i]);
+                _LevelInfoDisplayButtons[i].Populate(info: _AllLevelsInformation[i], onSelect: PlayLevel);
             }
+        }
+
+        public void PlayLevel(LevelInformation info)
+        {
+            _Frame.interactable = false;
+            GameManager.Audio.PlayBGM(bgm: info.Music);
+            GameManager.LevelToPlayOnLoad = info;
+            GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_GAMEPLAY);
         }
     }
 }

@@ -36,11 +36,6 @@ namespace WASD.Runtime.Popups
             base.Hide();
         }
 
-        public void OnTapGoToMenu()
-        {
-            _Frame.interactable = false;
-            GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_MAINMENU);
-        }
 
         public void OnTapMusicButton()
         {

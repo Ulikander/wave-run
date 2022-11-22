@@ -137,6 +137,56 @@ PrefabInstance:
       propertyPath: _Identifier
       value: ObstacleCubes
       objectReference: {fileID: 0}
+    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: _NeonAffectedRenderer.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: _NeonAffectedRenderer.Array.data[0]
+      value: 
+      objectReference: {fileID: 9065486873539126002}
+    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: _NeonAffectedRenderer.Array.data[1]
+      value: 
+      objectReference: {fileID: 7421521660066676675}
+    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: _NeonAffectedRenderer.Array.data[2]
+      value: 
+      objectReference: {fileID: 1952197619957335621}
+    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: _NeonAffectedRenderer.Array.data[3]
+      value: 
+      objectReference: {fileID: 8193276587214589935}
+    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: _NeonAffectedRendererIndex.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: _NeonAffectedRendererIndex.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: _NeonAffectedRendererIndex.Array.data[1]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: _NeonAffectedRendererIndex.Array.data[2]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534,
+        type: 3}
+      propertyPath: _NeonAffectedRendererIndex.Array.data[3]
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1418772863223520502, guid: 9c29af7f5c381ae4c86022b6eec34534, type: 3}
     - {fileID: 3770789623433144380, guid: 9c29af7f5c381ae4c86022b6eec34534, type: 3}
@@ -216,6 +266,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b5c40decf1e79640a2148b4024f8ed0, type: 3}
+--- !u!23 &1952197619957335621 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6589126927893049898, guid: 2b5c40decf1e79640a2148b4024f8ed0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4640626692840043631}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5523586543674984766 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2b5c40decf1e79640a2148b4024f8ed0,
@@ -242,3 +298,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!23 &7421521660066676675 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -6442298374534657108, guid: 2b5c40decf1e79640a2148b4024f8ed0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4640626692840043631}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8193276587214589935 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3590086638062959488, guid: 2b5c40decf1e79640a2148b4024f8ed0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4640626692840043631}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &9065486873539126002 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -4780072770720950627, guid: 2b5c40decf1e79640a2148b4024f8ed0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4640626692840043631}
+  m_PrefabAsset: {fileID: 0}

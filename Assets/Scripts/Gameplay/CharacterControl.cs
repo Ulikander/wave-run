@@ -10,6 +10,10 @@ namespace WASD.Runtime.Gameplay
 {
     public class CharacterControl : MonoBehaviour
     {
+        #region Properties
+        private float _SwitchPositionsRotateToZeroDelay { get => _SwitchPositionsTime - (_SwitchPositionsTime / 3f); }
+        #endregion
+
         #region Fields
         [SerializeField] private Vector3 _CharacterCentraltPoint;
         [SerializeField] private float _CharacterPositionDifference;
@@ -24,6 +28,7 @@ namespace WASD.Runtime.Gameplay
         [SerializeField] private string _SlideTriggerId = "Slide";
         [SerializeField] private float _JumpSpeed = 3f;
         [SerializeField] private float _SwitchPositionsTime;
+        [SerializeField] private float _SwitchPositionsRotation;
         [SerializeField] private float _SwipeMinimumDistance = .2f;
         [SerializeField] private float _SwipeMaximumTime = 1f;
         [SerializeField, Range(min: 0f, max: 1f)] private float _DirectionThreshold = .9f;
@@ -160,17 +165,10 @@ namespace WASD.Runtime.Gameplay
             else if (Vector2.Dot(lhs: Vector2.left, rhs: direction) > _DirectionThreshold)
             {
                 SwitchCharacterPositions();
-                if (_SwipeStartPosition.x < midPosition && _SwipeEndPosition.x > midPosition)
-                {
-                    SwitchCharacterPositions();
-                }
             }
             else if (Vector2.Dot(lhs: Vector2.right, rhs: direction) > _DirectionThreshold)
             {
-                if (_SwipeStartPosition.x > midPosition && _SwipeEndPosition.x < midPosition)
-                {
-                    SwitchCharacterPositions();
-                }
+                SwitchCharacterPositions();
             }
         }
 
@@ -193,7 +191,7 @@ namespace WASD.Runtime.Gameplay
                 return;
             }
             anim.SetTrigger(name: _JumpTriggerId);
-            rb.AddRelativeForce(force: new Vector3(x: 0, y: _JumpSpeed, z: 0), mode: ForceMode.Impulse);
+            rb.AddForce(force: new Vector3(x: 0, y: _JumpSpeed, z: 0), mode: ForceMode.Impulse);
         }
 
         private void CharacterSlide(bool fromLeft)
@@ -212,12 +210,26 @@ namespace WASD.Runtime.Gameplay
                 return;
             }
 
+            float blueMultiplySign = _CharacterBlue.transform.position.x < _CharacterRed.transform.position.x ? 1 : -1;
+            float redMultiplySign = blueMultiplySign * -1f;
+
             _CharacterBlue.LeanMoveX(
-                to: _CharacterCentraltPoint.x + (_CharacterPositionDifference * (_CharacterBlue.transform.position.x < _CharacterRed.transform.position.x ? 1 : -1)),
+                to: _CharacterCentraltPoint.x + (_CharacterPositionDifference * blueMultiplySign),
                 time: _SwitchPositionsTime);
+            _CharacterBlue.LeanRotateY(to: _SwitchPositionsRotation * blueMultiplySign, time: _SwitchPositionsTime / 4f);
+            LeanTween.delayedCall(delayTime: _SwitchPositionsRotateToZeroDelay, callback: () =>
+            {
+                _CharacterBlue.LeanRotateY(to: 0, time: _SwitchPositionsTime / 3f);
+            });
+
             _CharacterRed.LeanMoveX(
-               to: _CharacterCentraltPoint.x + (_CharacterPositionDifference *(_CharacterBlue.transform.position.x < _CharacterRed.transform.position.x ? -1 : 1)),
+               to: _CharacterCentraltPoint.x + (_CharacterPositionDifference * redMultiplySign),
                time: _SwitchPositionsTime);
+            _CharacterRed.LeanRotateY(to: _SwitchPositionsRotation * redMultiplySign, time: _SwitchPositionsTime / 4f);
+            LeanTween.delayedCall(delayTime: _SwitchPositionsRotateToZeroDelay, callback: () =>
+            {
+                _CharacterRed.LeanRotateY(to: 0, time: _SwitchPositionsTime / 3f);
+            });
 
             CharacterJump(fromLeft: false);
             CharacterJump(fromLeft: true);

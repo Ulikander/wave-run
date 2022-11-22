@@ -14,6 +14,7 @@ namespace WASD.Runtime.Managers
         #region Constants
         public const string cSCENEID_INIT = "Init";
         public const string cSCENEID_MAINMENU = "MainMenu";
+        public const string cSCENEID_GAMEPLAY = "GameplayCore";
         #endregion
 
         #region Fields
