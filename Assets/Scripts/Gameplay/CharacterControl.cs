@@ -41,6 +41,13 @@ namespace WASD.Runtime.Gameplay
         [SerializeField] private bool _PositionsAreInverted;
         [SerializeField] private bool _BlueGrounded;
         [SerializeField] private bool _RedGrounded;
+        private bool _IsPaused;
+        private Vector3 _BlueStoredVelocityOnPause;
+        private Vector3 _RedStoredVelocityOnPause;
+        /// <summary>
+        /// BlueSwitchSide, RedSwitchSide, BlueRotateStart, RedRotateStart, BlueRotateEnd, RedRotateEnd
+        /// </summary>
+        private LTDescr[] _StoredLeanTweenValuesOnPause;
         #endregion
 
         #region Events
@@ -70,6 +77,11 @@ namespace WASD.Runtime.Gameplay
             PlayerCollisionDetector.OnCollisionStayEvent -= OnCollisionStayEvent;
             PlayerCollisionDetector.OnCollisionExitEvent -= OnCollisionExitEvent;
         }
+
+        private void Start()
+        {
+            _StoredLeanTweenValuesOnPause = new LTDescr[6];
+        }
         #endregion
 
         private void OnTriggerEnterEvent(GameObject obj, CollisionConcept concept)
@@ -77,6 +89,11 @@ namespace WASD.Runtime.Gameplay
             if(concept is CollisionConcept.KillPlayer)
             {
                 Kill();
+            }
+
+            if (concept is CollisionConcept.Win)
+            {
+                Win();
             }
         }
 
@@ -99,11 +116,6 @@ namespace WASD.Runtime.Gameplay
             {
                 _RedGrounded = true;
                 return;
-            }
-
-            if (concept is CollisionConcept.Win)
-            {
-                Win();
             }
         }
 
@@ -141,6 +153,8 @@ namespace WASD.Runtime.Gameplay
 
         private void DetectSwipe()
         {
+            if (_IsPaused) return;
+
             if(Vector3.Distance(a: _SwipeStartPosition, b: _SwipeEndPosition) >= _SwipeMinimumDistance &&
                (_SwipeEndTime - _SwipeStartTime) <= _SwipeMaximumTime)
             {
@@ -213,24 +227,31 @@ namespace WASD.Runtime.Gameplay
             float blueMultiplySign = _CharacterBlue.transform.position.x < _CharacterRed.transform.position.x ? 1 : -1;
             float redMultiplySign = blueMultiplySign * -1f;
 
-            _CharacterBlue.LeanMoveX(
-                to: _CharacterCentraltPoint.x + (_CharacterPositionDifference * blueMultiplySign),
-                time: _SwitchPositionsTime);
-            _CharacterBlue.LeanRotateY(to: _SwitchPositionsRotation * blueMultiplySign, time: _SwitchPositionsTime / 4f);
-            LeanTween.delayedCall(delayTime: _SwitchPositionsRotateToZeroDelay, callback: () =>
+            _StoredLeanTweenValuesOnPause[0] =
+                _CharacterBlue.LeanMoveX(
+                    to: _CharacterCentraltPoint.x + (_CharacterPositionDifference * blueMultiplySign),
+                    time: _SwitchPositionsTime);
+
+            _StoredLeanTweenValuesOnPause[2] =
+                _CharacterBlue.LeanRotateY(to: _SwitchPositionsRotation * blueMultiplySign, time: _SwitchPositionsTime / 4f);
+
+            _StoredLeanTweenValuesOnPause[4] = LeanTween.delayedCall(delayTime: _SwitchPositionsRotateToZeroDelay, callback: () =>
             {
-                _CharacterBlue.LeanRotateY(to: 0, time: _SwitchPositionsTime / 3f);
+                _StoredLeanTweenValuesOnPause[4] = _CharacterBlue.LeanRotateY(to: 0, time: _SwitchPositionsTime / 3f);
             });
 
-            _CharacterRed.LeanMoveX(
-               to: _CharacterCentraltPoint.x + (_CharacterPositionDifference * redMultiplySign),
-               time: _SwitchPositionsTime);
-            _CharacterRed.LeanRotateY(to: _SwitchPositionsRotation * redMultiplySign, time: _SwitchPositionsTime / 4f);
-            LeanTween.delayedCall(delayTime: _SwitchPositionsRotateToZeroDelay, callback: () =>
-            {
-                _CharacterRed.LeanRotateY(to: 0, time: _SwitchPositionsTime / 3f);
-            });
+            _StoredLeanTweenValuesOnPause[1] = 
+                _CharacterRed.LeanMoveX(
+                    to: _CharacterCentraltPoint.x + (_CharacterPositionDifference * redMultiplySign),
+                    time: _SwitchPositionsTime);
 
+            _StoredLeanTweenValuesOnPause[3] =
+                _CharacterRed.LeanRotateY(to: _SwitchPositionsRotation * redMultiplySign, time: _SwitchPositionsTime / 4f);
+
+            _StoredLeanTweenValuesOnPause[5] = LeanTween.delayedCall(delayTime: _SwitchPositionsRotateToZeroDelay, callback: () =>
+            {
+                _StoredLeanTweenValuesOnPause[5] = _CharacterRed.LeanRotateY(to: 0, time: _SwitchPositionsTime / 3f);
+            });
             CharacterJump(fromLeft: false);
             CharacterJump(fromLeft: true);
 
@@ -245,6 +266,38 @@ namespace WASD.Runtime.Gameplay
         public void Win()
         {
             _OnWin.Invoke();
+        }
+
+        public void SetPauseValue(bool value)
+        {
+            _IsPaused = value;
+            _CharacterBlueAnimator.speed = value ? 0 : 1;
+            _CharacterRedAnimator.speed = value ? 0 : 1;
+
+            foreach(var lt in _StoredLeanTweenValuesOnPause)
+            {
+                if (lt == null) continue;
+                if (value) lt.pause();
+                else lt.resume();
+            }
+            
+            if (value)
+            {
+                _BlueStoredVelocityOnPause = _CharacterBlueRigidBody.velocity;
+                _CharacterBlueRigidBody.isKinematic = true;
+
+                _RedStoredVelocityOnPause = _CharacterRedRigidBody.velocity;
+                _CharacterRedRigidBody.isKinematic = true;
+            }
+            else
+            {
+                _CharacterBlueRigidBody.isKinematic = false;
+                _CharacterBlueRigidBody.velocity = _BlueStoredVelocityOnPause;
+
+                _CharacterRedRigidBody.isKinematic = false;
+                _CharacterRedRigidBody.velocity = _RedStoredVelocityOnPause;
+              
+            }
         }
     }
 

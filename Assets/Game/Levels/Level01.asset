@@ -20,7 +20,7 @@ MonoBehaviour:
     Size: 1
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 1
+    UseCustomObstaclePath: 0
     CustomLeftSide: []
     CustomRightSide: []
     InvertObstacleValues: 0

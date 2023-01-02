@@ -38,12 +38,16 @@ namespace WASD.Runtime.Managers
         [SerializeField] private GameObject _AudioContainerObject;
         [SerializeField] private float _DefaultFadeInTime;
         [SerializeField] private float _DefaultFadeOutTime;
+        [SerializeField] private float _DefaultPitchFadeSpeed;
+
+        private float _TargetPitch;
 
         private AudioSource _BgmAudioSource;
         private AudioContainer _CurrentBgm;
         private AudioSource _SfxAudioSource;
 
         private UnityTask _BgmFadeTask;
+        private UnityTask _PitchFadeTask;
         //private WaitForSeconds _WaitForDefaultFadeIn;
         //private WaitForSeconds _WaitForDefaultFateOut;
         private UnityTask _BgmLoopTask;
@@ -70,6 +74,38 @@ namespace WASD.Runtime.Managers
         {
             BgmMuted = PlayerPrefs.GetInt(key: GameManager.cPprefBgmMuted, defaultValue: 0) == 1;
             SfxMuted = PlayerPrefs.GetInt(key: GameManager.cPprefSFXMuted, defaultValue: 0) == 1;
+        }
+
+        public void FadeBgmPitch(float target, bool immediate = false)
+        {
+            _TargetPitch = target;
+
+            if (immediate)
+            {
+                _BgmAudioSource.pitch = _TargetPitch;
+                return;
+            }
+
+            //if (!_BgmAudioSource.isPlaying) return;
+            if(_BgmAudioSource.pitch != _TargetPitch && !Utils.IsUnityTaskRunning(task: ref _PitchFadeTask))
+            {
+                _PitchFadeTask = new(c: BgmPitchFadeTask());
+            }
+        }
+
+        private IEnumerator BgmPitchFadeTask()
+        {
+            float direction;
+            while (_BgmAudioSource.pitch != _TargetPitch)
+            {
+                direction = _BgmAudioSource.pitch > _TargetPitch ? -1f : _BgmAudioSource.pitch < _TargetPitch ? 1f : 0;
+                _BgmAudioSource.pitch += _DefaultPitchFadeSpeed * Time.deltaTime * direction;
+                if ((direction == 1 && _BgmAudioSource.pitch > _TargetPitch) || (direction == -1 && _BgmAudioSource.pitch < _TargetPitch))
+                {
+                    _BgmAudioSource.pitch = _TargetPitch;
+                }
+                yield return null;
+            }
         }
 
         public void StopBGM(bool skipFadeOut = true)

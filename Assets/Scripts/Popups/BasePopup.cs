@@ -154,6 +154,8 @@ namespace WASD.Runtime.Popups
             }
 
             GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_MAINMENU);
+            GameManager.Audio.FadeBgmPitch(target: 1f);
+            GameManager.Audio.StopBGM(skipFadeOut: false);
         }
     }
 }

@@ -60,6 +60,7 @@ namespace WASD.Runtime.Gameplay
         private readonly List<SpawnableProp> _ObstacleCubesList = new();
         private readonly List<SpawnableProp> _EndPortalList = new();
 
+        private bool _IsPaused;
         private float _GlobalVelocity = 0;
 
         private LevelInformation _CurrentLevel;
@@ -124,7 +125,8 @@ namespace WASD.Runtime.Gameplay
             {
                 prop = _ActiveProps[i];
                 newPos = prop.transform.position;
-                newPos.z -= _GlobalVelocity * Time.fixedDeltaTime;
+                if(!_IsPaused) newPos.z -= _GlobalVelocity * Time.fixedDeltaTime;
+
 
                 if (prop.EndingPoint.z < _DecorationsOrigin.position.z - _OriginsDisappearOffset)
                 {
@@ -419,6 +421,11 @@ namespace WASD.Runtime.Gameplay
             _NextLevel = nextLevelInfo;
             _IsActive = true;
         } 
+
+        public void SetPauseValue(bool value)
+        {
+            _IsPaused = value;
+        }
     }
 }
 

@@ -422,6 +422,7 @@ MonoBehaviour:
   _AudioContainerObject: {fileID: 6402057522331342926}
   _DefaultFadeInTime: 0.3
   _DefaultFadeOutTime: 1.25
+  _DefaultPitchFadeSpeed: 0.35
 --- !u!114 &3710910772359819048
 MonoBehaviour:
   m_ObjectHideFlags: 0
