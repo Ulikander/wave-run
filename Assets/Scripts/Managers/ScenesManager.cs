@@ -1,5 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -25,19 +26,15 @@ namespace WASD.Runtime.Managers
         [SerializeField] private float _BgFadeTime = 0.75f;
         [SerializeField] private float _TextAndSliderFadeTime = .35f;
 
-        private Queue<string> _QueuedScenes = new Queue<string>(capacity: 1);
-        private UnityTask _LoadSceneCoroutine;
-        private WaitForSeconds _WaitForBackgroundFade;
-        private WaitForSeconds _WaitForTextFade;
-        //private string _QueuedScene;
+        private readonly Queue<string> _QueuedScenes = new(capacity: 1);
+        private CancellationTokenSource _LoadSceneCancelToken;
+        
         #endregion
 
         #region MonoBehaviour
         private void Awake()
         {
             _Canvas.enabled = false;
-            _WaitForBackgroundFade = new WaitForSeconds(seconds: _BgFadeTime);
-            _WaitForTextFade = new WaitForSeconds(seconds: _TextAndSliderFadeTime);
         }
         #endregion
 
@@ -49,7 +46,7 @@ namespace WASD.Runtime.Managers
                 return;
             }
 
-            if (Utils.IsUnityTaskRunning(task: ref _LoadSceneCoroutine))
+            if (Utils.IsCancelTokenSourceActive(ref _LoadSceneCancelToken))
             {
                 if(_QueuedScenes.Count == 0)
                 {
@@ -61,67 +58,72 @@ namespace WASD.Runtime.Managers
                     return;
                 }
             }
-
+            
             if (doSynchronously)
             {
                 SceneManager.LoadScene(sceneName: sceneId);
             }
             else
             {
-                _LoadSceneCoroutine = new UnityTask(c: LoadSceneAsync(sceneId: sceneId));
+                LoadSceneAsync(sceneId: sceneId);
             }
 
         }
 
 
-        private IEnumerator LoadSceneAsync(string sceneId)
+        private async void LoadSceneAsync(string sceneId)
         {
+            _LoadSceneCancelToken = new CancellationTokenSource();
             _MainCanvasGroup.alpha = 0f;
             _TextAndSliderCanvasGroup.alpha = 0f;
             _ProgressSlider.value = 0f;
 
             _Canvas.enabled = true;
 
-        _MainCanvasGroup.LeanAlpha(to: 1f, time: _BgFadeTime);
-            yield return _WaitForBackgroundFade;
+            _MainCanvasGroup.LeanAlpha(to: 1f, time: _BgFadeTime);
+            await UniTask.Delay((int)(_BgFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token)
+                .SuppressCancellationThrow();
 
-        _TextAndSliderCanvasGroup.LeanAlpha(to: 1f, time: _TextAndSliderFadeTime);
-            yield return _WaitForTextFade;
+            _TextAndSliderCanvasGroup.LeanAlpha(to: 1f, time: _TextAndSliderFadeTime);
+            await UniTask.Delay((int)(_TextAndSliderFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token)
+                .SuppressCancellationThrow();
 
             AsyncOperation asyncSceneLoading = SceneManager.LoadSceneAsync(sceneName: sceneId);
             asyncSceneLoading.allowSceneActivation = false;
 
             while (asyncSceneLoading.progress < 0.9f)
             {
-                yield return null;
+                await UniTask.Yield(_LoadSceneCancelToken.Token).SuppressCancellationThrow();
                 _ProgressSlider.value = asyncSceneLoading.progress;
             }
 
             _ProgressSlider.value = 1f;
 
             _TextAndSliderCanvasGroup.LeanAlpha(to: 0f, time: _TextAndSliderFadeTime);
-            yield return _WaitForTextFade;
+            await UniTask.Delay((int)(_TextAndSliderFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token);
 
             asyncSceneLoading.allowSceneActivation = true;
 
-            yield return new WaitUntil(predicate: () => asyncSceneLoading.isDone);
+            await UniTask
+                .WaitUntil(predicate: () => asyncSceneLoading.isDone, cancellationToken: _LoadSceneCancelToken.Token)
+                .SuppressCancellationThrow();
             GameManager.RefreshMainCamera();
 
             _MainCanvasGroup.LeanAlpha(to: 0f, time: _BgFadeTime);
-            yield return _WaitForBackgroundFade;
+            await UniTask.Delay((int)(_BgFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token);
 
             _Canvas.enabled = false;
 
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _LoadSceneCancelToken);
             if (_QueuedScenes.Count != 0)
             {
-                _LoadSceneCoroutine = null;
                 LoadScene(sceneId: _QueuedScenes.Dequeue());
             }
         }
 
         public void StopAllTasks()
         {
-            Utils.StopUnityTask(task: ref _LoadSceneCoroutine);
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _LoadSceneCancelToken);
         }
     }
 }
