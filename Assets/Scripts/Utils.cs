@@ -74,7 +74,7 @@ namespace WASD.Runtime
 
         public static bool IsCancelTokenSourceActive(ref CancellationTokenSource tokenSource)
         {
-            return tokenSource is { IsCancellationRequested: false };
+            return tokenSource != null && (tokenSource != null || !tokenSource.IsCancellationRequested);
         }
 
         public static void CancelTokenSourceRequestCancelAndDispose(ref CancellationTokenSource tokenSource)

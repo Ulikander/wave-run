@@ -90,6 +90,7 @@ namespace WASD.Runtime.Managers
 
             if (immediate)
             {
+                Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmFadeTokenSource);
                 _BgmAudioSource.pitch = _TargetPitch;
                 return;
             }
@@ -97,17 +98,16 @@ namespace WASD.Runtime.Managers
             //if (!_BgmAudioSource.isPlaying) return;
             if(_BgmAudioSource.pitch != _TargetPitch && !Utils.IsCancelTokenSourceActive(ref _PitchFadeTokenSource))
             {
-                _PitchFadeTokenSource = new CancellationTokenSource();
-                BgmPitchFadeTask(_PitchFadeTokenSource.Token);
+                BgmPitchFadeTask();
             }
         }
 
-        private async void BgmPitchFadeTask(CancellationToken cancelToken)
+        private async void BgmPitchFadeTask()
         {
-            float direction;
-            while (!cancelToken.IsCancellationRequested && _BgmAudioSource.pitch != _TargetPitch)
+            _PitchFadeTokenSource = new CancellationTokenSource();
+            while (!_PitchFadeTokenSource.IsCancellationRequested && _BgmAudioSource.pitch != _TargetPitch)
             {
-                direction = _BgmAudioSource.pitch > _TargetPitch ? -1f : _BgmAudioSource.pitch < _TargetPitch ? 1f : 0;
+                var direction = _BgmAudioSource.pitch > _TargetPitch ? -1f : _BgmAudioSource.pitch < _TargetPitch ? 1f : 0;
                 _BgmAudioSource.pitch += _DefaultPitchFadeSpeed * Time.deltaTime * direction;
                 if ((direction >= 1 && _BgmAudioSource.pitch > _TargetPitch) ||
                     (direction <= -1 && _BgmAudioSource.pitch < _TargetPitch))
@@ -115,8 +115,10 @@ namespace WASD.Runtime.Managers
                     _BgmAudioSource.pitch = _TargetPitch;
                 }
 
-                await UniTask.Yield(cancelToken).SuppressCancellationThrow();
+                await UniTask.Yield(_PitchFadeTokenSource.Token).SuppressCancellationThrow();
             }
+            
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _PitchFadeTokenSource);
         }
 
         public void StopBgm(bool skipFadeOut = true)
@@ -124,7 +126,7 @@ namespace WASD.Runtime.Managers
             PlayBgm(bgm: null, skipFadeOut: skipFadeOut);
         }
 
-        public void PlayBgm(AudioContainer bgm, bool skipFadeIn = false, bool skipFadeOut = false, bool randomizeStart = false, bool restartIfSame = false)
+        public async void PlayBgm(AudioContainer bgm, bool skipFadeIn = false, bool skipFadeOut = false, bool randomizeStart = false, bool restartIfSame = false)
         {
             if (bgm != null && bgm.AudioType != Enums.AudioContainerType.BGM)
             {
@@ -142,30 +144,32 @@ namespace WASD.Runtime.Managers
             {
                 if (bgm != null)
                 {
-                    Debug.LogError(message: "Tried to play a BGM but another one is currently Fading into the AudioSource");
-                    return;
+                    await UniTask.WaitUntil(() => Utils.IsCancelTokenSourceActive(ref _BgmFadeTokenSource));
                 }
-
-                Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmFadeTokenSource);
+                else
+                {
+                    Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmFadeTokenSource);
+                }
             }
-
-            _BgmFadeTokenSource = new CancellationTokenSource();
-            FadeBgmRoutine(bgm, skipFadeIn, skipFadeOut, randomizeStart, _BgmFadeTokenSource.Token);
+            
+            FadeBgmRoutine(bgm, skipFadeIn, skipFadeOut, randomizeStart);
         }
 
         private async void FadeBgmRoutine(AudioContainer audioContainer, bool skipFadeIn, bool skipFadeOut,
-            bool randomizeStart, CancellationToken cancelToken)
+            bool randomizeStart)
         {
             float counter = 0;
 
+            if (!skipFadeIn || !skipFadeOut) _BgmFadeTokenSource = new CancellationTokenSource();
+            
             if (!skipFadeOut && _BgmAudioSource.isPlaying)
             {
                 float currentVolume = _BgmAudioSource.volume;
-                while (!cancelToken.IsCancellationRequested && counter < _DefaultFadeOutTime)
+                while (!_BgmFadeTokenSource.IsCancellationRequested && counter < _DefaultFadeOutTime)
                 {
                     counter += Time.deltaTime;
                     _BgmAudioSource.volume = Mathf.Lerp(a: currentVolume, b: 0f, t: counter / _DefaultFadeOutTime);
-                    await UniTask.Yield(cancelToken).SuppressCancellationThrow();
+                    await UniTask.Yield(_BgmFadeTokenSource.Token).SuppressCancellationThrow();
                 }
             }
 
@@ -196,32 +200,35 @@ namespace WASD.Runtime.Managers
 
             if (audioContainer.LoopType == Enums.AudioLoopType.Custom)
             {
-                _BgmLoopTokenSource = new CancellationTokenSource();
-                LoopBgmRoutine(_BgmLoopTokenSource.Token);
+                LoopBgmRoutine();
             }
 
             if (!skipFadeIn)
             {
                 counter = 0;
-                while (!cancelToken.IsCancellationRequested && counter < _DefaultFadeInTime)
+                while (!_BgmFadeTokenSource.IsCancellationRequested && counter < _DefaultFadeInTime)
                 {
                     counter += Time.deltaTime;
                     _BgmAudioSource.volume = Mathf.Lerp(a: 0, b: 1f, t: counter / _DefaultFadeInTime);
-                    await UniTask.Yield(cancelToken).SuppressCancellationThrow();
+                    await UniTask.Yield(_BgmFadeTokenSource.Token).SuppressCancellationThrow();
                 }
             }
 
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmFadeTokenSource);
             _BgmAudioSource.volume = 1f;
         }
 
-        private async void LoopBgmRoutine(CancellationToken cancelToken)
+        private async void LoopBgmRoutine()
         {
-            while (!cancelToken.IsCancellationRequested)
+            _BgmLoopTokenSource = new CancellationTokenSource();
+            while (!_BgmLoopTokenSource.IsCancellationRequested)
             {
                 await UniTask.WaitWhile(() => _BgmAudioSource.time < _CurrentBgm.LoopEndTime,
-                    cancellationToken: cancelToken).SuppressCancellationThrow();
+                    cancellationToken: _BgmLoopTokenSource.Token).SuppressCancellationThrow();
                 if (_BgmAudioSource != null) _BgmAudioSource.time = _CurrentBgm.LoopStartTime; // loopStartSamples;
             }
+            
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmLoopTokenSource);
         }
 
         public void PlaySfx(AudioContainer sfx, bool loop = false)
