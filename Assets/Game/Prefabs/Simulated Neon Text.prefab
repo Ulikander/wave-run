@@ -222,8 +222,8 @@ MonoBehaviour:
   _Label: 
   _TextMaterialLit: {fileID: 0}
   _IsOn: 1
-  _LitDurationRange: {x: 0.7, y: 3.5}
-  _UnLitDurationRange: {x: 0.05, y: 0.5}
+  _LitDurationRange: {x: 0.7, y: 5}
+  _UnLitDurationRange: {x: 0.05, y: 0.7}
   _PulsingRange: {x: 0.5, y: 1}
   _PulsingTime: 2
   _MeshMaterialLit: {fileID: 2100000, guid: c2ad0ddc9de88e34392dbf872cd629b1, type: 2}
