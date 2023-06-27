@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using TMPro;
 using WASD.Runtime.Managers;
@@ -63,8 +65,8 @@ namespace WASD.Runtime
         [SerializeField] private TextMeshPro _TextOff;
         #endregion
 
-        private UnityTask _PulsingTask;
-        private UnityTask _LitAndUnlitTask;
+        private CancellationTokenSource _PulsingCancelToken;
+        private CancellationTokenSource _LitAndUnlitCancelToken;
 
         #region MonoBehaviour
         private void Start()
@@ -88,7 +90,7 @@ namespace WASD.Runtime
         {
             if(ranges.x > ranges.y || ranges.x < 0f || ranges.y <= 0f)
             {
-                Debug.LogError(message: $"Neon Simul Invalid range: {ranges}");
+                Debug.LogError(message: $"Neon Simulation Invalid range: {ranges}");
                 return false;
             }
 
@@ -98,46 +100,48 @@ namespace WASD.Runtime
         private void StartNeonTasks()
         {
             if (
-                !Utils.IsUnityTaskRunning(task: ref _LitAndUnlitTask) &&
+                !Utils.IsCancelTokenSourceActive(ref _LitAndUnlitCancelToken) &&
                 ValidateRange(ranges: ref _LitDurationRange) &&
                 ValidateRange(ranges: ref _UnLitDurationRange))
             {
-                _LitAndUnlitTask = new (c: LitAndUnlitControl());
+                LitAndUnlitControl();
             }
 
             if (
-                !Utils.IsUnityTaskRunning(task: ref _PulsingTask) &&
+                !Utils.IsCancelTokenSourceActive(ref _PulsingCancelToken) &&
                 ValidateRange(ranges: ref _PulsingRange) &&
                 _PulsingTime > 0f)
             {
-                _PulsingTask = new(c: PulsingControl());
+                PulsingControl();
             }
         }
 
-        private IEnumerator PulsingControl()
+        private async void PulsingControl()
         {
-            float counter;
+            _PulsingCancelToken = new CancellationTokenSource();
 
             Color pulseColor = _TextOn.color;
             pulseColor.a = _PulsingRange.y;
 
             _TextOn.color = pulseColor;
 
-            while (true)
+            while (!_PulsingCancelToken.IsCancellationRequested)
             {
                 if(_PulsingTime == 0)
                 {
-                    yield return null;
+                    await UniTask.Yield(_PulsingCancelToken.Token).SuppressCancellationThrow();
+                    if (!Utils.IsCancelTokenSourceActive(ref _PulsingCancelToken)) return;
                     continue;
                 }
 
-                counter = 0;
+                float counter = 0;
                 while (counter < _PulsingTime / 2f)
                 {
                     counter += Time.deltaTime;
                     pulseColor.a = Mathf.Lerp(a: _PulsingRange.y, b: _PulsingRange.x, t: counter / (_PulsingTime / 2f));
                     _TextOn.color = pulseColor;
-                    yield return null;
+                    await UniTask.Yield(_PulsingCancelToken.Token).SuppressCancellationThrow();
+                    if (!Utils.IsCancelTokenSourceActive(ref _PulsingCancelToken)) return;
                 }
 
                 counter = 0;
@@ -146,20 +150,20 @@ namespace WASD.Runtime
                     counter += Time.deltaTime;
                     pulseColor.a = Mathf.Lerp(a: _PulsingRange.x, b: _PulsingRange.y, t: counter / (_PulsingTime / 2f));
                     _TextOn.color = pulseColor;
-                    yield return null;
+                    await UniTask.Yield(_PulsingCancelToken.Token).SuppressCancellationThrow();
+                    if (!Utils.IsCancelTokenSourceActive(ref _PulsingCancelToken)) return;
                 }
             }
         }
 
-        private IEnumerator LitAndUnlitControl()
+        private async void LitAndUnlitControl()
         {
-            float randomOnTime;
-            float randomOffTime;
+            _LitAndUnlitCancelToken = new CancellationTokenSource();
 
-            while (true)
+            while (!_LitAndUnlitCancelToken.IsCancellationRequested)
             {
-                randomOnTime = Random.Range(minInclusive: _LitDurationRange.x, maxInclusive: _LitDurationRange.y);
-                randomOffTime = Random.Range(minInclusive: _UnLitDurationRange.x, maxInclusive: _UnLitDurationRange.y);
+                var randomOnTime = Random.Range(minInclusive: _LitDurationRange.x, maxInclusive: _LitDurationRange.y);
+                var randomOffTime = Random.Range(minInclusive: _UnLitDurationRange.x, maxInclusive: _UnLitDurationRange.y);
 
                 _TextOff.enabled = false;
                 _TextOn.enabled = true;
@@ -168,7 +172,9 @@ namespace WASD.Runtime
                     indexes: _AffectedMeshRenderersMaterialIndex,
                     material: _MeshMaterialLit);
 
-                yield return new WaitForSeconds(seconds: randomOnTime);
+                await UniTask.Delay((int)(randomOnTime * 1000), cancellationToken: _LitAndUnlitCancelToken.Token)
+                    .SuppressCancellationThrow();
+                if (!Utils.IsCancelTokenSourceActive(ref _LitAndUnlitCancelToken)) return;
 
                 _TextOff.enabled = true;
                 _TextOn.enabled = false;
@@ -177,7 +183,9 @@ namespace WASD.Runtime
                     indexes: _AffectedMeshRenderersMaterialIndex,
                     material: _MeshMaterialUnlit);
 
-                yield return new WaitForSeconds(seconds: randomOffTime);
+                await UniTask.Delay((int)(randomOffTime * 1000), cancellationToken: _LitAndUnlitCancelToken.Token)
+                    .SuppressCancellationThrow();
+                if (!Utils.IsCancelTokenSourceActive(ref _LitAndUnlitCancelToken)) return;
             }
         }
 
@@ -212,8 +220,8 @@ namespace WASD.Runtime
 
         public void StopAllTasks()
         {
-            Utils.StopUnityTask(task: ref _PulsingTask);
-            Utils.StopUnityTask(task: ref _LitAndUnlitTask);
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _PulsingCancelToken);
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _LitAndUnlitCancelToken);
         }
     }
 }
