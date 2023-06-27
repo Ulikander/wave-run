@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 namespace WASD.Runtime
@@ -68,7 +69,23 @@ namespace WASD.Runtime
             return instance;
         }
 
-       
+
+        #region UniTask & Threading
+
+        public static bool IsCancelTokenSourceActive(ref CancellationTokenSource tokenSource)
+        {
+            return tokenSource is { IsCancellationRequested: false };
+        }
+
+        public static void CancelTokenSourceRequestCancelAndDispose(ref CancellationTokenSource tokenSource)
+        {
+            if (tokenSource == null) return;
+            tokenSource.Cancel();
+            tokenSource.Dispose();
+            tokenSource = null;
+        }
+
+        #endregion
     }
 }
 

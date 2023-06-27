@@ -69,7 +69,7 @@ namespace WASD.Runtime.Popups
             {
                 if (_OnShowSound != null)
                 {
-                    GameManager.Audio.PlaySFX(sfx: _OnShowSound);
+                    GameManager.Audio.PlaySfx(sfx: _OnShowSound);
                 }
                 _Canvas.enabled = true;
                 _Frame.alpha = 1;
@@ -98,7 +98,7 @@ namespace WASD.Runtime.Popups
             {
                 if (_OnHideSound != null)
                 {
-                    GameManager.Audio.PlaySFX(sfx: _OnHideSound);
+                    GameManager.Audio.PlaySfx(sfx: _OnHideSound);
                 }
                 _Frame.alpha = 0;
                 _Frame.gameObject.LeanScale(to: Vector3.one * _FrameTransitionScaleRange.x, time: 0f);
@@ -155,7 +155,7 @@ namespace WASD.Runtime.Popups
 
             GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_MAINMENU);
             GameManager.Audio.FadeBgmPitch(target: 1f);
-            GameManager.Audio.StopBGM(skipFadeOut: false);
+            GameManager.Audio.StopBgm(skipFadeOut: false);
         }
     }
 }

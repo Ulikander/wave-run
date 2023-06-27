@@ -84,7 +84,7 @@ namespace WASD.Runtime.SceneControllers
                 },
             };
 
-            GameManager.Audio.PlayBGM(bgm: _Music, randomizeStart: true);
+            GameManager.Audio.PlayBgm(bgm: _Music, randomizeStart: true);
             _MusicText.IsOn = !GameManager.Audio.BgmMuted;
             _SfxText.IsOn = !GameManager.Audio.SfxMuted;
 
