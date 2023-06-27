@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-
 using WASD.Runtime.Audio;
 using WASD.Runtime.Managers;
 
@@ -27,27 +27,33 @@ namespace WASD.Runtime.Popups
         [SerializeField] private float _FrameTransitionTime = 0.4f;
         [SerializeField] protected AudioContainer _OnShowSound;
         [SerializeField] protected AudioContainer _OnHideSound;
-
+        [SerializeField] protected bool _Animate;
+        
         protected Action _OnShow;
         protected Action _OnHide;
-        [SerializeField] protected bool _Animate;
 
-        private UnityTask _FrameTransitionTask;
-        private WaitForSeconds _WaitForFrameTransition;
+        private CancellationTokenSource _FrameTransitionCancelToken;
+
+        
         #endregion
 
         #region MonoBehaviour
         protected virtual void Awake()
         {
             _Canvas.enabled = false;
-            _WaitForFrameTransition = new WaitForSeconds(seconds: _FrameTransitionTime);
         }
+
+        private void OnDestroy()
+        {
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _FrameTransitionCancelToken);
+        }
+
         #endregion
 
         public void Show() => Show(options: null);
-        public virtual void Show(Options options = null)
+        public virtual void Show(Options options)
         {
-            if (Utils.IsUnityTaskRunning(task: ref _FrameTransitionTask) || _Canvas.enabled)
+            if (Utils.IsCancelTokenSourceActive(ref _FrameTransitionCancelToken) || _Canvas.enabled)
             {
                 return;
             }
@@ -63,7 +69,8 @@ namespace WASD.Runtime.Popups
 
             if (_Animate)
             {
-                _FrameTransitionTask = new UnityTask(c: FrameTransitionAsync(isShow: true));
+                _FrameTransitionCancelToken = new CancellationTokenSource();
+                FrameTransitionAsync(true, _FrameTransitionCancelToken.Token);
             }
             else
             {
@@ -85,14 +92,15 @@ namespace WASD.Runtime.Popups
 
         public virtual void Hide()
         {
-            if (Utils.IsUnityTaskRunning(task: ref _FrameTransitionTask) || !_Canvas.enabled)
+            if (Utils.IsCancelTokenSourceActive(ref _FrameTransitionCancelToken) || !_Canvas.enabled)
             {
                 return;
             }
 
             if (_Animate)
             {
-                _FrameTransitionTask = new UnityTask(c: FrameTransitionAsync(isShow: false));
+                _FrameTransitionCancelToken = new CancellationTokenSource();
+                FrameTransitionAsync(false, _FrameTransitionCancelToken.Token);
             }
             else
             {
@@ -108,18 +116,14 @@ namespace WASD.Runtime.Popups
             }
         }
 
-        protected virtual IEnumerator FrameTransitionAsync(bool isShow)
+        protected virtual async void FrameTransitionAsync(bool isShow, CancellationToken cancelToken)
         {
             _Frame.alpha = isShow ? 0f : 1f;
-
             _Frame.gameObject.LeanScale(to: Vector3.one * (isShow ? _FrameTransitionScaleRange.x : _FrameTransitionScaleRange.y), time: 0f);
-
-
             _Frame.interactable = false;
             _Canvas.enabled = true;
 
             _Frame.LeanAlpha(to: isShow ? _FrameAlphaRange.y : _FrameAlphaRange.x, time: _FrameTransitionTime);
-
 
             if (isShow)
             {
@@ -127,7 +131,8 @@ namespace WASD.Runtime.Popups
                time: _FrameTransitionTime / 2f);
             }
 
-            yield return _WaitForFrameTransition;
+            await UniTask.Delay((int)(_FrameTransitionTime * 1000), cancellationToken: cancelToken)
+                .SuppressCancellationThrow();
 
             _Frame.interactable = isShow;
             _Canvas.enabled = isShow;
