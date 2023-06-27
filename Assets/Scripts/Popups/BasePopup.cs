@@ -43,7 +43,7 @@ namespace WASD.Runtime.Popups
             _Canvas.enabled = false;
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             Utils.CancelTokenSourceRequestCancelAndDispose(ref _FrameTransitionCancelToken);
         }

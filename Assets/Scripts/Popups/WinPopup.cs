@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
@@ -17,45 +19,58 @@ namespace WASD.Runtime.Popups
         [SerializeField] [TextArea(minLines: 2, maxLines: 5)] private string _FinalLevelMessage;
         [SerializeField] private TextMeshProUGUI _TimerText;
 
-        private UnityTask _SwitchLevelTimerTask;
+        private CancellationTokenSource _SwitchLevelOnTimerCancelToken;
+        
         #endregion
 
         #region Events
         [SerializeField] private UnityEvent _OnSwitchLevel;
         #endregion
 
+        #region Monobehaviour
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _SwitchLevelOnTimerCancelToken);
+        }
+
+        #endregion
+
         public override void Populate()
         {
             if (_AudioBgmPitch > 0 && _AudioBgmPitch <= 3) GameManager.Audio.FadeBgmPitch(target: _AudioBgmPitch);
             _TimerText.text = _NextLevelMessage + $"\n{_SwitchLevelTime}";
-            _SwitchLevelTimerTask = new(c: SwitchLevelOnTimerTask());
+            SwitchLevelOnTimerTask();
         }
 
         public override void Hide()
         {
-            Utils.StopUnityTask(task: ref _SwitchLevelTimerTask);
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _SwitchLevelOnTimerCancelToken);
             base.Hide();
         }
 
         public override void GoToMainMenuScene(bool closePopup = false)
         {
-            Utils.StopUnityTask(task: ref _SwitchLevelTimerTask);
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _SwitchLevelOnTimerCancelToken);
             base.GoToMainMenuScene(closePopup);
         }
 
-        private IEnumerator SwitchLevelOnTimerTask()
+        private async void SwitchLevelOnTimerTask()
         {
+            _SwitchLevelOnTimerCancelToken = new CancellationTokenSource();
             float time = _SwitchLevelTime;
-            while(time > 0)
+            while(!_SwitchLevelOnTimerCancelToken.IsCancellationRequested && time > 0)
             {
                 time -= Time.deltaTime;
                 _TimerText.text = _NextLevelMessage + $"\n{Mathf.CeilToInt(f: time)}";
-                yield return null;
+                await UniTask.Yield(_SwitchLevelOnTimerCancelToken.Token).SuppressCancellationThrow();
             }
 
             _TimerText.text = _NextLevelMessage;
             GameManager.Audio.FadeBgmPitch(target: 1f);
             _OnSwitchLevel?.Invoke();
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _SwitchLevelOnTimerCancelToken);
         }
     }
 }
