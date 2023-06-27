@@ -27,8 +27,8 @@ namespace WASD.Runtime.Popups
         [SerializeField] private float _FrameTransitionTime = 0.4f;
         [SerializeField] protected AudioContainer _OnShowSound;
         [SerializeField] protected AudioContainer _OnHideSound;
-        [SerializeField] protected bool _Animate;
         
+        protected bool _Animate;
         protected Action _OnShow;
         protected Action _OnHide;
 
@@ -69,8 +69,7 @@ namespace WASD.Runtime.Popups
 
             if (_Animate)
             {
-                _FrameTransitionCancelToken = new CancellationTokenSource();
-                FrameTransitionAsync(true, _FrameTransitionCancelToken.Token);
+                FrameTransitionAsync(true);
             }
             else
             {
@@ -99,8 +98,7 @@ namespace WASD.Runtime.Popups
 
             if (_Animate)
             {
-                _FrameTransitionCancelToken = new CancellationTokenSource();
-                FrameTransitionAsync(false, _FrameTransitionCancelToken.Token);
+                FrameTransitionAsync(false);
             }
             else
             {
@@ -116,10 +114,13 @@ namespace WASD.Runtime.Popups
             }
         }
 
-        protected virtual async void FrameTransitionAsync(bool isShow, CancellationToken cancelToken)
+        protected virtual async void FrameTransitionAsync(bool isShow)
         {
+            _FrameTransitionCancelToken = new CancellationTokenSource();
+
             _Frame.alpha = isShow ? 0f : 1f;
-            _Frame.gameObject.LeanScale(to: Vector3.one * (isShow ? _FrameTransitionScaleRange.x : _FrameTransitionScaleRange.y), time: 0f);
+            _Frame.gameObject.LeanScale(
+                to: Vector3.one * (isShow ? _FrameTransitionScaleRange.x : _FrameTransitionScaleRange.y), time: 0f);
             _Frame.interactable = false;
             _Canvas.enabled = true;
 
@@ -127,11 +128,13 @@ namespace WASD.Runtime.Popups
 
             if (isShow)
             {
-                _Frame.gameObject.LeanScale(to: Vector3.one * (isShow ? _FrameTransitionScaleRange.y : _FrameTransitionScaleRange.x),
-               time: _FrameTransitionTime / 2f);
+                _Frame.gameObject.LeanScale(
+                    to: Vector3.one * (isShow ? _FrameTransitionScaleRange.y : _FrameTransitionScaleRange.x),
+                    time: _FrameTransitionTime / 2f);
             }
 
-            await UniTask.Delay((int)(_FrameTransitionTime * 1000), cancellationToken: cancelToken)
+            await UniTask.Delay((int)(_FrameTransitionTime * 1000),
+                    cancellationToken: _FrameTransitionCancelToken.Token)
                 .SuppressCancellationThrow();
 
             _Frame.interactable = isShow;
@@ -145,6 +148,8 @@ namespace WASD.Runtime.Popups
             {
                 _OnHide?.Invoke();
             }
+            
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _FrameTransitionCancelToken);
         }
 
         public virtual void GoToMainMenuScene(bool closePopup = false)
