@@ -40,6 +40,7 @@ namespace WASD.Runtime.Popups
             _SfxIcon.color = GameManager.Audio.SfxMuted ? _AudioIconOff : _AudioIconOn;
 
             _OnPause.Invoke(arg0: true);
+            _Animate = true;
 
             if (_ButtonCanvasGroup != null) _ButtonCanvasGroup.alpha = 0f;
         }
@@ -47,6 +48,7 @@ namespace WASD.Runtime.Popups
         public override void Hide()
         {
             GameManager.Audio.FadeBgmPitch(target: 1f);
+            _Animate = false;
             base.Hide();
         }
 

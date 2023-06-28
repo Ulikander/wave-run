@@ -14,10 +14,12 @@ namespace WASD.Runtime.Popups
         [Header("Lose")]
         [SerializeField] private float _AudioBgmPitch;
         [SerializeField] private Button _ExtraLifeButton;
+        [SerializeField] private bool _forceAnimate;
         #endregion
 
         public override void Populate()
         {
+            _Animate = _forceAnimate;
             if (_AudioBgmPitch > 0 && _AudioBgmPitch <= 3) GameManager.Audio.FadeBgmPitch(target: _AudioBgmPitch);
             _ExtraLifeButton.interactable = false;
         }

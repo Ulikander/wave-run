@@ -2149,9 +2149,9 @@ MonoBehaviour:
   _FrameTransitionTime: 0.8
   _OnShowSound: {fileID: 0}
   _OnHideSound: {fileID: 0}
-  _Animate: 1
   _AudioBgmPitch: 0.75
   _ExtraLifeButton: {fileID: 94511545}
+  _forceAnimate: 1
 --- !u!1001 &601595519
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2797,12 +2797,12 @@ MonoBehaviour:
   _FrameTransitionTime: 0.4
   _OnShowSound: {fileID: 0}
   _OnHideSound: {fileID: 0}
-  _Animate: 1
   _SwitchLevelTime: 6
   _AudioBgmPitch: 1.05
   _NextLevelMessage: "En unos momentos avanzar\xE1s al siguiente nivel..."
   _FinalLevelMessage: "Haz completado todos los niveles.\n\xA1Excelente!"
   _TimerText: {fileID: 1675249212}
+  _forceAnimate: 1
   _OnSwitchLevel:
     m_PersistentCalls:
       m_Calls: []
@@ -6183,7 +6183,6 @@ MonoBehaviour:
   _FrameTransitionTime: 0.25
   _OnShowSound: {fileID: 0}
   _OnHideSound: {fileID: 0}
-  _Animate: 1
   _ButtonCanvasGroup: {fileID: 678996210}
   _MusicIcon: {fileID: 722598903}
   _SfxIcon: {fileID: 1162171650}

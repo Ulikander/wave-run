@@ -18,6 +18,7 @@ namespace WASD.Runtime.Popups
         [SerializeField] [TextArea(minLines: 2, maxLines: 5)] private string _NextLevelMessage;
         [SerializeField] [TextArea(minLines: 2, maxLines: 5)] private string _FinalLevelMessage;
         [SerializeField] private TextMeshProUGUI _TimerText;
+        [SerializeField] private bool _forceAnimate;
 
         private CancellationTokenSource _SwitchLevelOnTimerCancelToken;
         
@@ -42,8 +43,9 @@ namespace WASD.Runtime.Popups
             if (_AudioBgmPitch > 0 && _AudioBgmPitch <= 3) GameManager.Audio.FadeBgmPitch(target: _AudioBgmPitch);
             _TimerText.text = _NextLevelMessage + $"\n{_SwitchLevelTime}";
             SwitchLevelOnTimerTask();
+            _Animate = _forceAnimate;
         }
-
+        
         public override void Hide()
         {
             Utils.CancelTokenSourceRequestCancelAndDispose(ref _SwitchLevelOnTimerCancelToken);
@@ -65,6 +67,7 @@ namespace WASD.Runtime.Popups
                 time -= Time.deltaTime;
                 _TimerText.text = _NextLevelMessage + $"\n{Mathf.CeilToInt(f: time)}";
                 await UniTask.Yield(_SwitchLevelOnTimerCancelToken.Token).SuppressCancellationThrow();
+                if (!Utils.IsCancelTokenSourceActive(ref _SwitchLevelOnTimerCancelToken)) return;
             }
 
             _TimerText.text = _NextLevelMessage;

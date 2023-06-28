@@ -45,7 +45,7 @@ namespace WASD.Runtime.Gameplay
         private Vector3 _BlueStoredVelocityOnPause;
         private Vector3 _RedStoredVelocityOnPause;
         /// <summary>
-        /// BlueSwitchSide, RedSwitchSide, BlueRotateStart, RedRotateStart, BlueRotateEnd, RedRotateEnd
+        /// [0]BlueSwitchSide, [1]RedSwitchSide, [2]BlueRotateStart, [3]RedRotateStart, [4]BlueRotateEnd, [5]RedRotateEnd
         /// </summary>
         private LTDescr[] _StoredLeanTweenValuesOnPause;
         #endregion
@@ -252,6 +252,7 @@ namespace WASD.Runtime.Gameplay
             {
                 _StoredLeanTweenValuesOnPause[5] = _CharacterRed.LeanRotateY(to: 0, time: _SwitchPositionsTime / 3f);
             });
+            
             CharacterJump(fromLeft: false);
             CharacterJump(fromLeft: true);
 
