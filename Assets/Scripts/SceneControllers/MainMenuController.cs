@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using WASD.Interfaces;
@@ -130,8 +131,8 @@ namespace WASD.Runtime.SceneControllers
 
             yield return _WaitForCameraTransitionDelay;
 
-            _Camera.transform.LeanMove(to: target.position, time: _CameraPositionTransitionTime);
-            _Camera.transform.LeanRotate(to: target.rotation.eulerAngles, time: _CameraPositionTransitionTime);
+            _Camera.transform.DOMove(target.position, _CameraPositionTransitionTime);
+            _Camera.transform.DORotate(target.rotation.eulerAngles, _CameraPositionTransitionTime);
 
             yield return new WaitForSeconds(seconds: _CameraPositionTransitionTime);
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -80,11 +81,12 @@ namespace WASD.Runtime.Managers
 
             _Canvas.enabled = true;
 
-            _MainCanvasGroup.LeanAlpha(to: 1f, time: _BgFadeTime);
+            DOTween.To(() => _MainCanvasGroup.alpha, x => _MainCanvasGroup.alpha = x, 1f, _BgFadeTime);
             await UniTask.Delay((int)(_BgFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token)
                 .SuppressCancellationThrow();
 
-            _TextAndSliderCanvasGroup.LeanAlpha(to: 1f, time: _TextAndSliderFadeTime);
+            DOTween.To(() => _TextAndSliderCanvasGroup.alpha, x => _TextAndSliderCanvasGroup.alpha = x, 1f,
+                _TextAndSliderFadeTime);
             await UniTask.Delay((int)(_TextAndSliderFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token)
                 .SuppressCancellationThrow();
 
@@ -99,7 +101,8 @@ namespace WASD.Runtime.Managers
 
             _ProgressSlider.value = 1f;
 
-            _TextAndSliderCanvasGroup.LeanAlpha(to: 0f, time: _TextAndSliderFadeTime);
+            DOTween.To(() => _TextAndSliderCanvasGroup.alpha, x => _TextAndSliderCanvasGroup.alpha = x, 0f,
+                _TextAndSliderFadeTime);
             await UniTask.Delay((int)(_TextAndSliderFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token);
 
             asyncSceneLoading.allowSceneActivation = true;
@@ -109,7 +112,7 @@ namespace WASD.Runtime.Managers
                 .SuppressCancellationThrow();
             GameManager.RefreshMainCamera();
 
-            _MainCanvasGroup.LeanAlpha(to: 0f, time: _BgFadeTime);
+            DOTween.To(() => _MainCanvasGroup.alpha, x => _MainCanvasGroup.alpha = x, 0f, _BgFadeTime);
             await UniTask.Delay((int)(_BgFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token);
 
             _Canvas.enabled = false;

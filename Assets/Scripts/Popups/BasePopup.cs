@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using WASD.Runtime.Audio;
 using WASD.Runtime.Managers;
@@ -79,7 +80,7 @@ namespace WASD.Runtime.Popups
                 }
                 _Canvas.enabled = true;
                 _Frame.alpha = 1;
-                _Frame.gameObject.LeanScale(to: Vector3.one * _FrameTransitionScaleRange.y, time: 0f);
+                _Frame.gameObject.transform.DOScale(Vector3.one * _FrameTransitionScaleRange.y, 0f);
                 _Frame.interactable = true;
                 _Canvas.enabled = true;
                 _OnShow?.Invoke();
@@ -107,7 +108,7 @@ namespace WASD.Runtime.Popups
                     GameManager.Audio.PlaySfx(sfx: _OnHideSound);
                 }
                 _Frame.alpha = 0;
-                _Frame.gameObject.LeanScale(to: Vector3.one * _FrameTransitionScaleRange.x, time: 0f);
+                _Frame.gameObject.transform.DOScale(Vector3.one * _FrameTransitionScaleRange.x, 0f);
                 _Frame.interactable = false;
                 _Canvas.enabled = false;
                 _OnHide?.Invoke();
@@ -119,18 +120,19 @@ namespace WASD.Runtime.Popups
             _FrameTransitionCancelToken = new CancellationTokenSource();
 
             _Frame.alpha = isShow ? 0f : 1f;
-            _Frame.gameObject.LeanScale(
-                to: Vector3.one * (isShow ? _FrameTransitionScaleRange.x : _FrameTransitionScaleRange.y), time: 0f);
+            _Frame.gameObject.transform.DOScale(
+                Vector3.one * (isShow ? _FrameTransitionScaleRange.x : _FrameTransitionScaleRange.y), 0f);
             _Frame.interactable = false;
             _Canvas.enabled = true;
 
-            _Frame.LeanAlpha(to: isShow ? _FrameAlphaRange.y : _FrameAlphaRange.x, time: _FrameTransitionTime);
+            DOTween.To(() => _Frame.alpha, (x) => _Frame.alpha = x, isShow ? _FrameAlphaRange.y : _FrameAlphaRange.x,
+                _FrameTransitionTime);
 
             if (isShow)
             {
-                _Frame.gameObject.LeanScale(
-                    to: Vector3.one * (isShow ? _FrameTransitionScaleRange.y : _FrameTransitionScaleRange.x),
-                    time: _FrameTransitionTime / 2f);
+                _Frame.transform.DOScale(
+                    Vector3.one * (isShow ? _FrameTransitionScaleRange.y : _FrameTransitionScaleRange.x),
+                    _FrameTransitionTime / 2f);
             }
 
             await UniTask.Delay((int)(_FrameTransitionTime * 1000),

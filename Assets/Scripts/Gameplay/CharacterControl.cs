@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 using WASD.Runtime.Managers;
@@ -11,7 +12,8 @@ namespace WASD.Runtime.Gameplay
     public class CharacterControl : MonoBehaviour
     {
         #region Properties
-        private float _SwitchPositionsRotateToZeroDelay { get => _SwitchPositionsTime - (_SwitchPositionsTime / 3f); }
+        private float _SwitchPositionsRotateToZeroDelay => _SwitchPositionsTime - (_SwitchPositionsTime / 3f);
+
         #endregion
 
         #region Fields
@@ -44,10 +46,10 @@ namespace WASD.Runtime.Gameplay
         private bool _IsPaused;
         private Vector3 _BlueStoredVelocityOnPause;
         private Vector3 _RedStoredVelocityOnPause;
-        /// <summary>
-        /// [0]BlueSwitchSide, [1]RedSwitchSide, [2]BlueRotateStart, [3]RedRotateStart, [4]BlueRotateEnd, [5]RedRotateEnd
-        /// </summary>
-        private LTDescr[] _StoredLeanTweenValuesOnPause;
+
+        private Sequence _BlueSwitchSideSequence;
+        private Sequence _RedSwitchSideSequence;
+        
         #endregion
 
         #region Events
@@ -76,11 +78,6 @@ namespace WASD.Runtime.Gameplay
             PlayerCollisionDetector.OnTriggerEnterEvent -= OnTriggerEnterEvent;
             PlayerCollisionDetector.OnCollisionStayEvent -= OnCollisionStayEvent;
             PlayerCollisionDetector.OnCollisionExitEvent -= OnCollisionExitEvent;
-        }
-
-        private void Start()
-        {
-            _StoredLeanTweenValuesOnPause = new LTDescr[6];
         }
         #endregion
 
@@ -227,36 +224,27 @@ namespace WASD.Runtime.Gameplay
             float blueMultiplySign = _CharacterBlue.transform.position.x < _CharacterRed.transform.position.x ? 1 : -1;
             float redMultiplySign = blueMultiplySign * -1f;
 
-            _StoredLeanTweenValuesOnPause[0] =
-                _CharacterBlue.LeanMoveX(
-                    to: _CharacterCentraltPoint.x + (_CharacterPositionDifference * blueMultiplySign),
-                    time: _SwitchPositionsTime);
-
-            _StoredLeanTweenValuesOnPause[2] =
-                _CharacterBlue.LeanRotateY(to: _SwitchPositionsRotation * blueMultiplySign, time: _SwitchPositionsTime / 4f);
-
-            _StoredLeanTweenValuesOnPause[4] = LeanTween.delayedCall(delayTime: _SwitchPositionsRotateToZeroDelay, callback: () =>
-            {
-                _StoredLeanTweenValuesOnPause[4] = _CharacterBlue.LeanRotateY(to: 0, time: _SwitchPositionsTime / 3f);
-            });
-
-            _StoredLeanTweenValuesOnPause[1] = 
-                _CharacterRed.LeanMoveX(
-                    to: _CharacterCentraltPoint.x + (_CharacterPositionDifference * redMultiplySign),
-                    time: _SwitchPositionsTime);
-
-            _StoredLeanTweenValuesOnPause[3] =
-                _CharacterRed.LeanRotateY(to: _SwitchPositionsRotation * redMultiplySign, time: _SwitchPositionsTime / 4f);
-
-            _StoredLeanTweenValuesOnPause[5] = LeanTween.delayedCall(delayTime: _SwitchPositionsRotateToZeroDelay, callback: () =>
-            {
-                _StoredLeanTweenValuesOnPause[5] = _CharacterRed.LeanRotateY(to: 0, time: _SwitchPositionsTime / 3f);
-            });
+            _BlueSwitchSideSequence = CreateSwitchSidesSequence(_CharacterBlue.transform, blueMultiplySign);
+            _RedSwitchSideSequence = CreateSwitchSidesSequence(_CharacterRed.transform, redMultiplySign);
             
             CharacterJump(fromLeft: false);
             CharacterJump(fromLeft: true);
 
             _PositionsAreInverted = !_PositionsAreInverted;
+        }
+
+        private Sequence CreateSwitchSidesSequence(Transform target, float multiplySign)
+        {
+            Vector3 initialRotation = _CharacterBlue.transform.eulerAngles;
+            Vector3 finalRotation = initialRotation;
+            finalRotation.y += _SwitchPositionsRotation * multiplySign;
+            
+            var sequence = DOTween.Sequence();
+            sequence.Append(target.DOMoveX(
+                _CharacterCentraltPoint.x + (_CharacterPositionDifference * multiplySign), _SwitchPositionsTime));
+            sequence.Join(target.DORotate(finalRotation, _SwitchPositionsTime / 4f));
+            sequence.Join(target.DORotate(initialRotation, _SwitchPositionsTime / 3f).SetDelay(_SwitchPositionsRotateToZeroDelay));
+            return sequence;
         }
         
         public void Kill()
@@ -275,12 +263,8 @@ namespace WASD.Runtime.Gameplay
             _CharacterBlueAnimator.speed = value ? 0 : 1;
             _CharacterRedAnimator.speed = value ? 0 : 1;
 
-            foreach(var lt in _StoredLeanTweenValuesOnPause)
-            {
-                if (lt == null) continue;
-                if (value) lt.pause();
-                else lt.resume();
-            }
+            _BlueSwitchSideSequence?.TogglePause();
+            _RedSwitchSideSequence?.TogglePause();
             
             if (value)
             {
