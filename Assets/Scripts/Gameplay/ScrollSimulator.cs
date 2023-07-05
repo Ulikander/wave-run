@@ -170,7 +170,8 @@ namespace WASD.Runtime.Gameplay
                     SpawnableProp newDecoration = _DecorationsList[0];
                     newDecoration.Show(position: _LastDecoration == null ? _DecorationsOrigin.position : _LastDecoration.EndingPoint);
                     _LastDecoration = newDecoration;
-                }       
+                }
+                UniTask.Yield(_DecorationSpawnCancelToken.Token).SuppressCancellationThrow();
             }
         }
 

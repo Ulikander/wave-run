@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,7 +12,7 @@ using WASD.Runtime.Popups;
 
 namespace WASD.Runtime.SceneControllers
 {
-    public class MainMenuController : MonoBehaviour, IUseTasks
+    public class MainMenuController : MonoBehaviour
     {
         #region Fields
         [SerializeField] AudioContainer _Music;
@@ -63,8 +65,8 @@ namespace WASD.Runtime.SceneControllers
         [Header("Popups")]
         [SerializeField] LevelSelectorPopup _LevelSelectorPopup;
 
+        private CancellationTokenSource _CameraTransitionCancelToken;
 
-        private UnityTask _CameraTransitionTask;
         private WaitForSeconds _WaitForCameraTransitionDelay;
         private BasePopup.Options _LevelSelectorPopupOptions;
         #endregion
@@ -92,9 +94,9 @@ namespace WASD.Runtime.SceneControllers
             SetAllColliderButtonsInteractability(value: true, target: _MainOptionsCameraPosition);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
-            StopAllTasks();
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _CameraTransitionCancelToken);
         }
         #endregion
 
@@ -125,26 +127,40 @@ namespace WASD.Runtime.SceneControllers
             
         }
 
-        private IEnumerator CameraTransitionRoutine(Transform target)
+        private async void CameraTransitionTask(Transform target)
         {
+            _CameraTransitionCancelToken = new CancellationTokenSource();
+            
             SetAllColliderButtonsInteractability(value: false, target: target);
 
-            yield return _WaitForCameraTransitionDelay;
+            await UniTask.Delay((int)(_CameraPositionTransitionDelay * 1000),
+                cancellationToken: _CameraTransitionCancelToken.Token).SuppressCancellationThrow();
+            if (_CameraTransitionCancelToken.IsCancellationRequested) return;
 
-            _Camera.transform.DOMove(target.position, _CameraPositionTransitionTime);
-            _Camera.transform.DORotate(target.rotation.eulerAngles, _CameraPositionTransitionTime);
+            Transform cameraTransform = _Camera.transform;
+            cameraTransform.DOMove(target.position, _CameraPositionTransitionTime);
+            cameraTransform.DORotate(target.rotation.eulerAngles, _CameraPositionTransitionTime);
 
-            yield return new WaitForSeconds(seconds: _CameraPositionTransitionTime);
+            await UniTask.Delay((int)(_CameraPositionTransitionTime * 1000),
+                cancellationToken: _CameraTransitionCancelToken.Token).SuppressCancellationThrow();
+            if (_CameraTransitionCancelToken.IsCancellationRequested) return;
 
             SetAllColliderButtonsInteractability(value: true, target: target);
-            _Camera.transform.position = target.position;
-            _Camera.transform.rotation = target.rotation;
+            cameraTransform.position = target.position;
+            cameraTransform.rotation = target.rotation;
+            
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _CameraTransitionCancelToken);
         }
 
         public void OnNewCameraPositionButtonTap(Transform target)
         {
-            Utils.StopUnityTask(task: ref _CameraTransitionTask);
-            _CameraTransitionTask = new(c: CameraTransitionRoutine(target: target));
+            if (Utils.IsCancelTokenSourceActive(ref _CameraTransitionCancelToken))
+            {
+                Debug.LogWarning("Attempted to do a camera transition, but one is already active!");
+                return;
+            }
+            
+            CameraTransitionTask(target);
         }
 
         public void OnOpenUrlButtonTap(string url)
@@ -194,11 +210,6 @@ namespace WASD.Runtime.SceneControllers
         public void GoToInitScene()
         {
             GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_INIT);
-        }
-
-        public void StopAllTasks()
-        {
-            Utils.StopUnityTask(task: ref _CameraTransitionTask);
         }
     }
 }
