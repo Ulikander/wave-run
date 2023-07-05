@@ -46,19 +46,6 @@ namespace WASD.Runtime
             }
         }
 
-        public static bool IsUnityTaskRunning(ref UnityTask task)
-        {
-            return task != null && task.Running;
-        }
-
-        public static void StopUnityTask(ref UnityTask task)
-        {
-            if (IsUnityTaskRunning(task: ref task))
-            {
-                task.Stop();
-            }
-        }
-
         public static T GetGlobalInstance<T>() where T : MonoBehaviour
         {
             T instance = Object.FindObjectOfType(type: typeof(T)) as T;

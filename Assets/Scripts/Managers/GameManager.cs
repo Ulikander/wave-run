@@ -7,14 +7,12 @@ using WASD.Runtime.Managers;
 namespace WASD.Runtime.Managers
 {
     [RequireComponent(typeof(AudioManager), typeof(InputManager), typeof(ScenesManager))]
-    [RequireComponent(typeof(TaskManager))]
     public class GameManager : MonoBehaviour
     {
         #region Properties
         public static GameManager Instance { get; private set; }
         public static AudioManager Audio { get => Instance._AudioManager; }
         public static ScenesManager Scenes { get => Instance._ScenesManager; }
-        public static TaskManager Tasks { get => Instance._TaskManager; }
 
         public static Camera MainCamera { get => Instance._MainCamera; }
         public static int LastCoreLevelUnlocked { get => Instance._LastCoreLevelUnlocked; }
@@ -31,7 +29,6 @@ namespace WASD.Runtime.Managers
         [Header("Managers")]
         [SerializeField] private AudioManager _AudioManager;
         [SerializeField] private ScenesManager _ScenesManager;
-        [SerializeField] private TaskManager _TaskManager;
 
         [Header("Camera")]
         [SerializeField] private Canvas _MainCanvas;
