@@ -79,8 +79,6 @@ namespace WASD.Runtime.Gameplay
         private SpawnableProp _LastLeftPlatform;
         private SpawnableProp _LastRightPlatform;
         private SpawnableProp _LastDecoration;
-
-        private CancellationTokenSource _DecorationSpawnCancelToken;
         #endregion
 
         #region Events
@@ -103,14 +101,9 @@ namespace WASD.Runtime.Gameplay
 
         private void Update()
         {
-                TryExecuteNextLevelPathStep();
+            DecorationsRefresher();
+            TryExecuteNextLevelPathStep();
         }
-
-        private void OnDestroy()
-        {
-            Utils.CancelTokenSourceRequestCancelAndDispose(ref _DecorationSpawnCancelToken);
-        }
-
         #endregion
 
         private void Acceleration()
@@ -157,21 +150,18 @@ namespace WASD.Runtime.Gameplay
 
         private void DecorationsRefresher()
         {
-            _DecorationSpawnCancelToken = new CancellationTokenSource();
-            while (!_DecorationSpawnCancelToken.IsCancellationRequested)
+            if (!_IsActive)
             {
-                if (!_IsActive)
-                {
-                    UniTask.Yield(_DecorationSpawnCancelToken.Token).SuppressCancellationThrow();
-                }
-                
-                if(_ActiveDecorations < _MaxActiveDecorations && _DecorationsList.Count != 0)
-                {
-                    SpawnableProp newDecoration = _DecorationsList[0];
-                    newDecoration.Show(position: _LastDecoration == null ? _DecorationsOrigin.position : _LastDecoration.EndingPoint);
-                    _LastDecoration = newDecoration;
-                }
-                UniTask.Yield(_DecorationSpawnCancelToken.Token).SuppressCancellationThrow();
+                return;
+            }
+
+            if (_ActiveDecorations < _MaxActiveDecorations && _DecorationsList.Count != 0)
+            {
+                SpawnableProp newDecoration = _DecorationsList[0];
+                newDecoration.Show(position: _LastDecoration == null
+                    ? _DecorationsOrigin.position
+                    : _LastDecoration.EndingPoint);
+                _LastDecoration = newDecoration;
             }
         }
 
