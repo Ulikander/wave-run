@@ -226,6 +226,7 @@ namespace WASD.Runtime.Managers
                 await UniTask.WaitWhile(() => _BgmAudioSource.time < _CurrentBgm.LoopEndTime,
                     cancellationToken: _BgmLoopTokenSource.Token).SuppressCancellationThrow();
                 if (_BgmAudioSource != null) _BgmAudioSource.time = _CurrentBgm.LoopStartTime; // loopStartSamples;
+                if (!Utils.IsCancelTokenSourceActive(ref _BgmLoopTokenSource)) return;
             }
             
             Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmLoopTokenSource);

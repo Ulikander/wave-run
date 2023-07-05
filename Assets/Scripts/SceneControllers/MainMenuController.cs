@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -17,42 +18,26 @@ namespace WASD.Runtime.SceneControllers
         #region Fields
         [SerializeField] AudioContainer _Music;
 
-        [Header("Main Options (Buttons)")]
-        [SerializeField] private ColliderButton _PlayButton;
-        [SerializeField] private ColliderButton _CreditsButton;
-        [SerializeField] private ColliderButton _ExitButton;
-        [SerializeField] private ColliderButton _MusicButton;
-        [SerializeField] private ColliderButton _SfxButton;
+        [Header("Main Menu (Buttons)")]
+        [SerializeField] private ColliderButton[] _MainMenuButtons;
         [Header("Main Options (Neon Texts)")]
-        [SerializeField] private SimulatedNeonText _PlayText;
-        [SerializeField] private SimulatedNeonText _CreditsText;
-        [SerializeField] private SimulatedNeonText _ExitText;
         [SerializeField] private SimulatedNeonText _MusicText;
         [SerializeField] private SimulatedNeonText _SfxText;
 
         [Header("LevelOptions (Buttons)")]
-        [SerializeField] private ColliderButton _TutorialButton;
-        [SerializeField] private ColliderButton _LevelsButton;
-        [SerializeField] private ColliderButton _InfiniteButton;
-        [SerializeField] private ColliderButton _ReturnToMainFromLevelsButton;
+        [SerializeField] private ColliderButton[] _LevelOptionButtons;
         [Header("LevelOptions (Neon Text)")]
         [SerializeField] private SimulatedNeonText _TutorialText;
         [SerializeField] private SimulatedNeonText _LevelsText;
         [SerializeField] private SimulatedNeonText _InfiniteText;
         [SerializeField] private SimulatedNeonText _ReturnToMainFromLevelsText;
 
-        [Header("Credits (Buttons)")]
-        [SerializeField] private ColliderButton _WASDlogoButton;
-        [SerializeField] private ColliderButton _TwitterButton;
-        [SerializeField] private ColliderButton _FacebookButton;
-        [SerializeField] private ColliderButton _InstagramButton;
-        [SerializeField] private ColliderButton _NewgroundsButton;
-        [SerializeField] private ColliderButton _ReturnToMainFromCreditsButton;
-        
+        [Header("Credits (Buttons)")] [SerializeField]
+        private ColliderButton[] _CreditsButtons;
         [Header("Credits (Neon Text)")]
         [SerializeField] private SimulatedNeonText[] _WASDlogoTexts;
         [SerializeField] private SimulatedNeonText _ReturnToMainFromCreditsText;
-
+        [SerializeField] private SpriteRenderer _CreditsBackgroundSprite;
 
         [Header("Camera")]
         [SerializeField] private Camera _Camera;
@@ -61,14 +46,21 @@ namespace WASD.Runtime.SceneControllers
         [SerializeField] private Transform _MainOptionsCameraPosition;
         [SerializeField] private Transform _PlayLevelsCameraPosition;
         [SerializeField] private Transform _CreditsCameraPosition;
+        [SerializeField] private Transform _ExtrasCameraPosition;
 
         [Header("Popups")]
         [SerializeField] LevelSelectorPopup _LevelSelectorPopup;
+        [SerializeField] private ExtrasPopup _ExtrasPopup;
 
         private CancellationTokenSource _CameraTransitionCancelToken;
 
-        private WaitForSeconds _WaitForCameraTransitionDelay;
         private BasePopup.Options _LevelSelectorPopupOptions;
+        #endregion
+
+        #region Events
+
+        private Action _OnCameraMovementTransitionEnd;
+
         #endregion
 
         #region MonoBehaviour
@@ -78,12 +70,12 @@ namespace WASD.Runtime.SceneControllers
                 position: _MainOptionsCameraPosition.position,
                 rotation: _MainOptionsCameraPosition.rotation);
 
-            _WaitForCameraTransitionDelay = new WaitForSeconds(seconds: _CameraPositionTransitionDelay);
             _LevelSelectorPopupOptions = new BasePopup.Options
             {
                 OnHide = delegate
                 {
-                    SetAllColliderButtonsInteractability(value: true, target: _PlayLevelsCameraPosition);
+                    SetAllColliderButtonsInteractable(value: true, target: _PlayLevelsCameraPosition);
+                    SetCameraTransitionApplicableNeonTextsActive(_PlayLevelsCameraPosition);
                 },
             };
 
@@ -91,7 +83,8 @@ namespace WASD.Runtime.SceneControllers
             _MusicText.IsOn = !GameManager.Audio.BgmMuted;
             _SfxText.IsOn = !GameManager.Audio.SfxMuted;
 
-            SetAllColliderButtonsInteractability(value: true, target: _MainOptionsCameraPosition);
+            SetAllColliderButtonsInteractable(value: true, target: _MainOptionsCameraPosition);
+            SetCameraTransitionApplicableNeonTextsActive(_MainOptionsCameraPosition);
         }
 
         private void OnDestroy()
@@ -100,38 +93,43 @@ namespace WASD.Runtime.SceneControllers
         }
         #endregion
 
-        public void SetAllColliderButtonsInteractability(bool value, Transform target)
+        public void SetAllColliderButtonsInteractable(bool value, Transform target)
         {
-            _PlayButton.Interactable = value && target == _MainOptionsCameraPosition;
-            _CreditsButton.Interactable = value && target == _MainOptionsCameraPosition;
-            _ExitButton.Interactable = value && target == _MainOptionsCameraPosition;
-            _MusicButton.Interactable = value && target == _MainOptionsCameraPosition;
-            _SfxButton.Interactable = value && target == _MainOptionsCameraPosition;
-
-            _TutorialButton.Interactable = value && target == _PlayLevelsCameraPosition;
-            _LevelsButton.Interactable = value && target == _PlayLevelsCameraPosition;
-            _InfiniteButton.Interactable = value && target == _PlayLevelsCameraPosition;
-            _ReturnToMainFromLevelsButton.Interactable = value && target == _PlayLevelsCameraPosition;
-
-            _WASDlogoButton.Interactable = value && target == _CreditsCameraPosition;
-            foreach(SimulatedNeonText text in _WASDlogoTexts)
+            void FSetCollidersEnabled(ColliderButton[] targetButtons, bool setActive)
             {
-                text.IsOn = target == _CreditsCameraPosition;
+                foreach (var button in targetButtons)
+                {
+                    button.Interactable = setActive;
+                }
             }
-            _TwitterButton.Interactable = value && target == _CreditsCameraPosition;
-            _FacebookButton.Interactable = value && target == _CreditsCameraPosition;
-            _InstagramButton.Interactable = value && target == _CreditsCameraPosition;
-            _NewgroundsButton.Interactable = value && target == _CreditsCameraPosition;
-            _ReturnToMainFromCreditsButton.Interactable = value && target == _CreditsCameraPosition;
-            _ReturnToMainFromCreditsText.IsOn = _ReturnToMainFromCreditsButton.Interactable;
             
+            bool mainOptionsIsTarget = value && target == _MainOptionsCameraPosition;
+            FSetCollidersEnabled(_MainMenuButtons, mainOptionsIsTarget);
+
+            bool playLevelsIsTarget =  value && target == _PlayLevelsCameraPosition;
+            FSetCollidersEnabled(_LevelOptionButtons, playLevelsIsTarget);
+
+            bool creditsIsTarget = value && target == _CreditsCameraPosition;
+            FSetCollidersEnabled(_CreditsButtons, creditsIsTarget);
         }
 
+        private void SetCameraTransitionApplicableNeonTextsActive(Transform target)
+        {
+            bool onInCreditsAndExtras = target == _CreditsCameraPosition || target== _ExtrasCameraPosition;
+            foreach(SimulatedNeonText text in _WASDlogoTexts)
+            {
+                text.IsOn = onInCreditsAndExtras;
+            }
+            _CreditsBackgroundSprite.enabled = onInCreditsAndExtras;
+            _ReturnToMainFromCreditsText.IsOn = onInCreditsAndExtras;
+        }
+        
         private async void CameraTransitionTask(Transform target)
         {
             _CameraTransitionCancelToken = new CancellationTokenSource();
             
-            SetAllColliderButtonsInteractability(value: false, target: target);
+            SetAllColliderButtonsInteractable(value: false, target: target);
+            SetCameraTransitionApplicableNeonTextsActive(target);
 
             await UniTask.Delay((int)(_CameraPositionTransitionDelay * 1000),
                 cancellationToken: _CameraTransitionCancelToken.Token).SuppressCancellationThrow();
@@ -145,10 +143,12 @@ namespace WASD.Runtime.SceneControllers
                 cancellationToken: _CameraTransitionCancelToken.Token).SuppressCancellationThrow();
             if (_CameraTransitionCancelToken.IsCancellationRequested) return;
 
-            SetAllColliderButtonsInteractability(value: true, target: target);
+            SetAllColliderButtonsInteractable(value: true, target: target);
             cameraTransform.position = target.position;
             cameraTransform.rotation = target.rotation;
             
+            _OnCameraMovementTransitionEnd?.Invoke();
+            _OnCameraMovementTransitionEnd = null;
             Utils.CancelTokenSourceRequestCancelAndDispose(ref _CameraTransitionCancelToken);
         }
 
@@ -190,21 +190,26 @@ namespace WASD.Runtime.SceneControllers
             _SfxText.IsOn = !GameManager.Audio.SfxMuted;
         }
 
+        public void OnExtrasButtonTap()
+        {
+            _OnCameraMovementTransitionEnd += _ExtrasPopup.Show;
+        }
+
         
         public void OnTutorialButtonTap()
         {
-
+            
         }
 
         public void OnLevelsButtonTap()
         {
-            SetAllColliderButtonsInteractability(value: false, target: null);
+            SetAllColliderButtonsInteractable(value: false, target: null);
             _LevelSelectorPopup.Show(options: _LevelSelectorPopupOptions);
         }
 
         public void OnInfiniteButtonTap()
         {
-
+            
         }
 
         public void GoToInitScene()

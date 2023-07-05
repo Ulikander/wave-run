@@ -351,7 +351,6 @@ GameObject:
   - component: {fileID: 3617501214285546622}
   - component: {fileID: 5124990775887018078}
   - component: {fileID: 3710910772359819048}
-  - component: {fileID: 5155875382847502498}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -390,7 +389,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _AudioManager: {fileID: 5124990775887018078}
   _ScenesManager: {fileID: 3710910772359819048}
-  _TaskManager: {fileID: 5155875382847502498}
   _MainCanvas: {fileID: 2805567387479101908}
   _MainCamera: {fileID: 0}
   _TargetFrameRate: 60
@@ -441,18 +439,6 @@ MonoBehaviour:
   _ProgressSlider: {fileID: 2155784307640690783}
   _BgFadeTime: 0.75
   _TextAndSliderFadeTime: 0.35
---- !u!114 &5155875382847502498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8928613129029585838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11ab7155ff9c0ea4f9352c93541211bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &9201436520909036785
 GameObject:
   m_ObjectHideFlags: 0
