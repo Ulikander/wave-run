@@ -68,12 +68,13 @@ namespace WASD.Runtime.Gameplay
                     indexes: _NeonAffectedRendererIndex,
                     material: _DefaultNeonMaterial);
             }
+            
+            Transform gameObjectTransform = gameObject.transform;
+            gameObjectTransform.position = position;
 
-            gameObject.transform.position = position;
-
-            Vector3 newSize = gameObject.transform.localScale;
+            Vector3 newSize = gameObjectTransform.localScale;
             newSize.z = 1 * size;
-            gameObject.transform.localScale = newSize;
+            gameObjectTransform.localScale = newSize;
 
             SetRenderersAndCollidersEnabled(value: true);
         }

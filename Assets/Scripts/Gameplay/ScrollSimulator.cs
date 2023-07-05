@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -76,6 +79,8 @@ namespace WASD.Runtime.Gameplay
         private SpawnableProp _LastLeftPlatform;
         private SpawnableProp _LastRightPlatform;
         private SpawnableProp _LastDecoration;
+
+        private CancellationTokenSource _DecorationSpawnCancelToken;
         #endregion
 
         #region Events
@@ -84,7 +89,11 @@ namespace WASD.Runtime.Gameplay
         #endregion
 
         #region MonoBehaviour
-       
+
+        private void Start()
+        {
+            DecorationsRefresher();
+        }
 
         private void FixedUpdate()
         {
@@ -94,9 +103,14 @@ namespace WASD.Runtime.Gameplay
 
         private void Update()
         {
-                DecorationsRefresher();
                 TryExecuteNextLevelPathStep();
         }
+
+        private void OnDestroy()
+        {
+            Utils.CancelTokenSourceRequestCancelAndDispose(ref _DecorationSpawnCancelToken);
+        }
+
         #endregion
 
         private void Acceleration()
@@ -143,16 +157,20 @@ namespace WASD.Runtime.Gameplay
 
         private void DecorationsRefresher()
         {
-            if (!_IsActive)
+            _DecorationSpawnCancelToken = new CancellationTokenSource();
+            while (!_DecorationSpawnCancelToken.IsCancellationRequested)
             {
-                return;
-            }
-
-            if(_ActiveDecorations < _MaxActiveDecorations && _DecorationsList.Count != 0)
-            {
-                SpawnableProp newDecoration = _DecorationsList[0];
-                newDecoration.Show(position: _LastDecoration == null ? _DecorationsOrigin.position : _LastDecoration.EndingPoint);
-                _LastDecoration = newDecoration;
+                if (!_IsActive)
+                {
+                    UniTask.Yield(_DecorationSpawnCancelToken.Token).SuppressCancellationThrow();
+                }
+                
+                if(_ActiveDecorations < _MaxActiveDecorations && _DecorationsList.Count != 0)
+                {
+                    SpawnableProp newDecoration = _DecorationsList[0];
+                    newDecoration.Show(position: _LastDecoration == null ? _DecorationsOrigin.position : _LastDecoration.EndingPoint);
+                    _LastDecoration = newDecoration;
+                }       
             }
         }
 

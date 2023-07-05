@@ -23,6 +23,8 @@ namespace WASD.Runtime.Gameplay
         [SerializeField] private SpawnableProp _EndPortalPrefab;
         #endregion
 
+        private List<SpawnableProp> _SpawnedProps;
+
         #region Events
         [SerializeField] private UnityEvent<List<SpawnableProp>> _OnFinishSpawns;
         #endregion
@@ -34,33 +36,25 @@ namespace WASD.Runtime.Gameplay
 
         public void StartSpawning()
         {
-            List<SpawnableProp> spawnedProps = new(capacity:
+            _SpawnedProps = new(capacity:
                 (_MinimumPlatformCount * 2) +
                 (_MinimumDecorationCount * _DecorationPrefabs.Length) +
                 (_MinimumObstacleCount * _ObstaclePrefabs.Length));
-
-            void fSpawnProp(Transform container, SpawnableProp original, int amount)
-            {
-                for (int i = 0; i < amount; i++)
-                {
-                    spawnedProps.Add(item: Instantiate(original: original, parent: container)); 
-                }
-            }
-
+            
             Transform platformContainer = new GameObject(name: "Platforms").transform;
-            fSpawnProp(
+            SpawnProp(
                 container: platformContainer,
                 original: _GroundPlatformPrefab,
                 amount: _MinimumPlatformCount);
 
-            fSpawnProp(
+            SpawnProp(
                 container: platformContainer,
                 original: _AirPlatformPrefab,
                 amount: _MinimumPlatformCount);
 
             foreach(SpawnableProp decoration in _DecorationPrefabs)
             {
-                fSpawnProp(
+                SpawnProp(
                     container: new GameObject(name: "Decorations").transform,
                     original: decoration,
                     amount: _MinimumDecorationCount);
@@ -69,23 +63,31 @@ namespace WASD.Runtime.Gameplay
             Transform obstacleContainer = new GameObject(name: "Obstacles").transform;
             foreach (SpawnableProp obstacle in _ObstaclePrefabs)
             {
-                fSpawnProp(
+                SpawnProp(
                     container: obstacleContainer,
                     original: obstacle,
                     amount: _MinimumObstacleCount);
             }
 
-            fSpawnProp(
+            SpawnProp(
                 container: new GameObject(name: "EndPortals").transform,
                 original: _EndPortalPrefab,
                 amount: 2);
 
-            foreach (SpawnableProp prop in spawnedProps)
+            foreach (SpawnableProp prop in _SpawnedProps)
             {
                 prop.Hide();
             }
 
-            _OnFinishSpawns.Invoke(arg0: spawnedProps);
+            _OnFinishSpawns.Invoke(arg0: _SpawnedProps);
+        }
+        
+        void SpawnProp(Transform container, SpawnableProp original, int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                _SpawnedProps.Add(item: Instantiate(original: original, parent: container)); 
+            }
         }
     }
 }

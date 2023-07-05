@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using TMPro;
 using WASD.Runtime.Managers;
@@ -127,32 +128,32 @@ namespace WASD.Runtime
 
             while (!_PulsingCancelToken.IsCancellationRequested)
             {
-                if(_PulsingTime == 0)
+                if (_PulsingTime == 0)
                 {
                     await UniTask.Yield(_PulsingCancelToken.Token).SuppressCancellationThrow();
                     if (!Utils.IsCancelTokenSourceActive(ref _PulsingCancelToken)) return;
                     continue;
                 }
 
-                float counter = 0;
-                while (counter < _PulsingTime / 2f)
-                {
-                    counter += Time.deltaTime;
-                    pulseColor.a = Mathf.Lerp(a: _PulsingRange.y, b: _PulsingRange.x, t: counter / (_PulsingTime / 2f));
-                    _TextOn.color = pulseColor;
-                    await UniTask.Yield(_PulsingCancelToken.Token).SuppressCancellationThrow();
-                    if (!Utils.IsCancelTokenSourceActive(ref _PulsingCancelToken)) return;
-                }
+                float pulsingTimeConverted = _PulsingTime / 2f;
 
-                counter = 0;
-                while (counter < _PulsingTime / 2f)
+                DOTween.To(() => _TextOn.color.a, x =>
                 {
-                    counter += Time.deltaTime;
-                    pulseColor.a = Mathf.Lerp(a: _PulsingRange.x, b: _PulsingRange.y, t: counter / (_PulsingTime / 2f));
+                    pulseColor.a = x;
                     _TextOn.color = pulseColor;
-                    await UniTask.Yield(_PulsingCancelToken.Token).SuppressCancellationThrow();
-                    if (!Utils.IsCancelTokenSourceActive(ref _PulsingCancelToken)) return;
-                }
+                }, _PulsingRange.x, pulsingTimeConverted);
+                await UniTask.Delay((int)(pulsingTimeConverted * 1000), cancellationToken: _PulsingCancelToken.Token)
+                    .SuppressCancellationThrow();
+                if (!Utils.IsCancelTokenSourceActive(ref _PulsingCancelToken)) return;
+
+                DOTween.To(() => pulseColor.a, x =>
+                {
+                    pulseColor.a = x;
+                    _TextOn.color = pulseColor;
+                }, _PulsingRange.y, pulsingTimeConverted);
+                await UniTask.Delay((int)(pulsingTimeConverted * 1000), cancellationToken: _PulsingCancelToken.Token)
+                    .SuppressCancellationThrow();
+                if (!Utils.IsCancelTokenSourceActive(ref _PulsingCancelToken)) return;
             }
         }
 
