@@ -33,7 +33,8 @@ namespace WASD.Editors
         {
             m_Data = target as LevelInformation;
 
-            //return base.CreateInspectorGUI();
+            return base.CreateInspectorGUI();
+            
             _Root = new VisualElement();
             VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 assetPath: "Assets/Editor/WASD/LevelInformationEditor/LevelInformationEditor.uxml");
@@ -167,6 +168,7 @@ namespace WASD.Editors
                     pathDataIndex: index);
 
             //Set Height
+            /*
             container.Q<IntegerField>(name: "set-height-left").value = m_Data.Data[index].SetLeftSideHeight;
             container.Q<IntegerField>(name: "set-height-left").RegisterValueChangedCallback(callback: (ctx) =>
             {
@@ -178,7 +180,7 @@ namespace WASD.Editors
             {
                 m_Data.Data[index].SetRightSideHeight = ctx.newValue;
             });
-
+            */
             //Decorations
         }
 

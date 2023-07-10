@@ -29,7 +29,7 @@ MonoBehaviour:
   - Type: 0
     Size: 1
     PathCustomSize: 0
-    ObstaclePath: {fileID: 11400000, guid: 4fc294a32de105441a23d7057f5381bd, type: 2}
+    ObstaclePath: {fileID: 11400000, guid: bd3c2ba304d69004ab8cbbb9a35ecdaa, type: 2}
     UseCustomObstaclePath: 0
     CustomLeftSide: []
     CustomRightSide: []
@@ -39,7 +39,7 @@ MonoBehaviour:
   - Type: 0
     Size: 1
     PathCustomSize: 0
-    ObstaclePath: {fileID: 11400000, guid: 3dc5b1ab34db3364c97cb031ae697d0c, type: 2}
+    ObstaclePath: {fileID: 11400000, guid: f90eb703476ad5c4f92ed22c69dbd7b4, type: 2}
     UseCustomObstaclePath: 0
     CustomLeftSide: []
     CustomRightSide: []
@@ -106,16 +106,6 @@ MonoBehaviour:
     InvertObstacleValues: 0
     SetLeftSideHeight: 0
     SetRightSideHeight: 0
-  - Type: 0
-    Size: 0
-    PathCustomSize: 0
-    ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
-    CustomLeftSide: []
-    CustomRightSide: []
-    InvertObstacleValues: 0
-    SetLeftSideHeight: 0
-    SetRightSideHeight: 0
   - Type: 2
     Size: 1
     PathCustomSize: 0
@@ -137,6 +127,56 @@ MonoBehaviour:
     SetLeftSideHeight: 0
     SetRightSideHeight: 0
   - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 11400000, guid: 3dc5b1ab34db3364c97cb031ae697d0c, type: 2}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 11400000, guid: c5e9cf51a9f0bf74ea61c5105575b104, type: 2}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 11400000, guid: f90eb703476ad5c4f92ed22c69dbd7b4, type: 2}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 1
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: -0.25
+    SetRightSideHeight: -0.25
+  - Type: 0
     Size: 0
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
@@ -148,6 +188,56 @@ MonoBehaviour:
     SetRightSideHeight: 0
   - Type: 0
     Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 11400000, guid: c5e9cf51a9f0bf74ea61c5105575b104, type: 2}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 1
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 11400000, guid: 4fc294a32de105441a23d7057f5381bd, type: 2}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 11400000, guid: bd3c2ba304d69004ab8cbbb9a35ecdaa, type: 2}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 0
     PathCustomSize: 0
     ObstaclePath: {fileID: 11400000, guid: 42847c4e71f8bb34399ef5728ac678ef, type: 2}
     UseCustomObstaclePath: 0

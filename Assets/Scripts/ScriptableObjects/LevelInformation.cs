@@ -29,8 +29,8 @@ namespace WASD.Runtime.Levels
             public bool InvertObstacleValues;
             [Space(height: 20f)]
             [Header("Height")]
-            public int SetLeftSideHeight;
-            public int SetRightSideHeight;
+            public float SetLeftSideHeight;
+            public float SetRightSideHeight;
 
             //No Decoration Options yet
             public PathData(){}

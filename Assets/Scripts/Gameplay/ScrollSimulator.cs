@@ -96,11 +96,6 @@ namespace WASD.Runtime.Gameplay
 
         #region MonoBehaviour
 
-        private void Start()
-        {
-            DecorationsRefresher();
-        }
-
         private void FixedUpdate()
         {
             Acceleration();
@@ -143,7 +138,7 @@ namespace WASD.Runtime.Gameplay
                 if(!_IsPaused) newPos.z -= _GlobalVelocity * Time.fixedDeltaTime;
 
 
-                if (prop.EndingPoint.z < _DecorationsOrigin.position.z - _OriginsDisappearOffset)
+                if (prop.EndingPoint.position.z < _DecorationsOrigin.position.z - _OriginsDisappearOffset)
                 {
                     prop.Hide();
                     i--;
@@ -168,7 +163,7 @@ namespace WASD.Runtime.Gameplay
                 SpawnableProp newDecoration = _DecorationsList[0];
                 newDecoration.Show(position: _LastDecoration == null
                     ? _DecorationsOrigin.position
-                    : _LastDecoration.EndingPoint);
+                    : _LastDecoration.EndingPoint.position);
                 _LastDecoration = newDecoration;
             }
         }
@@ -218,10 +213,12 @@ namespace WASD.Runtime.Gameplay
             }
         }
 
-        private bool HandlePathLevelStep(LevelInformation.PathData pathData)
+        private bool HandlePathLevelStep(PathData pathData)
         {
-            if((_LevelPathDataFlags[0] == "0" ? _GroundPlatformList.Count == 0 : _AirPlatformList.Count == 0) &&
-                (_LevelPathDataFlags[1] == "0" ? _GroundPlatformList.Count == 0 : _AirPlatformList.Count == 0))
+            int neededGroundPlatforms = (_LevelPathDataFlags[0] == "0" ? 1 : 0) + (_LevelPathDataFlags[1] == "0" ? 1 : 0);
+            int neededAirPlatforms = 2 - neededGroundPlatforms;
+
+            if(_GroundPlatformList.Count < neededGroundPlatforms || _AirPlatformList.Count < neededAirPlatforms)
             {
                 Debug.LogWarning("Not enough Platforms");
                 return false;
@@ -280,30 +277,32 @@ namespace WASD.Runtime.Gameplay
                 pathData.Size == Enums.LevelPathSize.Custom ? pathData.PathCustomSize : _PlatformSizeNormal);
 
             ShowSpawnableObstacles(
-                obstacles: pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
-                pathData.CustomLeftSide : pathData.ObstaclePath.LeftSide,
-                platform: _LastLeftPlatform);
+                pathData.ObstaclePath == null || pathData.UseCustomObstaclePath
+                    ? pathData.CustomLeftSide
+                    : pathData.ObstaclePath.LeftSide,
+                _LastLeftPlatform);
             ShowSpawnableObstacles(
-                obstacles: pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
-                pathData.CustomRightSide : pathData.ObstaclePath.RightSide,
-                platform: _LastRightPlatform);
+                pathData.ObstaclePath == null || pathData.UseCustomObstaclePath
+                    ? pathData.CustomRightSide
+                    : pathData.ObstaclePath.RightSide,
+                _LastRightPlatform);
 
             return true;
         }
 
         private void ShowSpawnablePlatforms(float size)
         {
-            int heightLeft = int.Parse(s: _LevelPathDataFlags[0]);
-            int heightRight = int.Parse(s: _LevelPathDataFlags[1]);
+            float heightLeft = float.Parse(s: _LevelPathDataFlags[0]);
+            float heightRight = float.Parse(s: _LevelPathDataFlags[1]);
 
-            SpawnableProp spawnedLeft = heightLeft == 0 ? _GroundPlatformList[0] : _AirPlatformList[0];
-            SpawnableProp spawnedRight = heightRight== 0 ? _GroundPlatformList[0 + (heightLeft > 0 ? 0 : 1)] : _AirPlatformList[0 + (heightLeft == 0 ? 0 : 1)];
+            SpawnableProp spawnedLeft = heightLeft == 0f ? _GroundPlatformList[0] : _AirPlatformList[0];
+            SpawnableProp spawnedRight = heightRight == 0f ? _GroundPlatformList[heightLeft != 0f ? 0 : 1] : _AirPlatformList[heightLeft == 0f ? 0 : 1];
 
             bool invertPlatformColors = _LevelPathDataFlags[2] == "true";
 
-            Vector3 leftPosition = _LastLeftPlatform != null ? _LastLeftPlatform.EndingPoint : _LeftPathOrigin.position;
+            Vector3 leftPosition = _LastLeftPlatform != null ? _LastLeftPlatform.EndingPoint.position : _LeftPathOrigin.position;
             leftPosition.y = _LeftPathOrigin.position.y + (heightLeft * _HeightValue);
-            Vector3 rightPosition = _LastRightPlatform != null ? _LastRightPlatform.EndingPoint : _RightPathOrigin.position;
+            Vector3 rightPosition = _LastRightPlatform != null ? _LastRightPlatform.EndingPoint.position : _RightPathOrigin.position;
             rightPosition.y = _RightPathOrigin.position.y + (heightRight * _HeightValue);
 
             spawnedLeft.SetPlayerCollisionConcept(concept: !invertPlatformColors ? CollisionConcept.BluePlatform : CollisionConcept.RedPlatform);
@@ -321,54 +320,56 @@ namespace WASD.Runtime.Gameplay
             _LastRightPlatform = spawnedRight;
         }
 
-        private void ShowSpawnableObstacles(List<Obstacle> obstacles, SpawnableProp platform)
+        private void ShowSpawnableObstacles(List<Obstacle> obstaclesToSpawn, SpawnableProp platform)
         {
-            if(obstacles.Count == 0)
+            if(obstaclesToSpawn.Count == 0)
             {
                 return;
             }
 
-            bool isCountEven = obstacles.Count % 2 == 0;
-            float inbetween = obstacles.Count == 1 || isCountEven ? platform.EndingPoint.z / (obstacles.Count + 1) : platform.EndingPoint.z / (obstacles.Count - 1);
+            bool isCountEven = obstaclesToSpawn.Count % 2 == 0;
+            float inbetween = obstaclesToSpawn.Count == 1 || isCountEven
+                ? platform.EndingPoint.position.z / (obstaclesToSpawn.Count + 1)
+                : platform.EndingPoint.position.z / (obstaclesToSpawn.Count - 1);
 
-            SpawnableProp obstacle;
+            SpawnableProp obstacleFromInactiveList = null;
             Vector3 position;
 
-            for (int i = 0; i < obstacles.Count; i++)
+            for (int i = 0; i < obstaclesToSpawn.Count; i++)
             {
-                obstacle = null;
-                switch (obstacles[i].Type)
+                switch (obstaclesToSpawn[i].Type)
                 {
                     case Enums.LevelObstacleType.Jump:
-                        obstacle = _ObstacleJumpList[i];
+                        obstacleFromInactiveList = _ObstacleJumpList[0];
                         break;
                     case Enums.LevelObstacleType.Slide:
-                        obstacle = _ObstacleSlideList[0];
+                        obstacleFromInactiveList = _ObstacleSlideList[0];
                         break;
                     case Enums.LevelObstacleType.Cubes:
-                        obstacle = _ObstacleCubesList[0];
+                        obstacleFromInactiveList = _ObstacleCubesList[0];
                         break;
                     case Enums.LevelObstacleType.Ship:
                         continue;
                     //break;
                     case Enums.LevelObstacleType.EndPortal:
-                        obstacle = _EndPortalList[0];
+                        obstacleFromInactiveList = _EndPortalList[0];
                         break;
                 }
 
                 position = platform.transform.position;
-                if (obstacles[i].AutomaticPosition)
+                if (obstaclesToSpawn[i].AutomaticPosition)
                 {
                     position.z += inbetween * (i + (isCountEven ? 1 : 0));
                 }
                 else
                 {
-                    position.z = platform.EndingPoint.z * obstacles[i].PositionOnPath;
+                    position.z += (platform.EndingPoint.localPosition.z * platform.transform.localScale.z) *
+                                  obstaclesToSpawn[i].PositionOnPath;
                 }
-                
-                obstacle.Show(
+
+                obstacleFromInactiveList.Show(
                     position: position,
-                    neonMaterial: obstacle.Identifier == _EndPortalIdentifier ? null :
+                    neonMaterial: obstacleFromInactiveList.Identifier == _EndPortalIdentifier ? null :
                         platform == _LastLeftPlatform ? _RightMaterial : _LeftMaterial);
             }
         }
@@ -386,9 +387,9 @@ namespace WASD.Runtime.Gameplay
 
             void fAddPropToList(List<SpawnableProp> list, List<SpawnableProp> props)
             {
-                foreach (SpawnableProp prop in props)
+                foreach (SpawnableProp selectedProp in props)
                 {
-                    prop.OnSetActive += (prop) =>
+                    selectedProp.OnSetActive += (prop) =>
                     {
                         if (!prop.IgnoreSimulation)
                         {
@@ -400,7 +401,7 @@ namespace WASD.Runtime.Gameplay
                         }
                         list.Remove(item: prop);
                     };
-                    prop.OnSetInactive += (prop) =>
+                    selectedProp.OnSetInactive += (prop) =>
                     {
                         if (!prop.IgnoreSimulation)
                         {
@@ -413,7 +414,7 @@ namespace WASD.Runtime.Gameplay
                         list.Add(item: prop);
                     };
 
-                    list.Add(item: prop);
+                    list.Add(item: selectedProp);
                 }
             }
 

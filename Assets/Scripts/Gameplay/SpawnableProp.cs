@@ -14,8 +14,7 @@ namespace WASD.Runtime.Gameplay
         public string Identifier { get => _Identifier; }
         public bool IgnoreSimulation { get => _IgnoreSimulation; }
         public bool IsActive { get; private set; }
-        public Vector3 EndingPoint { get => _EndingPoint != null ? _EndingPoint.position : transform.position; }
-
+        public Transform EndingPoint { get => _EndingPoint != null ? _EndingPoint : transform; }
         #endregion
 
         #region Fields

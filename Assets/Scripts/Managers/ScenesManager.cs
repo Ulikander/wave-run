@@ -42,11 +42,13 @@ namespace WASD.Runtime.Managers
 
         public void LoadScene(string sceneId, bool doSynchronously = false, Action onSceneLoaded = null)
         {
+            /*
             if(sceneId == SceneManager.GetActiveScene().name)
             {
                 Debug.LogError(message: "Tried to load the currently Active Scene! Stupeh!");
                 return;
             }
+            */
 
             if (Utils.IsCancelTokenSourceActive(ref _LoadSceneCancelToken))
             {

@@ -26,7 +26,8 @@ namespace WASD.Runtime.Popups
 
         public void OnTapRestart()
         {
-
+            GameManager.Scenes.LoadScene(ScenesManager.cSCENEID_GAMEPLAY);
+            GameManager.Audio.FadeBgmPitch(target: 1f);
         }
 
         public void OnTapExtraLife()
