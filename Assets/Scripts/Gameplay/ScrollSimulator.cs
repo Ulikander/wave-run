@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using WASD.Runtime.Levels;
-
+using WASD.Runtime.Managers;
 using static WASD.Runtime.Levels.LevelInformation;
 using static WASD.Runtime.Levels.ObstaclePathData;
 using static WASD.Runtime.Gameplay.PlayerCollisionDetector;
@@ -17,13 +17,21 @@ namespace WASD.Runtime.Gameplay
 {
     public class ScrollSimulator : MonoBehaviour
     {
-        #region Fields
+        #region Properties
+
         public bool IsActive { get => _IsActive; set
             {
                 _IsActive = value;
                 _OnChangeActiveState.Invoke(arg0: _IsActive);
             }
         }
+
+        #endregion
+        
+        #region Fields
+
+        [Header("Editor")]
+        [SerializeField] private bool _ForceLevelSelectedOnEditor;
 
         //[SerializeField] private bool _DecorationOrderIsRandom;
         [Header("Simulation")]
@@ -421,12 +429,20 @@ namespace WASD.Runtime.Gameplay
         }
 
         public void BeginSimulation(LevelInformation levelInfo) => BeginSimulation(levelInfo, null);
-        public void BeginSimulation(LevelInformation levelInfo, LevelInformation nextLevelInfo = null)
+        public void BeginSimulation(LevelInformation levelInfo, LevelInformation nextLevelInfo)
         {
             _LevelPathDataFlags[0] = "0";
             _LevelPathDataFlags[1] = "0";
             _LevelPathDataFlags[2] = "false";
-            _CurrentLevel = levelInfo;
+            if (Application.isEditor && _ForceLevelSelectedOnEditor)
+            {
+                _CurrentLevel = levelInfo;
+            }
+            else
+            {
+                _CurrentLevel = GameManager.LevelActive;
+            }
+            
             _NextLevel = nextLevelInfo;
             _IsActive = true;
         } 

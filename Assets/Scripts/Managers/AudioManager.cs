@@ -225,12 +225,11 @@ namespace WASD.Runtime.Managers
         private async void LoopBgmRoutine()
         {
             _BgmLoopTokenSource = new CancellationTokenSource();
-            while (!_BgmLoopTokenSource.IsCancellationRequested)
+            while (Utils.IsCancelTokenSourceActive(ref _BgmLoopTokenSource))
             {
                 await UniTask.WaitWhile(() => _BgmAudioSource.time < _CurrentBgm.LoopEndTime,
                     cancellationToken: _BgmLoopTokenSource.Token).SuppressCancellationThrow();
                 if (_BgmAudioSource != null) _BgmAudioSource.time = _CurrentBgm.LoopStartTime; // loopStartSamples;
-                if (!Utils.IsCancelTokenSourceActive(ref _BgmLoopTokenSource)) return;
             }
             
             Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmLoopTokenSource);

@@ -6338,6 +6338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5c43f818faa414bbe13c50dde1f250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ForceLevelSelectedOnEditor: 0
   _MaxActiveDecorations: 2
   _HeightValue: 2
   _PlatformSizeNormal: 1

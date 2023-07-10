@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace WASD.Data
@@ -33,8 +33,12 @@ namespace WASD.Data
 
         #endregion
 
+        #region Fields
 
         private SaveData _SaveData;
+        
+        #endregion
+        
         
         public SaveDataContainer()
         {
@@ -46,7 +50,7 @@ namespace WASD.Data
 
         public void PerformSave()
         {
-            string json = JsonUtility.ToJson(_SaveData, false);
+            string json = JsonConvert.SerializeObject(_SaveData);
             PlayerPrefs.SetString(CPprefSaveData, json);
             Debug.LogWarning("Saved player data.");
         }
@@ -61,13 +65,13 @@ namespace WASD.Data
                 return false;
             }
 
-            bool loadWasSuccesfull = false;
+            bool loadWasSuccessful = false;
             try
             {
-                data = JsonUtility.FromJson<SaveData>(json);
+                data = JsonConvert.DeserializeObject<SaveData>(json);
                 
                 Debug.LogWarning("Loaded player data.");
-                loadWasSuccesfull = true;
+                loadWasSuccessful = true;
             }
             catch (Exception e)
             {
@@ -75,7 +79,7 @@ namespace WASD.Data
                 Debug.LogError("Could not parse player data");
             }
             
-            return loadWasSuccesfull;
+            return loadWasSuccessful;
         }
 
         public bool IsLevelCleared(int levelIndex)
