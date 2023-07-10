@@ -14,7 +14,7 @@ namespace WASD.Runtime.Levels
     {
         #region Types
         [Serializable]
-        public struct PathData
+        public class PathData
         {
             [Header("Size")]
             public LevelPathStep Type;
@@ -24,8 +24,8 @@ namespace WASD.Runtime.Levels
             public float PathCustomSize;
             public ObstaclePathData ObstaclePath;
             public bool UseCustomObstaclePath;
-            public Obstacle[] CustomLeftSide;
-            public Obstacle[] CustomRightSide;
+            public List<Obstacle> CustomLeftSide;
+            public List<Obstacle> CustomRightSide;
             public bool InvertObstacleValues;
             [Space(height: 20f)]
             [Header("Height")]
@@ -33,6 +33,21 @@ namespace WASD.Runtime.Levels
             public int SetRightSideHeight;
 
             //No Decoration Options yet
+            public PathData(){}
+
+            public PathData(PathData copy)
+            {
+                Type = copy.Type;
+                Size = copy.Size;
+                PathCustomSize = copy.PathCustomSize;
+                ObstaclePath = copy.ObstaclePath;
+                UseCustomObstaclePath = copy.UseCustomObstaclePath;
+                CustomLeftSide = copy.CustomLeftSide;
+                CustomRightSide = copy.CustomRightSide;
+                InvertObstacleValues = copy.InvertObstacleValues;
+                SetLeftSideHeight = copy.SetLeftSideHeight;
+                SetRightSideHeight = copy.SetRightSideHeight;
+            }
         }
         #endregion
 
@@ -40,9 +55,9 @@ namespace WASD.Runtime.Levels
         public LevelDifficulty LevelDifficulty;
         public int CoreLevelValue;
         public AudioContainer Music;
-        public PathData[] Data;
+        public List<PathData> Data;
         #endregion
-
+        
         public void ClearUnusedValues()
         {
 

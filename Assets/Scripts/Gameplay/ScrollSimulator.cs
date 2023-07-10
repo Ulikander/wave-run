@@ -182,12 +182,12 @@ namespace WASD.Runtime.Gameplay
 
             //Decoration
 
-            if(_CurrentLevel == null || _CurrentLevel.Data == null || _CurrentLevel.Data.Length == 0)
+            if(_CurrentLevel == null || _CurrentLevel.Data == null || _CurrentLevel.Data.Count == 0)
             {
                 return;
             }
 
-            if(_LastLevelInformationPathData >= _CurrentLevel.Data.Length)
+            if(_LastLevelInformationPathData >= _CurrentLevel.Data.Count)
             {
                 _LastLevelInformationPathData = 0;
             }
@@ -232,7 +232,7 @@ namespace WASD.Runtime.Gameplay
             _PropListsCounts[2] = _ObstacleCubesList.Count;
             _PropListsCounts[3] = _EndPortalList.Count;
 
-            bool fValidateObstacleAvailability(Obstacle[] obstacles)
+            bool fValidateObstacleAvailability(List<Obstacle> obstacles)
             {
                 int id;
                 foreach (Obstacle obstacle in obstacles)
@@ -321,20 +321,20 @@ namespace WASD.Runtime.Gameplay
             _LastRightPlatform = spawnedRight;
         }
 
-        private void ShowSpawnableObstacles(Obstacle[] obstacles, SpawnableProp platform)
+        private void ShowSpawnableObstacles(List<Obstacle> obstacles, SpawnableProp platform)
         {
-            if(obstacles.Length == 0)
+            if(obstacles.Count == 0)
             {
                 return;
             }
 
-            bool isCountEven = obstacles.Length % 2 == 0;
-            float inbetween = obstacles.Length == 1 || isCountEven ? platform.EndingPoint.z / (obstacles.Length + 1) : platform.EndingPoint.z / (obstacles.Length - 1);
+            bool isCountEven = obstacles.Count % 2 == 0;
+            float inbetween = obstacles.Count == 1 || isCountEven ? platform.EndingPoint.z / (obstacles.Count + 1) : platform.EndingPoint.z / (obstacles.Count - 1);
 
             SpawnableProp obstacle;
             Vector3 position;
 
-            for (int i = 0; i < obstacles.Length; i++)
+            for (int i = 0; i < obstacles.Count; i++)
             {
                 obstacle = null;
                 switch (obstacles[i].Type)

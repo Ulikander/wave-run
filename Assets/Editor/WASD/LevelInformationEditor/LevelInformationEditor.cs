@@ -44,7 +44,6 @@ namespace WASD.Editors
 
             ConfigurePropertiesView();
 
-            
             return _Root;
         }
 
@@ -55,8 +54,6 @@ namespace WASD.Editors
             _CustomEditorContainer = _Root.Q<VisualElement>(name: "CustomEditorContainer");
             _DefaultEditorContainer = _Root.Q<IMGUIContainer>(name: "DefaultEditorContainer");
             _DefaultEditorContainer.onGUIHandler = () => DrawDefaultInspector();
-
-            
 
             //Properties
             _Root.Q<Button>(name: "ClearPropertiesButton").clicked += delegate
@@ -89,12 +86,12 @@ namespace WASD.Editors
         {
             //Buttons
             Button moveUp = container.Q<Button>(name: "moveup");
-            moveUp.clicked += delegate { MoveLevelInfoData(array: ref m_Data.Data, oldIndex: index, direction: -1); };
+            moveUp.clicked += delegate { MoveLevelInfoData(ref m_Data.Data, index, direction: -1); };
             moveUp.style.opacity = index == 0 ? 0.2f : 1f;
 
             Button moveDown = container.Q<Button>(name: "movedown");
-            moveDown.clicked += delegate { MoveLevelInfoData(array: ref m_Data.Data, oldIndex: index, direction: 1); };
-            moveDown.style.opacity = index >= m_Data.Data.Length - 1 ? 0.2f : 1f;
+            moveDown.clicked += delegate { MoveLevelInfoData(ref m_Data.Data, index, direction: 1); };
+            moveDown.style.opacity = index >= m_Data.Data.Count - 1 ? 0.2f : 1f;
 
             container.Q<Button>(name: "remove").clicked += delegate { RemoveLevelInfoData(index: index); };
 
@@ -185,6 +182,8 @@ namespace WASD.Editors
             //Decorations
         }
 
+       
+
         void ValidateObstacleAsset(PropertyField propertyLeft, PropertyField propertyRight, int pathDataIndex)
         {
             //also should check for  m_Data.Data[index].InvertObstacleValues;
@@ -218,9 +217,24 @@ namespace WASD.Editors
             _DefaultEditorContainer.style.display = !evt.newValue ? DisplayStyle.None : DisplayStyle.Flex;
         }
 
+        
+        private void MoveLevelInfoData(ref List<PathData> data, int index, int direction)
+        {
+            if (direction == 0) return;
+            if (index == 0 && direction == -1) return;
+            if (index >= data.Count - 1 && direction == 1) return;
+
+            var copy = new PathData(data[index]);
+            int newIndex = index + direction;
+            
+            data.RemoveAt(index);
+            data.Insert(newIndex, copy);
+        }
+        
+        /*
         private void MoveLevelInfoData<T>(ref T[] array, int oldIndex, int direction)
         {
-            if (oldIndex + direction < 0 || oldIndex + direction >= m_Data.Data.Length)
+            if (oldIndex + direction < 0 || oldIndex + direction >= m_Data.Data.Count)
             {
                 return;
             }
@@ -247,13 +261,14 @@ namespace WASD.Editors
 
             _LevelInfoData.RefreshItems();
         }
+        */
 
         private void RemoveLevelInfoData(int index)
         {
             List<PathData> newData = new(collection: m_Data.Data);
             newData.RemoveAt(index);
 
-            m_Data.Data = newData.ToArray();
+            m_Data.Data = newData;
             _LevelInfoData.RefreshItems();
         }
     }

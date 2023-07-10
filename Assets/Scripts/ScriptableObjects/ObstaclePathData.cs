@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using WASD.Enums;
 
@@ -19,8 +20,8 @@ namespace WASD.Runtime.Levels
         #endregion
 
         #region Fields
-        public Obstacle[] LeftSide;
-        public Obstacle[] RightSide;
+        public List<Obstacle> LeftSide;
+        public List<Obstacle> RightSide;
         #endregion
     }
 }
