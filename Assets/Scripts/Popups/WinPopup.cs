@@ -45,7 +45,13 @@ namespace WASD.Runtime.Popups
             SwitchLevelOnTimerTask();
             _Animate = _forceAnimate;
         }
-        
+
+        public override void Show(Options options)
+        {
+            GameManager.SaveData.SetLevelClearState(GameManager.LevelActive.CoreLevelValue, true);
+            base.Show(options);
+        }
+
         public override void Hide()
         {
             Utils.CancelTokenSourceRequestCancelAndDispose(ref _SwitchLevelOnTimerCancelToken);

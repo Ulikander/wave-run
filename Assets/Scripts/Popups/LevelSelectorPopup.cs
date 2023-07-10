@@ -30,9 +30,9 @@ namespace WASD.Runtime.Popups
         public void PlayLevel(LevelInformation info)
         {
             _Frame.interactable = false;
-            GameManager.Audio.PlayBgm(bgm: info.Music);
-            GameManager.LevelToPlayOnLoad = info;
-            GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_GAMEPLAY);
+            GameManager.LevelActive = info;
+            GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_GAMEPLAY,
+                onSceneLoaded: () => { GameManager.Audio.PlayBgm(bgm: info.Music, fadeOutTime: .2f); });
         }
     }
 }

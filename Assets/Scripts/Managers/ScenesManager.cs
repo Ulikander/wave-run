@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace WASD.Runtime.Managers
         }
         #endregion
 
-        public void LoadScene(string sceneId, bool doSynchronously = false)
+        public void LoadScene(string sceneId, bool doSynchronously = false, Action onSceneLoaded = null)
         {
             if(sceneId == SceneManager.GetActiveScene().name)
             {
@@ -62,17 +63,20 @@ namespace WASD.Runtime.Managers
             
             if (doSynchronously)
             {
-                SceneManager.LoadScene(sceneName: sceneId);
+                SceneManager.LoadScene(sceneId);
+                if (onSceneLoaded != null)
+                    Debug.LogError(
+                        "There was a onSceneLoaded event, but the scene was loaded Synchronously. Said event didn't execute");
             }
             else
             {
-                LoadSceneAsync(sceneId: sceneId);
+                LoadSceneAsync(sceneId, onSceneLoaded);
             }
 
         }
 
 
-        private async void LoadSceneAsync(string sceneId)
+        private async void LoadSceneAsync(string sceneId, Action onSceneLoaded = null)
         {
             _LoadSceneCancelToken = new CancellationTokenSource();
             _MainCanvasGroup.alpha = 0f;
@@ -111,6 +115,8 @@ namespace WASD.Runtime.Managers
                 .WaitUntil(predicate: () => asyncSceneLoading.isDone, cancellationToken: _LoadSceneCancelToken.Token)
                 .SuppressCancellationThrow();
             GameManager.RefreshMainCamera();
+            
+            onSceneLoaded?.Invoke();
 
             DOTween.To(() => _MainCanvasGroup.alpha, x => _MainCanvasGroup.alpha = x, 0f, _BgFadeTime);
             await UniTask.Delay((int)(_BgFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token);

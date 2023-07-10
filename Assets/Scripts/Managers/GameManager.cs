@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WASD.Data;
 using WASD.Runtime.Levels;
 using WASD.Runtime.Managers;
 
@@ -13,16 +14,16 @@ namespace WASD.Runtime.Managers
         public static GameManager Instance { get; private set; }
         public static AudioManager Audio { get => Instance._AudioManager; }
         public static ScenesManager Scenes { get => Instance._ScenesManager; }
-
+        public static SaveDataContainer SaveData => Instance._SaveDataContainer;
+        
         public static Camera MainCamera { get => Instance._MainCamera; }
-        public static int LastCoreLevelUnlocked { get => Instance._LastCoreLevelUnlocked; }
-        public static LevelInformation LevelToPlayOnLoad { get; set; }
+        public static LevelInformation LevelActive { get; set; }
+        public static LevelInformation LevelToPlayOnWin { get; set; }
         #endregion
 
         #region Constants
         public const string cPprefBgmMuted = "mute_bgm";
         public const string cPprefSFXMuted = "mute_sfx";
-        public const string cPprefCoreLevel = "level_lastunlock";
         #endregion
 
         #region Fields
@@ -35,7 +36,7 @@ namespace WASD.Runtime.Managers
         [SerializeField] private Camera _MainCamera;
         [SerializeField] private int _TargetFrameRate = 60;
 
-        private int _LastCoreLevelUnlocked;
+        private SaveDataContainer _SaveDataContainer;
         
         #endregion
 
@@ -50,7 +51,8 @@ namespace WASD.Runtime.Managers
                 //Destroy(obj: _MainCanvas.worldCamera.gameObject);
                 Application.targetFrameRate = _TargetFrameRate;
                 RefreshMainCamera();
-                _LastCoreLevelUnlocked = PlayerPrefs.GetInt(key: cPprefCoreLevel, defaultValue: 1);
+
+                _SaveDataContainer = new SaveDataContainer();
             }
             else
             {

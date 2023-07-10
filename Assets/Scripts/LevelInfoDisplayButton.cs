@@ -36,7 +36,10 @@ namespace WASD.Runtime
 
             _LevelText.text = $"Nivel {info.CoreLevelValue}";
 
-            _LockedImage.enabled = GameManager.LastCoreLevelUnlocked < _LevelInfo.CoreLevelValue;
+            bool isLevelUnlocked = _LevelInfo.CoreLevelValue == 1 ||
+                                   GameManager.SaveData.IsLevelCleared(_LevelInfo.CoreLevelValue - 1);
+
+            _LockedImage.enabled = !isLevelUnlocked;
             _FrameImage.color = _LockedImage.enabled ? _FrameLockedColor : _FrameUnlockedColor;
             _MainButton.interactable = !_LockedImage.enabled;
         }

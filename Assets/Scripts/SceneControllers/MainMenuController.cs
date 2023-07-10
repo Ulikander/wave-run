@@ -133,7 +133,7 @@ namespace WASD.Runtime.SceneControllers
 
             await UniTask.Delay((int)(_CameraPositionTransitionDelay * 1000),
                 cancellationToken: _CameraTransitionCancelToken.Token).SuppressCancellationThrow();
-            if (_CameraTransitionCancelToken.IsCancellationRequested) return;
+            if (!Utils.IsCancelTokenSourceActive(ref _CameraTransitionCancelToken)) return;
 
             Transform cameraTransform = _Camera.transform;
             cameraTransform.DOMove(target.position, _CameraPositionTransitionTime);
@@ -141,7 +141,7 @@ namespace WASD.Runtime.SceneControllers
 
             await UniTask.Delay((int)(_CameraPositionTransitionTime * 1000),
                 cancellationToken: _CameraTransitionCancelToken.Token).SuppressCancellationThrow();
-            if (_CameraTransitionCancelToken.IsCancellationRequested) return;
+            if (!Utils.IsCancelTokenSourceActive(ref _CameraTransitionCancelToken)) return;
 
             SetAllColliderButtonsInteractable(value: true, target: target);
             cameraTransform.position = target.position;

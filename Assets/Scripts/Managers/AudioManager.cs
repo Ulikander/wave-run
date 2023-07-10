@@ -108,7 +108,7 @@ namespace WASD.Runtime.Managers
             while (!_PitchFadeTokenSource.IsCancellationRequested && _BgmAudioSource.pitch != _TargetPitch)
             {
                 var direction = _BgmAudioSource.pitch > _TargetPitch ? -1f : _BgmAudioSource.pitch < _TargetPitch ? 1f : 0;
-                _BgmAudioSource.pitch += _DefaultPitchFadeSpeed * Time.deltaTime * direction;
+                _BgmAudioSource.pitch += _DefaultPitchFadeSpeed * Time.unscaledDeltaTime * direction;
                 if ((direction >= 1 && _BgmAudioSource.pitch > _TargetPitch) ||
                     (direction <= -1 && _BgmAudioSource.pitch < _TargetPitch))
                 {
@@ -126,11 +126,11 @@ namespace WASD.Runtime.Managers
             PlayBgm(bgm: null, skipFadeOut: skipFadeOut);
         }
 
-        public async void PlayBgm(AudioContainer bgm, bool skipFadeIn = false, bool skipFadeOut = false, bool randomizeStart = false, bool restartIfSame = false)
+        public async void PlayBgm(AudioContainer bgm, bool skipFadeIn = false, bool skipFadeOut = false, bool randomizeStart = false, bool restartIfSame = false, float fadeOutTime = 0f, float fadeInTime = 0f)
         {
             if (bgm != null && bgm.AudioType != Enums.AudioContainerType.BGM)
             {
-                Debug.LogError(message: $"Tried to play SFX as a BGM, thats not correct. Stupeh!");
+                Debug.LogError(message: $"Tried to play SFX as a BGM, that's not correct. Stupeh!");
                 return;
             }
 
@@ -152,11 +152,11 @@ namespace WASD.Runtime.Managers
                 }
             }
             
-            FadeBgmRoutine(bgm, skipFadeIn, skipFadeOut, randomizeStart);
+            FadeBgmRoutine(bgm, skipFadeIn, skipFadeOut, randomizeStart, fadeOutTime, fadeInTime);
         }
 
         private async void FadeBgmRoutine(AudioContainer audioContainer, bool skipFadeIn, bool skipFadeOut,
-            bool randomizeStart)
+            bool randomizeStart, float fadeOutTime = 0f, float fadeInTime = 0f)
         {
             float counter = 0;
 
@@ -164,11 +164,13 @@ namespace WASD.Runtime.Managers
             
             if (!skipFadeOut && _BgmAudioSource.isPlaying)
             {
+                fadeOutTime = fadeOutTime == 0 ? _DefaultFadeOutTime : fadeOutTime;
+                
                 float currentVolume = _BgmAudioSource.volume;
-                while (!_BgmFadeTokenSource.IsCancellationRequested && counter < _DefaultFadeOutTime)
+                while (!_BgmFadeTokenSource.IsCancellationRequested && counter < fadeOutTime)
                 {
                     counter += Time.deltaTime;
-                    _BgmAudioSource.volume = Mathf.Lerp(a: currentVolume, b: 0f, t: counter / _DefaultFadeOutTime);
+                    _BgmAudioSource.volume = Mathf.Lerp(a: currentVolume, b: 0f, t: counter / fadeOutTime);
                     await UniTask.Yield(_BgmFadeTokenSource.Token).SuppressCancellationThrow();
                 }
             }
@@ -205,11 +207,13 @@ namespace WASD.Runtime.Managers
 
             if (!skipFadeIn)
             {
+                fadeInTime = fadeInTime == 0 ? _DefaultFadeOutTime : fadeInTime;
+                
                 counter = 0;
-                while (!_BgmFadeTokenSource.IsCancellationRequested && counter < _DefaultFadeInTime)
+                while (!_BgmFadeTokenSource.IsCancellationRequested && counter < fadeInTime)
                 {
                     counter += Time.deltaTime;
-                    _BgmAudioSource.volume = Mathf.Lerp(a: 0, b: 1f, t: counter / _DefaultFadeInTime);
+                    _BgmAudioSource.volume = Mathf.Lerp(a: 0, b: 1f, t: counter / fadeInTime);
                     await UniTask.Yield(_BgmFadeTokenSource.Token).SuppressCancellationThrow();
                 }
             }
