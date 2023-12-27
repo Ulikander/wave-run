@@ -14,4 +14,469 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LevelDifficulty: 0
   CoreLevelValue: 4
-  Data: []
+  Music: {fileID: 11400000, guid: 813a666a119ddff46a41bd1790986338, type: 2}
+  Data:
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide:
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    CustomRightSide:
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 1
+    Size: 2
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: -0.2
+    SetRightSideHeight: -0.2
+  - Type: 2
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: -0.2
+    SetRightSideHeight: -0.2
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide:
+    - Type: 0
+      AutomaticPosition: 0
+      PositionOnPath: 1
+      OverrideSize: 0
+    CustomRightSide:
+    - Type: 0
+      AutomaticPosition: 0
+      PositionOnPath: 1
+      OverrideSize: 0
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 1
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 2
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide:
+    - Type: 3
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    CustomRightSide:
+    - Type: 0
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 3
+    PathCustomSize: 0.7
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide:
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    CustomRightSide:
+    - Type: 2
+      AutomaticPosition: 0
+      PositionOnPath: 0.6
+      OverrideSize: 0
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide:
+    - Type: 0
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    CustomRightSide:
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 1
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 1
+    SetRightSideHeight: 1
+  - Type: 2
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 1
+    SetRightSideHeight: 1
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide:
+    - Type: 1
+      AutomaticPosition: 0
+      PositionOnPath: 0.9
+      OverrideSize: 0
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 1
+    SetRightSideHeight: 1
+  - Type: 1
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0.8
+    SetRightSideHeight: 1
+  - Type: 0
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide:
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 1
+      OverrideSize: 0
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0.8
+    SetRightSideHeight: 1
+  - Type: 2
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0.8
+    SetRightSideHeight: 1
+  - Type: 1
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 1
+    SetRightSideHeight: 0.8
+  - Type: 0
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide:
+    - Type: 0
+      AutomaticPosition: 0
+      PositionOnPath: 1
+      OverrideSize: 0
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 1
+    SetRightSideHeight: 0.8
+  - Type: 1
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide:
+    - Type: 0
+      AutomaticPosition: 0
+      PositionOnPath: 1
+      OverrideSize: 0
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 1
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide:
+    - Type: 5
+      AutomaticPosition: 0
+      PositionOnPath: 0.8
+      OverrideSize: 0
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 2
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide:
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 0
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 2
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 0
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 0
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    CustomRightSide:
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 0
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 2
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 0
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    - Type: 0
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 1
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0.5
+    SetRightSideHeight: 0.5
+  - Type: 0
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0.5
+    SetRightSideHeight: 0.5
+  - Type: 1
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 1
+    SetRightSideHeight: 1
+  - Type: 0
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 1
+    SetRightSideHeight: 1
+  - Type: 1
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 1.5
+    SetRightSideHeight: 1.5
+  - Type: 2
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 1.5
+    SetRightSideHeight: 1.5
+  - Type: 0
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 1.5
+    SetRightSideHeight: 1.5
+  - Type: 1
+    Size: 0
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 2
+    SetRightSideHeight: 2
+  - Type: 0
+    Size: 3
+    PathCustomSize: 1.3
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide:
+    - Type: 2
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    CustomRightSide:
+    - Type: 2
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 2
+    SetRightSideHeight: 2
+  - Type: 0
+    Size: 1
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 11400000, guid: 42847c4e71f8bb34399ef5728ac678ef, type: 2}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 2
+    SetRightSideHeight: 2

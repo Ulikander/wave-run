@@ -4,6 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 using WASD.Runtime.Audio;
 using WASD.Runtime.Managers;
 
@@ -28,6 +29,8 @@ namespace WASD.Runtime.Popups
         [SerializeField] private float _FrameTransitionTime = 0.4f;
         [SerializeField] protected AudioContainer _OnShowSound;
         [SerializeField] protected AudioContainer _OnHideSound;
+        [Space(15)]
+        [SerializeField] private UnityEvent _onPopulate;
         
         protected bool _Animate;
         protected Action _OnShow;
@@ -88,7 +91,10 @@ namespace WASD.Runtime.Popups
             }
         }
 
-        public abstract void Populate();
+        public virtual void Populate()
+        {
+            _onPopulate?.Invoke();
+        }
 
         public virtual void Hide()
         {

@@ -44,6 +44,7 @@ namespace WASD.Runtime.Popups
             _TimerText.text = _NextLevelMessage + $"\n{_SwitchLevelTime}";
             SwitchLevelOnTimerTask();
             _Animate = _forceAnimate;
+            base.Populate();
         }
 
         public override void Show(Options options)

@@ -16,6 +16,7 @@ namespace WASD.Runtime.Levels
             public LevelObstacleType Type;
             public bool AutomaticPosition;
             public float PositionOnPath;
+            public float OverrideSize;
         }
         #endregion
 

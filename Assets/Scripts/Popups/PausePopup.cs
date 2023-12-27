@@ -41,6 +41,8 @@ namespace WASD.Runtime.Popups
 
             _OnPause.Invoke(arg0: true);
             _Animate = true;
+            
+            base.Populate();
 
             if (_ButtonCanvasGroup != null) _ButtonCanvasGroup.alpha = 0f;
         }
@@ -65,7 +67,11 @@ namespace WASD.Runtime.Popups
 
         public void SetButtonVisibility(bool value)
         {
-            if (_ButtonCanvasGroup != null) _ButtonCanvasGroup.alpha = value ? 1f : 0f;
+            if (_ButtonCanvasGroup != null)
+            {
+                _ButtonCanvasGroup.alpha = value ? 1f : 0f;
+                _ButtonCanvasGroup.blocksRaycasts = value;
+            }
         }
     }
 

@@ -54,7 +54,7 @@ MonoBehaviour:
   _NeonAffectedRenderer:
   - {fileID: 5593034583861750538}
   _NeonAffectedRendererIndex: 00000000
-  _PlayerCollision: {fileID: 0}
+  _PlayerCollision: {fileID: 1830473503571473904}
 --- !u!1 &5683237076698987593
 GameObject:
   m_ObjectHideFlags: 0
@@ -116,6 +116,7 @@ MonoBehaviour:
   _Collider: {fileID: 8597981450158312068}
   _PlayerTag: Player
   _CollisionConcept: 1
+  _IgnoreInvincibility: 0
 --- !u!1 &8498326069995150285
 GameObject:
   m_ObjectHideFlags: 0

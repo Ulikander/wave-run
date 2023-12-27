@@ -15,22 +15,25 @@ namespace WASD.Runtime.Gameplay
             Win,
             BluePlatform,
             RedPlatform,
+            Invincibility,
         }
         #endregion
 
         #region Properties
         public Collider Collider { get => _Collider; }
         public CollisionConcept Concept { get => _CollisionConcept; set => _CollisionConcept = value; }
+        public bool IgnoresInvincibility => _IgnoreInvincibility;
         #endregion
 
         #region Fields
         [SerializeField] private Collider _Collider;
         [SerializeField] private string _PlayerTag;
         [SerializeField] private CollisionConcept _CollisionConcept;
+        [SerializeField] private bool _IgnoreInvincibility;
         #endregion
 
         #region Events
-        public delegate void CollisionDelegate(GameObject obj, CollisionConcept concept);
+        public delegate void CollisionDelegate(GameObject collidedObject, PlayerCollisionDetector collisionDetector);
         public static event CollisionDelegate OnCollisionEnterEvent;
         public static event CollisionDelegate OnCollisionStayEvent;
         public static event CollisionDelegate OnCollisionExitEvent;
@@ -69,7 +72,7 @@ namespace WASD.Runtime.Gameplay
         {
             if (eventReference != null && collision.gameObject.CompareTag(_PlayerTag))
             {
-                eventReference(obj: collision.gameObject, _CollisionConcept);
+                eventReference(collision.gameObject,this);
             }
         }
 
@@ -77,7 +80,7 @@ namespace WASD.Runtime.Gameplay
         {
             if (eventReference != null && other.gameObject.CompareTag(_PlayerTag))
             {
-                eventReference(obj: other.gameObject, _CollisionConcept);
+                eventReference(other.gameObject, this);
             }
         }
     }

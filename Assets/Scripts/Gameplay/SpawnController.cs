@@ -19,7 +19,9 @@ namespace WASD.Runtime.Gameplay
         [SerializeField] private int _MinimumDecorationCount;
         [Header("Obstacles")]
         [SerializeField] private SpawnableProp[] _ObstaclePrefabs;
+        [SerializeField] private SpawnableProp[] _PowerUpPrefabs;
         [SerializeField] private int _MinimumObstacleCount;
+        [SerializeField] private int _MinimumPowerUpCount;
         [SerializeField] private SpawnableProp _EndPortalPrefab;
         #endregion
 
@@ -52,10 +54,11 @@ namespace WASD.Runtime.Gameplay
                 original: _AirPlatformPrefab,
                 amount: _MinimumPlatformCount);
 
+            Transform decorationsContainer = new GameObject(name: "Decorations").transform;
             foreach(SpawnableProp decoration in _DecorationPrefabs)
             {
                 SpawnProp(
-                    container: new GameObject(name: "Decorations").transform,
+                    container: decorationsContainer,
                     original: decoration,
                     amount: _MinimumDecorationCount);
             }
@@ -67,6 +70,15 @@ namespace WASD.Runtime.Gameplay
                     container: obstacleContainer,
                     original: obstacle,
                     amount: _MinimumObstacleCount);
+            }
+
+            Transform powerUpsContainer = new GameObject(name: "PowerUps").transform;
+            foreach (SpawnableProp powerUp in _PowerUpPrefabs)
+            {
+                SpawnProp(
+                    container: powerUpsContainer,
+                    original: powerUp,
+                    amount: _MinimumPowerUpCount);
             }
 
             SpawnProp(

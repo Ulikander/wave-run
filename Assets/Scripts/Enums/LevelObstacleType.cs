@@ -7,5 +7,6 @@ namespace WASD.Enums
         Cubes,
         Ship,
         EndPortal,
+        Invincibility,
     }
 }

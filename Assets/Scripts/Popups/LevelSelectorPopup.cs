@@ -15,6 +15,7 @@ namespace WASD.Runtime.Popups
 
         public override void Populate()
         {
+            base.Populate();
             for(int i = 0; i < _LevelInfoDisplayButtons.Length; i++)
             {
                 if(i >= _AllLevelsInformation.Length)

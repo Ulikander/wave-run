@@ -4,6 +4,7 @@
     {
         public override void Populate()
         {
+            base.Populate();
             _Animate = true;
         }
     }

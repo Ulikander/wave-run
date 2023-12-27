@@ -1091,7 +1091,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991a78376638eeb498bed4dcdef63670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Music: {fileID: 11400000, guid: 9f7ba3298387d1f41b231da060d7863f, type: 2}
+  _Music: {fileID: 11400000, guid: 09ac8b11bcff0fc4194ba6098e31079f, type: 2}
   _MainMenuButtons:
   - {fileID: 1984240845}
   - {fileID: 609495144}
@@ -8949,6 +8949,9 @@ MonoBehaviour:
   _FrameTransitionTime: 0.4
   _OnShowSound: {fileID: 0}
   _OnHideSound: {fileID: 0}
+  _onPopulate:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!222 &748668263966013473
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -109,6 +110,28 @@ namespace WASD.Runtime.Gameplay
                 OnSetInactive?.Invoke(obj: this);
             }
         }
+
+#if UNITY_EDITOR
+        private string _PathElementValue;
+        public void SetGizmoValues(string pathElement)
+        {
+            _PathElementValue = pathElement;
+        }
+        
+        private void OnDrawGizmos()
+        {
+            if (IsActive)
+            {
+                Vector3 position = transform.position;
+                Vector3 newPos = position;
+                newPos.x -= 3;
+                newPos.y += 3;
+                Gizmos.DrawLine(position, newPos);
+                newPos.y += .15f;
+                Handles.Label(newPos, $"PathId: {_PathElementValue} | Id: {Identifier}");
+            }
+        }
+#endif
     }
 }
 

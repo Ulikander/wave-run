@@ -465,6 +465,11 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5551230623708928145, guid: 4ceeea01e9311684cb48089da99316f2,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5672859604109514031, guid: 4ceeea01e9311684cb48089da99316f2,
         type: 3}
       propertyPath: m_Name
@@ -1897,13 +1902,17 @@ MonoBehaviour:
     type: 3}
   _MinimumPlatformCount: 16
   _DecorationPrefabs:
-  - {fileID: 9199364682466529509, guid: 38b4275636a63ba45aaa05615b11d884, type: 3}
+  - {fileID: 1561389511312423306, guid: 49ce820206bef7d4483e8e5d538a143f, type: 3}
   _MinimumDecorationCount: 2
   _ObstaclePrefabs:
   - {fileID: 6640940444831940416, guid: 3e853152f538a0246bacaa312812e38f, type: 3}
   - {fileID: 8640705849913399762, guid: 9c29af7f5c381ae4c86022b6eec34534, type: 3}
   - {fileID: 6640940444831940416, guid: f61a6cbaaab9af940a976cec7e34140e, type: 3}
+  - {fileID: 6640940444831940416, guid: 964e543e636be8c4b9618353089a6e6b, type: 3}
+  - {fileID: 8640705849913399762, guid: f472b5d513c6d444e8500cae709029e0, type: 3}
+  _PowerUpPrefabs: []
   _MinimumObstacleCount: 12
+  _MinimumPowerUpCount: 0
   _EndPortalPrefab: {fileID: 8640705849913399762, guid: 2577b274c46bff945988989b95f7155c,
     type: 3}
   _OnFinishSpawns:
@@ -2149,9 +2158,75 @@ MonoBehaviour:
   _FrameTransitionTime: 0.8
   _OnShowSound: {fileID: 0}
   _OnHideSound: {fileID: 0}
+  _onPopulate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2098285814}
+        m_TargetAssemblyTypeName: WASD.Runtime.Popups.PausePopup, WASD.Runtime
+        m_MethodName: SetButtonVisibility
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 971729967}
+        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.CharacterControl, WASD.Runtime
+        m_MethodName: SetPauseValue
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2140939442}
+        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.ScrollSimulator, WASD.Runtime
+        m_MethodName: set_IsActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _AudioBgmPitch: 0.75
   _ExtraLifeButton: {fileID: 94511545}
   _forceAnimate: 1
+  _onTapExtraLife:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 971729967}
+        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.CharacterControl, WASD.Runtime
+        m_MethodName: Respawn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 555950060}
+        m_TargetAssemblyTypeName: WASD.Runtime.Popups.BasePopup, WASD.Runtime
+        m_MethodName: Hide
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &601595519
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2797,6 +2872,45 @@ MonoBehaviour:
   _FrameTransitionTime: 0.4
   _OnShowSound: {fileID: 0}
   _OnHideSound: {fileID: 0}
+  _onPopulate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2098285814}
+        m_TargetAssemblyTypeName: WASD.Runtime.Popups.PausePopup, WASD.Runtime
+        m_MethodName: SetButtonVisibility
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 971729967}
+        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.CharacterControl, WASD.Runtime
+        m_MethodName: SetPauseValue
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2140939442}
+        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.ScrollSimulator, WASD.Runtime
+        m_MethodName: set_IsActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _SwitchLevelTime: 6
   _AudioBgmPitch: 1.05
   _NextLevelMessage: "En unos momentos avanzar\xE1s al siguiente nivel..."
@@ -3740,6 +3854,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _CharacterCentraltPoint: {x: 0, y: 3, z: -1.77}
+  _CharacterRespawnHeight: 5
+  _CharacterRespawnTime: 1
   _CharacterPositionDifference: 1.65
   _CharacterBlue: {fileID: 4445416173677989263}
   _CharacterBlueAnimator: {fileID: 186045960}
@@ -3750,54 +3866,23 @@ MonoBehaviour:
   _RunAnimId: Run
   _JumpTriggerId: Jump
   _SlideTriggerId: Slide
+  _DeadTriggerId: Dead
+  _RespawnTriggerId: Respawn
   _JumpSpeed: 20
   _SwitchPositionsTime: 1.5
   _SwitchPositionsRotation: 48
   _SwipeMinimumDistance: 0.2
   _SwipeMaximumTime: 1
+  _InvincibilityDuration: 5
+  _RespawnInvincibilityDuration: 3
   _DirectionThreshold: 0.9
   _PositionsAreInverted: 0
   _BlueGrounded: 0
   _RedGrounded: 0
+  _IsInvincible: 0
   _OnKill:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2098285814}
-        m_TargetAssemblyTypeName: WASD.Runtime.Popups.PausePopup, WASD.Runtime
-        m_MethodName: SetButtonVisibility
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 971729967}
-        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.CharacterControl, WASD.Runtime
-        m_MethodName: SetPauseValue
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 2140939442}
-        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.ScrollSimulator, WASD.Runtime
-        m_MethodName: set_IsActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 555950060}
         m_TargetAssemblyTypeName: WASD.Runtime.Popups.BasePopup, WASD.Runtime
         m_MethodName: Show
@@ -3813,42 +3898,6 @@ MonoBehaviour:
   _OnWin:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2098285814}
-        m_TargetAssemblyTypeName: WASD.Runtime.Popups.PausePopup, WASD.Runtime
-        m_MethodName: SetButtonVisibility
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 971729967}
-        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.CharacterControl, WASD.Runtime
-        m_MethodName: SetPauseValue
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 2140939442}
-        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.ScrollSimulator, WASD.Runtime
-        m_MethodName: set_IsActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 680925459}
         m_TargetAssemblyTypeName: WASD.Runtime.Popups.BasePopup, WASD.Runtime
         m_MethodName: Show
@@ -3860,6 +3909,48 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+  _OnRespawnTimeFinish:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2140939442}
+        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.ScrollSimulator, WASD.Runtime
+        m_MethodName: set_IsActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 971729967}
+        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.CharacterControl, WASD.Runtime
+        m_MethodName: SetPauseValue
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _OnRespawnInvincibilityFinish:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2098285814}
+        m_TargetAssemblyTypeName: WASD.Runtime.Popups.PausePopup, WASD.Runtime
+        m_MethodName: SetButtonVisibility
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!1 &1064959834
 GameObject:
@@ -5195,7 +5286,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1613156714}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5230,6 +5321,7 @@ MonoBehaviour:
   _Collider: {fileID: 1613156716}
   _PlayerTag: Player
   _CollisionConcept: 0
+  _IgnoreInvincibility: 1
 --- !u!1 &1613836411
 GameObject:
   m_ObjectHideFlags: 0
@@ -6183,6 +6275,9 @@ MonoBehaviour:
   _FrameTransitionTime: 0.25
   _OnShowSound: {fileID: 0}
   _OnHideSound: {fileID: 0}
+  _onPopulate:
+    m_PersistentCalls:
+      m_Calls: []
   _ButtonCanvasGroup: {fileID: 678996210}
   _MusicIcon: {fileID: 722598903}
   _SfxIcon: {fileID: 1162171650}
@@ -6358,6 +6453,8 @@ MonoBehaviour:
   _ObstacleJumpIdentifier: ObstacleJump
   _ObstacleSlideIdentifier: ObstacleSlide
   _ObstacleCubeIdentifier: ObstacleCubes
+  _ObstacleShipIdentifier: ObstacleShip
+  _PowerUpInvinsibilityIdentifier: PowerUpInvincibility
   _EndPortalIdentifier: EndPortal
   _OnFinishPrepare:
     m_PersistentCalls:
@@ -6367,7 +6464,7 @@ MonoBehaviour:
         m_MethodName: BeginSimulation
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: a435c1aef03d1b243a787af7c816ed77,
+          m_ObjectArgument: {fileID: 11400000, guid: 859cddfe1192c59498908dc4c5906025,
             type: 2}
           m_ObjectArgumentAssemblyTypeName: WASD.Runtime.Levels.LevelInformation,
             WASD.Runtime

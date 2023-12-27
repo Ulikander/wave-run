@@ -15,13 +15,16 @@ namespace WASD.Runtime.Popups
         [SerializeField] private float _AudioBgmPitch;
         [SerializeField] private Button _ExtraLifeButton;
         [SerializeField] private bool _forceAnimate;
+        [SerializeField] private UnityEvent _onTapExtraLife;
         #endregion
 
         public override void Populate()
         {
             _Animate = _forceAnimate;
-            if (_AudioBgmPitch > 0 && _AudioBgmPitch <= 3) GameManager.Audio.FadeBgmPitch(target: _AudioBgmPitch);
-            _ExtraLifeButton.interactable = false;
+            if (_AudioBgmPitch is > 0 and <= 3) GameManager.Audio.FadeBgmPitch(target: _AudioBgmPitch);
+            //_ExtraLifeButton.interactable = false;
+            
+            base.Populate();
         }
 
         public void OnTapRestart()
@@ -32,7 +35,9 @@ namespace WASD.Runtime.Popups
 
         public void OnTapExtraLife()
         {
-
+            _Animate = false;
+            GameManager.Audio.FadeBgmPitch(target: 1);
+            _onTapExtraLife?.Invoke();
         }
     }
 

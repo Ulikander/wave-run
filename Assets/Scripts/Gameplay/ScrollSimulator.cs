@@ -58,6 +58,8 @@ namespace WASD.Runtime.Gameplay
         [SerializeField] private string _ObstacleJumpIdentifier = "ObstacleJump";
         [SerializeField] private string _ObstacleSlideIdentifier = "ObstacleSlide";
         [SerializeField] private string _ObstacleCubeIdentifier = "ObstacleCubes";
+        [SerializeField] private string _ObstacleShipIdentifier = "ObstacleShip";
+        [SerializeField] private string _PowerUpInvinsibilityIdentifier = "PowerUpInvincibility";
         [SerializeField] private string _EndPortalIdentifier = "EndPortal";
 
         private readonly List<SpawnableProp> _GroundPlatformList = new();
@@ -69,7 +71,9 @@ namespace WASD.Runtime.Gameplay
         private readonly List<SpawnableProp> _ObstacleJumpList = new();
         private readonly List<SpawnableProp> _ObstacleSlideList = new();
         private readonly List<SpawnableProp> _ObstacleCubesList = new();
+        private readonly List<SpawnableProp> _ObstacleShipList = new();
         private readonly List<SpawnableProp> _EndPortalList = new();
+        private readonly List<SpawnableProp> _PowerUpInvincibilityList = new();
 
         private bool _IsPaused;
         private float _GlobalVelocity = 0;
@@ -81,7 +85,7 @@ namespace WASD.Runtime.Gameplay
         /// 0: LeftHeight, 1: RightHeight, 2: InvertedColors
         /// </summary>
         private string[] _LevelPathDataFlags = new string[3];
-        private int[] _PropListsCounts = new int[4];
+        private int[] _PropListsCounts = new int[6];
         private bool ExecuteNextLevelPathStepSuccess;
 
         private SpawnableProp _LastLeftPlatform;
@@ -161,6 +165,9 @@ namespace WASD.Runtime.Gameplay
             if (_ActiveDecorations < _MaxActiveDecorations && _DecorationsList.Count != 0)
             {
                 SpawnableProp newDecoration = _DecorationsList[0];
+#if UNITY_EDITOR
+                newDecoration.SetGizmoValues(_LastLevelInformationPathData.ToString());
+#endif
                 newDecoration.Show(position: _LastDecoration == null
                     ? _DecorationsOrigin.position
                     : _LastDecoration.EndingPoint.position);
@@ -215,19 +222,22 @@ namespace WASD.Runtime.Gameplay
 
         private bool HandlePathLevelStep(PathData pathData)
         {
+            Debug.Log(_LastLevelInformationPathData);
             int neededGroundPlatforms = (_LevelPathDataFlags[0] == "0" ? 1 : 0) + (_LevelPathDataFlags[1] == "0" ? 1 : 0);
             int neededAirPlatforms = 2 - neededGroundPlatforms;
 
             if(_GroundPlatformList.Count < neededGroundPlatforms || _AirPlatformList.Count < neededAirPlatforms)
             {
-                Debug.LogWarning("Not enough Platforms");
+                //Debug.LogWarning("Not enough Platforms");
                 return false;
             }
 
             _PropListsCounts[0] = _ObstacleJumpList.Count;
             _PropListsCounts[1] = _ObstacleSlideList.Count;
             _PropListsCounts[2] = _ObstacleCubesList.Count;
-            _PropListsCounts[3] = _EndPortalList.Count;
+            _PropListsCounts[3] = _ObstacleShipList.Count;
+            _PropListsCounts[4] = _EndPortalList.Count;
+            _PropListsCounts[5] = _PowerUpInvincibilityList.Count;
 
             bool fValidateObstacleAvailability(List<Obstacle> obstacles)
             {
@@ -238,8 +248,9 @@ namespace WASD.Runtime.Gameplay
                         obstacle.Type == Enums.LevelObstacleType.Jump ? 0 :
                         obstacle.Type == Enums.LevelObstacleType.Slide ? 1 :
                         obstacle.Type == Enums.LevelObstacleType.Cubes ? 2 :
-                        obstacle.Type == Enums.LevelObstacleType.Ship ? -1 :
-                        obstacle.Type == Enums.LevelObstacleType.EndPortal ? 3 :
+                        obstacle.Type == Enums.LevelObstacleType.Ship ? 3 :
+                        obstacle.Type == Enums.LevelObstacleType.EndPortal ? 4 :
+                        obstacle.Type == Enums.LevelObstacleType.Invincibility ? 5 :
                         -1;
 
                     if(id == -1)
@@ -281,6 +292,7 @@ namespace WASD.Runtime.Gameplay
                     ? pathData.CustomLeftSide
                     : pathData.ObstaclePath.LeftSide,
                 _LastLeftPlatform);
+            
             ShowSpawnableObstacles(
                 pathData.ObstaclePath == null || pathData.UseCustomObstaclePath
                     ? pathData.CustomRightSide
@@ -305,6 +317,9 @@ namespace WASD.Runtime.Gameplay
             Vector3 rightPosition = _LastRightPlatform != null ? _LastRightPlatform.EndingPoint.position : _RightPathOrigin.position;
             rightPosition.y = _RightPathOrigin.position.y + (heightRight * _HeightValue);
 
+#if UNITY_EDITOR
+            spawnedLeft.SetGizmoValues(_LastLevelInformationPathData.ToString());
+#endif
             spawnedLeft.SetPlayerCollisionConcept(concept: !invertPlatformColors ? CollisionConcept.BluePlatform : CollisionConcept.RedPlatform);
             spawnedLeft.Show(
                 position: leftPosition,
@@ -312,6 +327,9 @@ namespace WASD.Runtime.Gameplay
                 neonMaterial: !invertPlatformColors ? _LeftMaterial : _RightMaterial);
             _LastLeftPlatform = spawnedLeft;
 
+#if UNITY_EDITOR
+            spawnedRight.SetGizmoValues(_LastLevelInformationPathData.ToString());
+#endif
             spawnedRight.SetPlayerCollisionConcept(concept: invertPlatformColors ? CollisionConcept.BluePlatform : CollisionConcept.RedPlatform);
             spawnedRight.Show(
                 position: rightPosition,
@@ -328,12 +346,11 @@ namespace WASD.Runtime.Gameplay
             }
 
             bool isCountEven = obstaclesToSpawn.Count % 2 == 0;
-            float inbetween = obstaclesToSpawn.Count == 1 || isCountEven
-                ? platform.EndingPoint.position.z / (obstaclesToSpawn.Count + 1)
-                : platform.EndingPoint.position.z / (obstaclesToSpawn.Count - 1);
+            float inBetween = isCountEven
+                ? platform.EndingPoint.localPosition.z / (obstaclesToSpawn.Count + 1)
+                : platform.EndingPoint.localPosition.z / (obstaclesToSpawn.Count - 1);
 
             SpawnableProp obstacleFromInactiveList = null;
-            Vector3 position;
 
             for (int i = 0; i < obstaclesToSpawn.Count; i++)
             {
@@ -349,28 +366,43 @@ namespace WASD.Runtime.Gameplay
                         obstacleFromInactiveList = _ObstacleCubesList[0];
                         break;
                     case Enums.LevelObstacleType.Ship:
-                        continue;
-                    //break;
+                        obstacleFromInactiveList = _ObstacleShipList[0];
+                        break;
                     case Enums.LevelObstacleType.EndPortal:
                         obstacleFromInactiveList = _EndPortalList[0];
                         break;
+                    case Enums.LevelObstacleType.Invincibility:
+                        obstacleFromInactiveList = _PowerUpInvincibilityList[0];
+                        break;
                 }
 
-                position = platform.transform.position;
+                Vector3 position = platform.transform.position;
                 if (obstaclesToSpawn[i].AutomaticPosition)
                 {
-                    position.z += inbetween * (i + (isCountEven ? 1 : 0));
+                    if (obstaclesToSpawn.Count == 1)
+                    {
+                        position.z += (platform.EndingPoint.localPosition.z * platform.transform.localScale.z) / 2f;;
+                    }
+                    else
+                    {
+                        position.z += inBetween * (i + (isCountEven ? 1 : 0)) * platform.transform.localScale.z;
+                    }
                 }
                 else
                 {
-                    position.z += (platform.EndingPoint.localPosition.z * platform.transform.localScale.z) *
+                    position.z += platform.EndingPoint.localPosition.z * platform.transform.localScale.z *
                                   obstaclesToSpawn[i].PositionOnPath;
                 }
 
+#if UNITY_EDITOR
+                obstacleFromInactiveList.SetGizmoValues(_LastLevelInformationPathData.ToString());
+#endif
+                
                 obstacleFromInactiveList.Show(
-                    position: position,
-                    neonMaterial: obstacleFromInactiveList.Identifier == _EndPortalIdentifier ? null :
-                        platform == _LastLeftPlatform ? _RightMaterial : _LeftMaterial);
+                    position,
+                    obstaclesToSpawn[i].OverrideSize == 0 ? 1f : obstaclesToSpawn[i].OverrideSize,
+                    obstacleFromInactiveList.Identifier == _EndPortalIdentifier ? null :
+                    platform == _LastLeftPlatform ? _RightMaterial : _LeftMaterial);
             }
         }
 
@@ -383,7 +415,9 @@ namespace WASD.Runtime.Gameplay
             _ObstacleJumpList.Clear();
             _ObstacleSlideList.Clear();
             _ObstacleCubesList.Clear();
+            _ObstacleShipList.Clear();
             _EndPortalList.Clear();
+            _PowerUpInvincibilityList.Clear();
 
             void fAddPropToList(List<SpawnableProp> list, List<SpawnableProp> props)
             {
@@ -424,7 +458,9 @@ namespace WASD.Runtime.Gameplay
             fAddPropToList(list: _ObstacleJumpList, props: spawnedProps.Where(prop => prop.Identifier == _ObstacleJumpIdentifier).ToList());
             fAddPropToList(list: _ObstacleSlideList, props: spawnedProps.Where(prop => prop.Identifier == _ObstacleSlideIdentifier).ToList());
             fAddPropToList(list: _ObstacleCubesList, props: spawnedProps.Where(prop => prop.Identifier == _ObstacleCubeIdentifier).ToList());
+            fAddPropToList(list: _ObstacleShipList, props: spawnedProps.Where(prop => prop.Identifier == _ObstacleShipIdentifier).ToList());
             fAddPropToList(list: _EndPortalList, props: spawnedProps.Where(prop => prop.Identifier == _EndPortalIdentifier).ToList());
+            fAddPropToList(list: _PowerUpInvincibilityList, props: spawnedProps.Where(prop => prop.Identifier == _PowerUpInvinsibilityIdentifier).ToList());
 
             _OnFinishPrepare.Invoke();
         }
@@ -438,6 +474,7 @@ namespace WASD.Runtime.Gameplay
             if (Application.isEditor && _ForceLevelSelectedOnEditor)
             {
                 _CurrentLevel = levelInfo;
+                GameManager.Audio.PlayBgm(_CurrentLevel.Music);
             }
             else
             {

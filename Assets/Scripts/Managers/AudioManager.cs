@@ -84,7 +84,7 @@ namespace WASD.Runtime.Managers
             SfxMuted = PlayerPrefs.GetInt(key: GameManager.cPprefSFXMuted, defaultValue: 0) == 1;
         }
 
-        public void FadeBgmPitch(float target, bool immediate = false)
+        public void FadeBgmPitch(float target, float fadeSpeed = 0f, bool immediate = false)
         {
             _TargetPitch = target;
 
@@ -98,17 +98,17 @@ namespace WASD.Runtime.Managers
             //if (!_BgmAudioSource.isPlaying) return;
             if(_BgmAudioSource.pitch != _TargetPitch && !Utils.IsCancelTokenSourceActive(ref _PitchFadeTokenSource))
             {
-                BgmPitchFadeTask();
+                BgmPitchFadeTask(fadeSpeed <= 0 ? _DefaultPitchFadeSpeed : fadeSpeed);
             }
         }
 
-        private async void BgmPitchFadeTask()
+        private async void BgmPitchFadeTask(float fadeSpeed)
         {
             _PitchFadeTokenSource = new CancellationTokenSource();
             while (!_PitchFadeTokenSource.IsCancellationRequested && _BgmAudioSource.pitch != _TargetPitch)
             {
                 var direction = _BgmAudioSource.pitch > _TargetPitch ? -1f : _BgmAudioSource.pitch < _TargetPitch ? 1f : 0;
-                _BgmAudioSource.pitch += _DefaultPitchFadeSpeed * Time.unscaledDeltaTime * direction;
+                _BgmAudioSource.pitch += fadeSpeed * Time.unscaledDeltaTime * direction;
                 if ((direction >= 1 && _BgmAudioSource.pitch > _TargetPitch) ||
                     (direction <= -1 && _BgmAudioSource.pitch < _TargetPitch))
                 {
