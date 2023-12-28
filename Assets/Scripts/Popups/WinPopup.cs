@@ -49,7 +49,7 @@ namespace WASD.Runtime.Popups
 
         public override void Show(Options options)
         {
-            GameManager.SaveData.SetLevelClearState(GameManager.LevelActive.CoreLevelValue, true);
+            GameManager.SaveData.SetLevelClearState(GameManager.CurrentCoreLevel, true);
             base.Show(options);
         }
 
@@ -79,6 +79,7 @@ namespace WASD.Runtime.Popups
 
             _TimerText.text = _NextLevelMessage;
             GameManager.Audio.FadeBgmPitch(target: 1f);
+            _Frame.interactable = false;
             _OnSwitchLevel?.Invoke();
             Utils.CancelTokenSourceRequestCancelAndDispose(ref _SwitchLevelOnTimerCancelToken);
         }

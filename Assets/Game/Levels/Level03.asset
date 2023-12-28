@@ -75,6 +75,7 @@ MonoBehaviour:
     - Type: 0
       AutomaticPosition: 0
       PositionOnPath: 1
+      OverrideSize: 0
     CustomRightSide: []
     InvertObstacleValues: 0
     SetLeftSideHeight: 0
@@ -148,10 +149,12 @@ MonoBehaviour:
     - Type: 0
       AutomaticPosition: 0
       PositionOnPath: 0.7
+      OverrideSize: 0
     CustomRightSide:
     - Type: 1
       AutomaticPosition: 0
       PositionOnPath: 0.7
+      OverrideSize: 0
     InvertObstacleValues: 0
     SetLeftSideHeight: 0
     SetRightSideHeight: 0
@@ -234,10 +237,12 @@ MonoBehaviour:
     - Type: 2
       AutomaticPosition: 0
       PositionOnPath: 0.95
+      OverrideSize: 0
     CustomRightSide:
     - Type: 2
       AutomaticPosition: 0
       PositionOnPath: 0.95
+      OverrideSize: 0
     InvertObstacleValues: 0
     SetLeftSideHeight: 0
     SetRightSideHeight: 0
@@ -334,9 +339,13 @@ MonoBehaviour:
   - Type: 0
     Size: 1
     PathCustomSize: 0
-    ObstaclePath: {fileID: 11400000, guid: 3dc5b1ab34db3364c97cb031ae697d0c, type: 2}
+    ObstaclePath: {fileID: 0}
     UseCustomObstaclePath: 0
-    CustomLeftSide: []
+    CustomLeftSide:
+    - Type: 1
+      AutomaticPosition: 0
+      PositionOnPath: 0.2
+      OverrideSize: 0
     CustomRightSide: []
     InvertObstacleValues: 0
     SetLeftSideHeight: 1
@@ -382,11 +391,15 @@ MonoBehaviour:
     SetLeftSideHeight: 0
     SetRightSideHeight: 0
   - Type: 0
-    Size: 1
-    PathCustomSize: 0
+    Size: 3
+    PathCustomSize: 1.25
     ObstaclePath: {fileID: 11400000, guid: bd3c2ba304d69004ab8cbbb9a35ecdaa, type: 2}
     UseCustomObstaclePath: 0
-    CustomLeftSide: []
+    CustomLeftSide:
+    - Type: 0
+      AutomaticPosition: 0
+      PositionOnPath: 0.4
+      OverrideSize: 0
     CustomRightSide: []
     InvertObstacleValues: 0
     SetLeftSideHeight: 0
@@ -460,10 +473,12 @@ MonoBehaviour:
     - Type: 1
       AutomaticPosition: 0
       PositionOnPath: 1
+      OverrideSize: 0
     CustomRightSide:
     - Type: 1
       AutomaticPosition: 0
       PositionOnPath: 1
+      OverrideSize: 0
     InvertObstacleValues: 0
     SetLeftSideHeight: 0
     SetRightSideHeight: 0

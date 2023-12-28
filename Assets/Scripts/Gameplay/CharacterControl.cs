@@ -364,6 +364,8 @@ namespace WASD.Runtime.Gameplay
         {
             _BlueSwitchSideSequence?.Kill(true);
             _RedSwitchSideSequence?.Kill(true);
+
+            await UniTask.NextFrame(cancelToken);
             
             Vector3 newPos = _CharacterCentraltPoint;
             newPos.x += _CharacterPositionDifference;

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace WASD.Data
@@ -13,14 +12,14 @@ namespace WASD.Data
         {
             #region Fields
 
-            public Dictionary<int, bool> clearedLevels;
+            public List<bool> clearedLevels;
             public bool hasExtrasUnlocked;
 
             #endregion
 
             public SaveData()
             {
-                clearedLevels = new Dictionary<int, bool>();
+                clearedLevels = new List<bool>();
                 hasExtrasUnlocked = false;
             }
         }
@@ -29,7 +28,7 @@ namespace WASD.Data
 
         #region Constants
 
-        public static string CPprefSaveData = "savedata";
+        private const string CPprefSaveData = "savedata";
 
         #endregion
 
@@ -50,14 +49,14 @@ namespace WASD.Data
 
         public void PerformSave()
         {
-            string json = JsonConvert.SerializeObject(_SaveData);
-            PlayerPrefs.SetString(CPprefSaveData, json);
+            string json = JsonUtility.ToJson(_SaveData);
+            PlayerPrefsUtility.SetEncryptedString(CPprefSaveData, json);
             Debug.LogWarning("Saved player data.");
         }
 
         public bool TryPerformLoad(out SaveData data)
         {
-            string json = PlayerPrefs.GetString(CPprefSaveData);
+            string json = PlayerPrefsUtility.GetEncryptedString(CPprefSaveData);
             data = null;
             if (string.IsNullOrEmpty(json))
             {
@@ -68,7 +67,7 @@ namespace WASD.Data
             bool loadWasSuccessful = false;
             try
             {
-                data = JsonConvert.DeserializeObject<SaveData>(json);
+                data = JsonUtility.FromJson<SaveData>(json);//JsonConvert.DeserializeObject<SaveData>(json);
                 
                 Debug.LogWarning("Loaded player data.");
                 loadWasSuccessful = true;
@@ -84,21 +83,23 @@ namespace WASD.Data
 
         public bool IsLevelCleared(int levelIndex)
         {
-            return _SaveData.clearedLevels.ContainsKey(levelIndex) && _SaveData.clearedLevels[levelIndex];
+            if (levelIndex >= _SaveData.clearedLevels.Count) return false;
+            return _SaveData.clearedLevels[levelIndex];
         }
 
         public void SetLevelClearState(int levelIndex, bool isCleared)
         {
-            if (!_SaveData.clearedLevels.ContainsKey(levelIndex))
-            {
-                _SaveData.clearedLevels.Add(levelIndex, isCleared);
-            }
-            else
-            {
-                _SaveData.clearedLevels[levelIndex] = isCleared;
-            }
-            
+            ValidateSaveState(levelIndex);
+            _SaveData.clearedLevels[levelIndex] = isCleared;
             PerformSave();
+        }
+
+        private void ValidateSaveState(int index)
+        {
+            while (_SaveData.clearedLevels.Count <= index)
+            {
+                _SaveData.clearedLevels.Add(false);
+            }
         }
     }
 }

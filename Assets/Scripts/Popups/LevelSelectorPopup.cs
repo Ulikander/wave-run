@@ -31,9 +31,8 @@ namespace WASD.Runtime.Popups
         public void PlayLevel(LevelInformation info)
         {
             _Frame.interactable = false;
-            GameManager.LevelActive = info;
-            GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_GAMEPLAY,
-                onSceneLoaded: () => { GameManager.Audio.PlayBgm(bgm: info.Music, fadeOutTime: .2f); });
+            GameManager.CurrentCoreLevel = info.CoreLevelValue;
+            GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_GAMEPLAY);
         }
     }
 }

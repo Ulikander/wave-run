@@ -1,0 +1,73 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/WASD/LevelInformationEditor/LevelEditor.uss?fileID=7433441132597879392&amp;guid=a14fb9bfef7f50e4fbe4e6ded87e969b&amp;type=3#LevelEditor" />
+    <ui:VisualElement class="level-select-container" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; height: 65px; flex-wrap: nowrap;">
+        <uie:ObjectField label="Selected Level" allow-scene-objects="false" type="WASD.Runtime.Levels.LevelInformation, WASD.Runtime" binding-path="_SelectedLevel" name="level_object" class="level-object-field" />
+        <ui:VisualElement name="level-visual" style="height: 29px; align-items: stretch; justify-content: flex-start; flex-direction: row; display: flex;">
+            <ui:VisualElement style="flex-direction: row; justify-content: space-between; width: 33%; padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; margin-right: 14px;">
+                <ui:Label text="Music" display-tooltip-when-elided="true" style="width: 22%; -unity-text-align: middle-left;" />
+                <uie:ObjectField type="WASD.Runtime.Audio.AudioContainer, WASD.Runtime" allow-scene-objects="false" name="level_object_music" style="width: 77%;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row; justify-content: space-between; width: 33%; padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; margin-right: 15px;">
+                <ui:Label text="Difficulty" display-tooltip-when-elided="true" style="width: 33%; -unity-text-align: middle-left;" />
+                <uie:EnumField value="Core" type="WASD.Enums.LevelDifficulty, WASD.Enums" name="level_difficulty" focusable="true" style="width: 66%;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="level_core_visual" style="flex-direction: row; justify-content: space-between; width: 33%; padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px; display: flex; margin-right: 15px;">
+                <ui:Label text="Core Value" display-tooltip-when-elided="true" style="width: 50%; -unity-text-align: middle-left;" />
+                <uie:IntegerField value="42" name="level_core_value" style="width: 50%;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="editor-visual-full" style="height: 100%; width: 100%; flex-direction: row; display: flex; flex-grow: 1; flex-wrap: nowrap; justify-content: space-between; align-items: auto;">
+        <ui:VisualElement style="width: 250px; height: 100%; background-color: rgb(0, 0, 0);">
+            <ui:Label text="Visualizer" display-tooltip-when-elided="true" style="-unity-text-align: middle-center;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="width: auto; height: 100%; background-color: rgba(0, 140, 255, 0.07); flex-grow: 1;">
+            <ui:VisualElement style="flex-direction: row; justify-content: center; width: 100%; height: 43px; align-items: center;">
+                <ui:Label text="Path Ids: (99/09)" display-tooltip-when-elided="true" name="editor-select-label" class="edit-path-label" style="width: 115px;" />
+                <ui:Button text="New&#10;Before" display-tooltip-when-elided="true" name="editor-select-new-before" class="edit-path-normalbutton" style="width: 50px;" />
+                <ui:Button text="New&#10;After" display-tooltip-when-elided="true" name="editor-select-new-after" class="edit-path-normalbutton" style="width: 50px;" />
+                <ui:VisualElement style="height: 100%; width: 25px;" />
+                <ui:Button text="Copy" display-tooltip-when-elided="true" name="editor-select-copy" class="edit-path-normalbutton" style="width: 50px;" />
+                <ui:Button text="Paste" display-tooltip-when-elided="true" name="editor-select-paste" class="edit-path-normalbutton" style="width: 50px;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row; justify-content: center; width: 100%; height: 43px; align-items: center;">
+                <ui:Button text="&lt;" display-tooltip-when-elided="true" name="editor-select-prev" class="edit-path-smallbutton" />
+                <ui:Button text="Move&#10;Before" display-tooltip-when-elided="true" name="editor-select-moveup" class="edit-path-normalbutton" style="width: 50px;" />
+                <ui:Button text="Move&#10;After" display-tooltip-when-elided="true" name="editor-select-movedown" class="edit-path-normalbutton" style="width: 50px;" />
+                <ui:Button text="&gt;" display-tooltip-when-elided="true" name="editor-select-next" class="edit-path-smallbutton" />
+                <ui:VisualElement style="height: 100%; width: 25px;" />
+                <ui:Button text="Remove" display-tooltip-when-elided="true" name="editor-select-remove" class="edit-path-normalbutton" style="width: 50px;" />
+                <ui:Button text="Clear Unused&#10;Data" display-tooltip-when-elided="true" name="editor-select-clear" class="edit-path-normalbutton" style="width: 84px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="editor-visual-path" style="width: 100%; height: 100%; padding-top: 10px; background-color: rgba(0, 0, 0, 0.15); padding-left: 10px; padding-right: 10px; padding-bottom: 10px; display: flex;">
+                <uie:EnumField label="Path Data Type" value="Path" type="WASD.Enums.LevelPathStep, WASD.Enums" />
+                <ui:VisualElement name="editor-visual-path-path" class="edit-path-type-container" style="display: none; visibility: visible;">
+                    <ui:VisualElement style="width: 100%; height: 25px; flex-direction: row; margin-bottom: 10px; min-height: 16px; display: flex;">
+                        <ui:Label text="Platform Size" display-tooltip-when-elided="true" class="common-label" style="width: 25%;" />
+                        <uie:EnumField value="Normal" type="WASD.Enums.LevelPathSize, WASD.Enums" style="width: 20%;" />
+                        <ui:VisualElement style="height: 100%; width: 50%; flex-direction: row; padding-left: 17px;">
+                            <ui:Label text="Custom Size:" display-tooltip-when-elided="true" class="common-label" style="width: 70%;" />
+                            <uie:FloatField value="42.2" style="width: 30%;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:Toggle label="Use Custom Obstacle Path    :" value="false" />
+                    <uie:ObjectField label="Path Data Object" type="WASD.Runtime.Levels.ObstaclePathData, WASD.Runtime" style="display: flex;" />
+                    <ui:Toggle label="Invert Obstacle Data Object Values  :" value="false" />
+                    <ui:VisualElement style="flex-direction: row; width: 100%; height: 100%;">
+                        <ui:ScrollView class="edit-path-obstacle-customscroll">
+                            <ui:IMGUIContainer />
+                        </ui:ScrollView>
+                        <ui:ScrollView class="edit-path-obstacle-customscroll">
+                            <ui:IMGUIContainer />
+                        </ui:ScrollView>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="editor-visual-path-height" class="edit-path-type-container" style="display: flex;">
+                    <uie:FloatField label="Left Side Height" value="42.2" />
+                    <uie:FloatField label="Right Side Height" value="42.2" />
+                    <ui:Label text="Base Height   |   0 &#10;Above Ground   |   &gt; 0 &#10;Below Ground   |   &lt; 0 " display-tooltip-when-elided="true" style="height: 60px; padding-top: 10px; -unity-text-align: middle-center; padding-right: 0; padding-left: 0;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

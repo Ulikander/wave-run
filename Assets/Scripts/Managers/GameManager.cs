@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using WASD.Data;
 using WASD.Runtime.Levels;
@@ -11,14 +13,16 @@ namespace WASD.Runtime.Managers
     public class GameManager : MonoBehaviour
     {
         #region Properties
+        
         public static GameManager Instance { get; private set; }
         public static AudioManager Audio { get => Instance._AudioManager; }
         public static ScenesManager Scenes { get => Instance._ScenesManager; }
         public static SaveDataContainer SaveData => Instance._SaveDataContainer;
         
         public static Camera MainCamera { get => Instance._MainCamera; }
-        public static LevelInformation LevelActive { get; set; }
-        public static LevelInformation LevelToPlayOnWin { get; set; }
+
+        public static int CurrentCoreLevel;
+        
         #endregion
 
         #region Constants
@@ -35,6 +39,9 @@ namespace WASD.Runtime.Managers
         [SerializeField] private Canvas _MainCanvas;
         [SerializeField] private Camera _MainCamera;
         [SerializeField] private int _TargetFrameRate = 60;
+
+        [Header("Levels")]
+        [SerializeField] private LevelInformation[] coreLevels;
 
         private SaveDataContainer _SaveDataContainer;
         
@@ -67,6 +74,24 @@ namespace WASD.Runtime.Managers
             //Instance._MainCanvas.worldCamera = Instance._MainCamera;
         }
 
+        public static bool TryGetCoreLevel(int index, out LevelInformation level)
+        {
+            if (index <= 0 || index >= Instance.coreLevels.Length)
+            {
+                level = null;
+                return false;
+            }
+
+            level = Instance.coreLevels.FirstOrDefault(lvl => lvl.CoreLevelValue == index);
+            return level != null;
+        }
+
+        public static async UniTaskVoid ExitAppAfterDelay(float delay)
+        {
+            Scenes.FadeScreenToBlack(delay).Forget();
+            await UniTask.Delay((int)((delay + 0.25f) * 1000));
+            Application.Quit();
+        }
     }
 }
 

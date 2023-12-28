@@ -33,6 +33,12 @@ namespace WASD.Runtime.Managers
         
         #endregion
 
+        #region Properties
+
+        public bool IsTransitionActive => Utils.IsCancelTokenSourceActive(ref _LoadSceneCancelToken);
+
+        #endregion
+
         #region MonoBehaviour
         private void Awake()
         {
@@ -130,6 +136,21 @@ namespace WASD.Runtime.Managers
             {
                 LoadScene(sceneId: _QueuedScenes.Dequeue());
             }
+        }
+
+        public async UniTaskVoid FadeScreenToBlack(float timeToFade)
+        {
+            _MainCanvasGroup.alpha = 0f;
+            _TextAndSliderCanvasGroup.alpha = 0f;
+            _Canvas.enabled = true;
+
+            DOTween.To(() => _MainCanvasGroup.alpha, x => _MainCanvasGroup.alpha = x, 1f, timeToFade);
+            await UniTask.Delay((int)((timeToFade + 2f) * 1000))
+                .SuppressCancellationThrow();
+            
+            _MainCanvasGroup.alpha = 0f;
+            _TextAndSliderCanvasGroup.alpha = 0f;
+            _Canvas.enabled = false;
         }
 
         public void StopAllTasks()

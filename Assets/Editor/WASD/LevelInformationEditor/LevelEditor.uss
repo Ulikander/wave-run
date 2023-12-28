@@ -1,0 +1,48 @@
+.level-select-container {
+    background-color: rgba(0, 0, 0, 0.36);
+    width: 100%;
+    height: 110px;
+}
+
+.edit-path-smallbutton {
+    width: 25px;
+    height: 25px;
+}
+
+.edit-path-normalbutton {
+    height: 80%;
+}
+
+.edit-path-label {
+    height: 100%;
+    -unity-text-align: middle-center;
+    background-color: rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+    -unity-font-style: bold;
+}
+
+.edit-path-type-container {
+    background-color: rgba(255, 255, 255, 0.15);
+    height: 100%;
+    width: 100%;
+    padding-top: 10px;
+    padding-right: 9px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+.common-label {
+    -unity-text-align: middle-left;
+    -unity-font-style: normal;
+    height: 100%;
+}
+
+.edit-path-obstacle-customscroll {
+    width: 50%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

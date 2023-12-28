@@ -2911,7 +2911,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _SwitchLevelTime: 6
+  _SwitchLevelTime: 5.3
   _AudioBgmPitch: 1.05
   _NextLevelMessage: "En unos momentos avanzar\xE1s al siguiente nivel..."
   _FinalLevelMessage: "Haz completado todos los niveles.\n\xA1Excelente!"
@@ -2919,7 +2919,19 @@ MonoBehaviour:
   _forceAnimate: 1
   _OnSwitchLevel:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2140939442}
+        m_TargetAssemblyTypeName: WASD.Runtime.Gameplay.ScrollSimulator, WASD.Runtime
+        m_MethodName: ReloadToNextLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &722598901
 GameObject:
   m_ObjectHideFlags: 0
@@ -3854,7 +3866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _CharacterCentraltPoint: {x: 0, y: 3, z: -1.77}
-  _CharacterRespawnHeight: 5
+  _CharacterRespawnHeight: 6.5
   _CharacterRespawnTime: 1
   _CharacterPositionDifference: 1.65
   _CharacterBlue: {fileID: 4445416173677989263}
@@ -6433,7 +6445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5c43f818faa414bbe13c50dde1f250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ForceLevelSelectedOnEditor: 1
+  _ForceLevelSelectedOnEditor: 0
   _MaxActiveDecorations: 2
   _HeightValue: 2
   _PlatformSizeNormal: 1

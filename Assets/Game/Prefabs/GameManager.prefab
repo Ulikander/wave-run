@@ -392,6 +392,16 @@ MonoBehaviour:
   _MainCanvas: {fileID: 2805567387479101908}
   _MainCamera: {fileID: 0}
   _TargetFrameRate: 60
+  coreLevels:
+  - {fileID: 11400000, guid: a435c1aef03d1b243a787af7c816ed77, type: 2}
+  - {fileID: 11400000, guid: c8f7ab2a28b7e024abfaa5de72e2b0a7, type: 2}
+  - {fileID: 11400000, guid: 6b8144a2c2f4db844a8eb33e90bec4ba, type: 2}
+  - {fileID: 11400000, guid: 859cddfe1192c59498908dc4c5906025, type: 2}
+  - {fileID: 11400000, guid: 4847df3024316a245952ec07b1185585, type: 2}
+  - {fileID: 11400000, guid: 569d6a467d19fc54a8e2d6a018843840, type: 2}
+  - {fileID: 11400000, guid: 0adb0c04c3ead9349bb16d691486ac48, type: 2}
+  - {fileID: 11400000, guid: 84a9169e608563a41a5570d978451ee0, type: 2}
+  - {fileID: 11400000, guid: 4304e77ad4103ba4a8535566c2043e02, type: 2}
 --- !u!114 &3617501214285546622
 MonoBehaviour:
   m_ObjectHideFlags: 0

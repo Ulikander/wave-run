@@ -79,7 +79,7 @@ namespace WASD.Runtime.Gameplay
         private float _GlobalVelocity = 0;
 
         private LevelInformation _CurrentLevel;
-        private LevelInformation _NextLevel;
+        private int _NextLevel;
         private int _LastLevelInformationPathData;
         /// <summary>
         /// 0: LeftHeight, 1: RightHeight, 2: InvertedColors
@@ -474,16 +474,30 @@ namespace WASD.Runtime.Gameplay
             if (Application.isEditor && _ForceLevelSelectedOnEditor)
             {
                 _CurrentLevel = levelInfo;
-                GameManager.Audio.PlayBgm(_CurrentLevel.Music);
+            }
+            else if (!GameManager.TryGetCoreLevel(GameManager.CurrentCoreLevel, out _CurrentLevel))
+            {
+                Debug.LogError("ScrollSimulator: Failed to select Current Core Level from GameManager.");
+                return;
+            }
+
+            GameManager.Audio.PlayBgm(_CurrentLevel.Music, fadeOutTime: .2f);
+            _NextLevel = GameManager.CurrentCoreLevel + 1;
+            _IsActive = true;
+        }
+
+        public void ReloadToNextLevel()
+        {
+            if (GameManager.TryGetCoreLevel(_NextLevel, out LevelInformation levelInfo))
+            {
+                GameManager.CurrentCoreLevel = levelInfo.CoreLevelValue;
+                GameManager.Scenes.LoadScene(ScenesManager.cSCENEID_GAMEPLAY);
             }
             else
             {
-                _CurrentLevel = GameManager.LevelActive;
+                GameManager.Scenes.LoadScene(ScenesManager.cSCENEID_MAINMENU);
             }
-            
-            _NextLevel = nextLevelInfo;
-            _IsActive = true;
-        } 
+        }
 
         public void SetPauseValue(bool value)
         {

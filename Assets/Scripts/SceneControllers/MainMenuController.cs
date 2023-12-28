@@ -175,7 +175,12 @@ namespace WASD.Runtime.SceneControllers
 
         public void OnExitButtonTap()
         {
-            Application.Quit();
+            if (!GameManager.Scenes.IsTransitionActive)
+            {
+                GameManager.ExitAppAfterDelay(1.25f).Forget();
+                _OnCameraMovementTransitionEnd += _ExtrasPopup.Show;
+                CameraTransitionTask(_ExtrasCameraPosition);
+            }
         }
 
         public void OnMusicButtonTap()
