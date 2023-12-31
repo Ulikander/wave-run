@@ -14,4 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LevelDifficulty: 0
   CoreLevelValue: 5
-  Data: []
+  Music: {fileID: 0}
+  Data:
+  - Type: 0
+    Size: 3
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0
+  - Type: 0
+    Size: 2
+    PathCustomSize: 0
+    ObstaclePath: {fileID: 0}
+    UseCustomObstaclePath: 0
+    CustomLeftSide: []
+    CustomRightSide: []
+    InvertObstacleValues: 0
+    SetLeftSideHeight: 0
+    SetRightSideHeight: 0

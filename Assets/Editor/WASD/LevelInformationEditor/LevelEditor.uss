@@ -5,7 +5,7 @@
 }
 
 .edit-path-smallbutton {
-    width: 25px;
+    width: 15px;
     height: 25px;
 }
 

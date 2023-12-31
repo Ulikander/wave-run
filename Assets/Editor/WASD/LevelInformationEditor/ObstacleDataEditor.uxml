@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; background-color: rgba(255, 255, 255, 0.09); border-left-color: rgba(0, 0, 0, 0.3); border-right-color: rgba(0, 0, 0, 0.3); border-top-color: rgba(0, 0, 0, 0.3); border-bottom-color: rgba(0, 0, 0, 0.3); border-left-width: 5px; border-right-width: 5px; border-top-width: 5px; border-bottom-width: 5px;">
+        <ui:VisualElement style="width: 100%; flex-direction: row; justify-content: space-between; align-items: stretch;">
+            <ui:Label text="Type" display-tooltip-when-elided="true" style="-unity-text-align: middle-left;" />
+            <uie:EnumField value="Jump" type="WASD.Enums.LevelObstacleType, WASD.Enums" binding-path="Type" style="min-width: 40px; width: 100px;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="width: 100%; flex-direction: row; justify-content: space-between; align-items: stretch;">
+            <ui:Label text="Size Override" display-tooltip-when-elided="true" style="-unity-text-align: middle-left;" />
+            <uie:FloatField value="0" binding-path="OverrideSize" style="min-width: 40px;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="width: 100%; flex-direction: row; justify-content: space-between; align-items: stretch;">
+            <ui:Label text="Auto Position" display-tooltip-when-elided="true" style="-unity-text-align: middle-left;" />
+            <ui:Toggle binding-path="AutomaticPosition" name="position-auto-toggle" />
+        </ui:VisualElement>
+        <ui:VisualElement name="position-visual" style="width: 100%; flex-direction: row; justify-content: space-between; align-items: stretch;">
+            <ui:Label text="Position" display-tooltip-when-elided="true" style="-unity-text-align: middle-left;" />
+            <uie:FloatField value="0" binding-path="PositionOnPath" style="min-width: 40px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

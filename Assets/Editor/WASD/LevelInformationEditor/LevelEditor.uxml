@@ -31,6 +31,10 @@
                 <ui:Button text="Paste" display-tooltip-when-elided="true" name="editor-select-paste" class="edit-path-normalbutton" style="width: 50px;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-direction: row; justify-content: center; width: 100%; height: 43px; align-items: center;">
+                <ui:VisualElement style="height: 100%;">
+                    <ui:Label text="Go to:" display-tooltip-when-elided="true" style="font-size: 9px; -unity-text-align: middle-center;" />
+                    <uie:IntegerField value="-1" name="editor-select-goto" />
+                </ui:VisualElement>
                 <ui:Button text="&lt;" display-tooltip-when-elided="true" name="editor-select-prev" class="edit-path-smallbutton" />
                 <ui:Button text="Move&#10;Before" display-tooltip-when-elided="true" name="editor-select-moveup" class="edit-path-normalbutton" style="width: 50px;" />
                 <ui:Button text="Move&#10;After" display-tooltip-when-elided="true" name="editor-select-movedown" class="edit-path-normalbutton" style="width: 50px;" />
@@ -40,31 +44,31 @@
                 <ui:Button text="Clear Unused&#10;Data" display-tooltip-when-elided="true" name="editor-select-clear" class="edit-path-normalbutton" style="width: 84px;" />
             </ui:VisualElement>
             <ui:VisualElement name="editor-visual-path" style="width: 100%; height: 100%; padding-top: 10px; background-color: rgba(0, 0, 0, 0.15); padding-left: 10px; padding-right: 10px; padding-bottom: 10px; display: flex;">
-                <uie:EnumField label="Path Data Type" value="Path" type="WASD.Enums.LevelPathStep, WASD.Enums" />
-                <ui:VisualElement name="editor-visual-path-path" class="edit-path-type-container" style="display: none; visibility: visible;">
+                <uie:EnumField label="Path Data Type" value="Path" type="WASD.Enums.LevelPathStep, WASD.Enums" name="editor-path-type" />
+                <ui:VisualElement name="editor-visual-path-path" class="edit-path-type-container" style="display: flex; visibility: visible;">
                     <ui:VisualElement style="width: 100%; height: 25px; flex-direction: row; margin-bottom: 10px; min-height: 16px; display: flex;">
                         <ui:Label text="Platform Size" display-tooltip-when-elided="true" class="common-label" style="width: 25%;" />
-                        <uie:EnumField value="Normal" type="WASD.Enums.LevelPathSize, WASD.Enums" style="width: 20%;" />
-                        <ui:VisualElement style="height: 100%; width: 50%; flex-direction: row; padding-left: 17px;">
+                        <uie:EnumField value="Normal" type="WASD.Enums.LevelPathSize, WASD.Enums" name="editor-path-size-enum" style="width: 20%;" />
+                        <ui:VisualElement name="editor-path-visual-custom-size" style="height: 100%; width: 50%; flex-direction: row; padding-left: 17px; display: flex;">
                             <ui:Label text="Custom Size:" display-tooltip-when-elided="true" class="common-label" style="width: 70%;" />
-                            <uie:FloatField value="42.2" style="width: 30%;" />
+                            <uie:FloatField value="42.2" name="editor-path-size-custom" style="width: 30%;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:Toggle label="Use Custom Obstacle Path    :" value="false" />
-                    <uie:ObjectField label="Path Data Object" type="WASD.Runtime.Levels.ObstaclePathData, WASD.Runtime" style="display: flex;" />
-                    <ui:Toggle label="Invert Obstacle Data Object Values  :" value="false" />
-                    <ui:VisualElement style="flex-direction: row; width: 100%; height: 100%;">
-                        <ui:ScrollView class="edit-path-obstacle-customscroll">
-                            <ui:IMGUIContainer />
+                    <ui:Toggle label="Use Custom Obstacle Path    :" value="false" name="editor-path-custom-obstacle-toggle" />
+                    <uie:ObjectField label="Path Data Object" type="WASD.Runtime.Levels.ObstaclePathData, WASD.Runtime" name="editor-path-obstacle-data" style="display: flex;" />
+                    <ui:Toggle label="Invert Obstacle Data Object Values  :" value="false" name="editor-path-obstacle-invert" />
+                    <ui:VisualElement name="editor-path-visual-custom-path-data" style="flex-direction: row; width: 100%; height: 100%;">
+                        <ui:ScrollView horizontal-scroller-visibility="Hidden" class="edit-path-obstacle-customscroll">
+                            <uie:PropertyField name="editor-path-obstacle-imgui-left" />
                         </ui:ScrollView>
-                        <ui:ScrollView class="edit-path-obstacle-customscroll">
-                            <ui:IMGUIContainer />
+                        <ui:ScrollView horizontal-scroller-visibility="Hidden" class="edit-path-obstacle-customscroll">
+                            <uie:PropertyField name="editor-path-obstacle-imgui-right" />
                         </ui:ScrollView>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="editor-visual-path-height" class="edit-path-type-container" style="display: flex;">
-                    <uie:FloatField label="Left Side Height" value="42.2" />
-                    <uie:FloatField label="Right Side Height" value="42.2" />
+                <ui:VisualElement name="editor-visual-path-height" class="edit-path-type-container" style="display: none;">
+                    <uie:FloatField label="Left Side Height" value="42.2" name="editor-path-height-left" />
+                    <uie:FloatField label="Right Side Height" value="42.2" name="editor-path-height-right" />
                     <ui:Label text="Base Height   |   0 &#10;Above Ground   |   &gt; 0 &#10;Below Ground   |   &lt; 0 " display-tooltip-when-elided="true" style="height: 60px; padding-top: 10px; -unity-text-align: middle-center; padding-right: 0; padding-left: 0;" />
                 </ui:VisualElement>
             </ui:VisualElement>

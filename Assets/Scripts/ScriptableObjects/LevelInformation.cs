@@ -35,8 +35,9 @@ namespace WASD.Runtime.Levels
             //No Decoration Options yet
             public PathData(){}
 
-            public PathData(PathData copy)
+            public PathData Copy()
             {
+                PathData copy = new PathData();
                 Type = copy.Type;
                 Size = copy.Size;
                 PathCustomSize = copy.PathCustomSize;
@@ -47,6 +48,7 @@ namespace WASD.Runtime.Levels
                 InvertObstacleValues = copy.InvertObstacleValues;
                 SetLeftSideHeight = copy.SetLeftSideHeight;
                 SetRightSideHeight = copy.SetRightSideHeight;
+                return copy;
             }
         }
         #endregion
