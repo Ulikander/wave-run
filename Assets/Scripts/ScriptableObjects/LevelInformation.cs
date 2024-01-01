@@ -37,17 +37,20 @@ namespace WASD.Runtime.Levels
 
             public PathData Copy()
             {
-                PathData copy = new PathData();
-                Type = copy.Type;
-                Size = copy.Size;
-                PathCustomSize = copy.PathCustomSize;
-                ObstaclePath = copy.ObstaclePath;
-                UseCustomObstaclePath = copy.UseCustomObstaclePath;
-                CustomLeftSide = copy.CustomLeftSide;
-                CustomRightSide = copy.CustomRightSide;
-                InvertObstacleValues = copy.InvertObstacleValues;
-                SetLeftSideHeight = copy.SetLeftSideHeight;
-                SetRightSideHeight = copy.SetRightSideHeight;
+                PathData copy = new PathData
+                {
+                    Type = Type,
+                    Size = Size,
+                    PathCustomSize = PathCustomSize,
+                    ObstaclePath = ObstaclePath,
+                    UseCustomObstaclePath = UseCustomObstaclePath,
+                    CustomLeftSide = CustomLeftSide,
+                    CustomRightSide = CustomRightSide,
+                    InvertObstacleValues = InvertObstacleValues,
+                    SetLeftSideHeight = SetLeftSideHeight,
+                    SetRightSideHeight = SetRightSideHeight,
+                };
+                
                 return copy;
             }
         }

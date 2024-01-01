@@ -46,3 +46,25 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+.visualizer-parent {
+    align-items: stretch;
+    flex-direction: column-reverse;
+}
+
+.label-visualizer-title {
+    background-color: rgba(255, 255, 255, 0.14);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    height: auto;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 3px;
+    margin-right: 3px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}

@@ -11,6 +11,7 @@ using WASD.Runtime.Levels;
 
 namespace WASD.Editors
 {
+    [Serializable]
     public class LevelEditor : EditorWindow
     {
         #region Types
@@ -267,7 +268,9 @@ namespace WASD.Editors
 
         private class EditorValueFields
         {
-            public LevelInformation Level => _LevelField.value as LevelInformation;
+            public event Action<int> OnEditValue;
+            
+            private LevelInformation Level => _LevelField.value as LevelInformation;
             private LevelInformation.PathData CurrentPathData => _CurrentPathIndex >= 0 ? Level.Data[_CurrentPathIndex] : null;
             private readonly ObjectField _LevelField;
             private int _CurrentPathIndex;
@@ -298,6 +301,7 @@ namespace WASD.Editors
                 {
                     LevelPathStep value = (LevelPathStep)ctx.newValue;
                     CurrentPathData.Type = value;
+                    OnEditValue?.Invoke(_CurrentPathIndex);
                 });
 
                 _PlatformSizeField = root.Q<EnumField>("editor-path-size-enum");
@@ -305,6 +309,7 @@ namespace WASD.Editors
                 {
                     LevelPathSize value = (LevelPathSize)ctx.newValue;
                     CurrentPathData.Size = value;
+                    OnEditValue?.Invoke(_CurrentPathIndex);
                 });
 
                 _PlatformCustomSizeVisual = root.Q<VisualElement>("editor-path-visual-custom-size");
@@ -313,12 +318,14 @@ namespace WASD.Editors
                 _PlatformCustomSizeField.RegisterValueChangedCallback(ctx =>
                 {
                     CurrentPathData.PathCustomSize = ctx.newValue;
+                    OnEditValue?.Invoke(_CurrentPathIndex);
                 });
 
                 _UseCustomObstaclePathField = root.Q<Toggle>("editor-path-custom-obstacle-toggle");
                 _UseCustomObstaclePathField.RegisterValueChangedCallback(ctx =>
                 {
                     CurrentPathData.UseCustomObstaclePath = ctx.newValue;
+                    OnEditValue?.Invoke(_CurrentPathIndex);
                 });
 
                 _PathObstacleDataField = root.Q<ObjectField>("editor-path-obstacle-data");
@@ -328,6 +335,7 @@ namespace WASD.Editors
                     {
                         ObstaclePathData value = ctx.newValue as ObstaclePathData;
                         CurrentPathData.ObstaclePath = value;
+                        OnEditValue?.Invoke(_CurrentPathIndex);
                     }
                 });
 
@@ -335,25 +343,36 @@ namespace WASD.Editors
                 _InvertObstacleDataValuesToggle.RegisterValueChangedCallback(ctx =>
                 {
                     CurrentPathData.InvertObstacleValues = ctx.newValue;
+                    OnEditValue?.Invoke(_CurrentPathIndex);
                 });
 
                 _CustomObstacleDataVisual = root.Q<VisualElement>("editor-path-visual-custom-path-data");
 
                 _CustomObstacleDataLeft = root.Q<PropertyField>("editor-path-obstacle-imgui-left");
-
+                _CustomObstacleDataLeft.RegisterCallback<SerializedPropertyChangeEvent>(ctx =>
+                {
+                    OnEditValue?.Invoke(_CurrentPathIndex);
+                });
+               
                 _CustomObstacleDataRight = root.Q<PropertyField>("editor-path-obstacle-imgui-right");
-
+                _CustomObstacleDataRight.RegisterCallback<SerializedPropertyChangeEvent>(ctx =>
+                {
+                    OnEditValue?.Invoke(_CurrentPathIndex);
+                });
+                
 
                 _LeftSideHeightField = root.Q<FloatField>("editor-path-height-left");
                 _LeftSideHeightField.RegisterValueChangedCallback(ctx =>
                 {
                     CurrentPathData.SetLeftSideHeight = ctx.newValue;
+                    OnEditValue?.Invoke(_CurrentPathIndex);
                 });
 
                 _RightSideHeightField = root.Q<FloatField>("editor-path-height-right");
                 _RightSideHeightField.RegisterValueChangedCallback(ctx =>
                 {
                     CurrentPathData.SetRightSideHeight = ctx.newValue;
+                    OnEditValue?.Invoke(_CurrentPathIndex);
                 });
             }
 
@@ -404,6 +423,217 @@ namespace WASD.Editors
             }
         }
 
+        private class Visualizer
+        {
+            private class Container
+            {
+                private readonly VisualElement _Parent;
+                
+                private readonly VisualElement _Root;
+                public VisualElement PathVisual;
+                public VisualElement LeftPathElement;
+                public VisualElement RightPathElement;
+                public VisualElement InfoVisual;
+
+                public Label PathInfoLabel;
+                public Label MainInfoLabel;
+
+                public Container(VisualElement parent)
+                {
+                    _Parent = parent;
+                    VisualTreeAsset visualTree =
+                        AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
+                            "Assets/Editor/WASD/LevelInformationEditor/VisualizerContainer.uxml");
+                    _Root = new VisualElement();
+                    visualTree.CloneTree(_Root);
+
+                    PathVisual = _Root.Q<VisualElement>("path-visual");
+                    InfoVisual = _Root.Q<VisualElement>("path-info-visual");
+
+                    LeftPathElement = _Root.Q<VisualElement>("left-path");
+                    RightPathElement = _Root.Q<VisualElement>("right-path");
+
+                    PathInfoLabel = _Root.Q<Label>("path-info-label");
+                    MainInfoLabel = _Root.Q<Label>("info-label");
+                    
+                    _Parent.Add(_Root);
+                }
+
+                public void Remove()
+                {
+                    _Parent.Remove(_Root);
+                }
+            }
+            
+            public LevelInformation Level => _LevelField.value as LevelInformation;
+            private readonly ObjectField _LevelField;
+            private readonly Color _ColorBlue;
+            private readonly Color _ColorRed;
+            private readonly float _ShortSize;
+            private readonly float _NormalSize;
+            private readonly float _LongSize;
+            private readonly float _BasePlatformElementSize;
+
+            private List<Container> _Containers;
+
+            private VisualElement _ParentVisualElement;
+
+            public Visualizer(VisualElement root, ObjectField levelField)
+            {
+                _LevelField = levelField;
+                _ColorRed = new Color(.6f, .2f, .2f);
+                _ColorBlue =  new Color(.2f,.2f,.8f);
+                _BasePlatformElementSize = 150f;
+                _ShortSize = .5f;
+                _NormalSize = 1f;
+                _LongSize = 2f;
+                _Containers = new List<Container>();
+                _ParentVisualElement = root.Q<VisualElement>("visualizer-parent");
+            }
+
+            public void GenerateVisualizer()
+            {
+                ClearVisualizer();
+                if (Level.Data == null || Level.Data.Count == 0)
+                {
+                    return;
+                }
+
+                for (int index = 0; index < Level.Data.Count; index++)
+                {
+                    _Containers.Add(new Container(_ParentVisualElement));
+                    RefreshContainer(index);
+                }
+            }
+
+            private void ClearVisualizer()
+            {
+                while (_Containers.Count > 0)
+                {
+                    _Containers[0].Remove();
+                    _Containers.RemoveAt(0);
+                }
+            }
+
+            public void RefreshContainer(int index)
+            {
+                if (Level == null) return;
+                if (index >= Level.Data.Count) return;
+                Container container = _Containers[index];
+                LevelInformation.PathData data = Level.Data[index];
+
+                container.MainInfoLabel.text = $"Id: {index}";
+                container.PathVisual.style.display =
+                    data.Type == LevelPathStep.Path ? DisplayStyle.Flex : DisplayStyle.None;
+                container.InfoVisual.style.display =
+                    data.Type != LevelPathStep.Path ? DisplayStyle.Flex : DisplayStyle.None;
+                
+                if (data.Type == LevelPathStep.Path)
+                {
+                    container.MainInfoLabel.text += $" | Size: {data.Size}";
+                    if (data.Size == LevelPathSize.Custom) container.MainInfoLabel.text += $" ({data.PathCustomSize})";
+                    bool switchColors = AreColorsSwitched(index);
+                    
+                    container.LeftPathElement.style.backgroundColor = !switchColors ? _ColorBlue : _ColorRed;
+                    container.RightPathElement.style.backgroundColor = !switchColors ? _ColorRed : _ColorBlue;
+
+                    float platformSize = _BasePlatformElementSize;
+                    switch (data.Size)
+                    {
+                        case LevelPathSize.Short:
+                            platformSize *= _ShortSize;
+                            break;
+                        case LevelPathSize.Normal:
+                            platformSize *= _NormalSize;
+                            break;
+                        case LevelPathSize.Long:
+                            platformSize *= _LongSize;
+                            break;
+                        case LevelPathSize.Custom:
+                            platformSize *= data.PathCustomSize;
+                            break;
+                        default:
+                            platformSize *= 1f;
+                            break;
+                    }
+
+                    container.LeftPathElement.style.height = platformSize;
+                    container.RightPathElement.style.height = platformSize;
+
+                    void FPopulateObstacles(VisualElement platform, List<ObstaclePathData.Obstacle> obstacles)
+                    {
+                        platform.Clear();
+                        if (obstacles == null) return;
+
+                        bool isCountEven = obstacles.Count % 2 == 0;
+                        float inBetween = isCountEven
+                            ? (platformSize - 20f) / (obstacles.Count + 1)
+                            : (platformSize - 20f) / (obstacles.Count - 1);
+
+                        for (var i = 0; i < obstacles.Count; i++)
+                        {
+                            ObstaclePathData.Obstacle obstacle = obstacles[i];
+                            Label newLabel = new Label($"{obstacle.Type}");
+                            newLabel.style.position = Position.Absolute;
+
+                            if (obstacle.AutomaticPosition)
+                            {
+                                if (obstacles.Count == 1)
+                                {
+                                    newLabel.style.bottom = (platformSize - 20f) / 2f;
+                                }
+                                else
+                                {
+                                    newLabel.style.bottom = inBetween * (i + (isCountEven ? 1 : 0));
+                                }
+
+                                platform.Add(newLabel);
+                            }
+                            else
+                            {
+                                newLabel.style.bottom = (platformSize - 20f) * obstacle.PositionOnPath;
+                                platform.Add(newLabel);
+                            }
+                        }
+                    }
+                    
+                    if (!data.UseCustomObstaclePath && data.ObstaclePath != null)
+                    {
+                        FPopulateObstacles(container.LeftPathElement,
+                            !data.InvertObstacleValues ? data.ObstaclePath.LeftSide : data.ObstaclePath.RightSide);
+                        FPopulateObstacles(container.RightPathElement,
+                            !data.InvertObstacleValues ? data.ObstaclePath.RightSide : data.ObstaclePath.LeftSide);
+                    }
+                    else
+                    {
+                        FPopulateObstacles(container.LeftPathElement,
+                            data.UseCustomObstaclePath ? data.CustomLeftSide : null);
+                        FPopulateObstacles(container.RightPathElement,
+                            data.UseCustomObstaclePath ? data.CustomRightSide : null);
+                    }
+                    
+                }
+                else
+                {
+                    container.PathInfoLabel.text = $"{data.Type}";
+                    if (data.Type == LevelPathStep.ChangeHeight)
+                    {
+                        container.PathInfoLabel.text += $"\nL: {data.SetLeftSideHeight} | R: {data.SetRightSideHeight}";
+                    }
+                }
+            }
+
+            private bool AreColorsSwitched(int index)
+            {
+                bool result = false;
+                for (int i = 0; i < index; i++)
+                {
+                    if (Level.Data[i].Type == LevelPathStep.SwitchColors) result = !result;
+                }
+                return result;
+            }
+        }
+
         #endregion
 
         #region Events
@@ -418,6 +648,7 @@ namespace WASD.Editors
         private EditorMainContainers _EditorMainContainers;
         private EditorPathSelect _EditorPathSelect;
         private EditorValueFields _EditorValueFields;
+        private Visualizer _Visualizer;
 
         private int _CurrentPathDataId;
 
@@ -433,7 +664,7 @@ namespace WASD.Editors
 
         public void CreateGUI()
         {
-            var visualTree =
+            VisualTreeAsset visualTree =
                 AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                     "Assets/Editor/WASD/LevelInformationEditor/LevelEditor.uxml");
             visualTree.CloneTree(rootVisualElement);
@@ -443,6 +674,7 @@ namespace WASD.Editors
             {
                 LevelInformation value = ctx.newValue as LevelInformation;
                 HandleCurrentPathIndexChange(value != null && value.Data is { Count: > 0 } ? 0 : -1);
+                _Visualizer.GenerateVisualizer();
             });
             
             _EditorMainContainers = new EditorMainContainers(rootVisualElement, _LevelGeneral.LevelField);
@@ -461,6 +693,8 @@ namespace WASD.Editors
             OnPathIndexChange += _EditorPathSelect.HandlePathIndexChange;
             _EditorValueFields = new EditorValueFields(rootVisualElement, _LevelGeneral.LevelField);
             OnPathIndexChange += _EditorValueFields.HandleSwitchPathIndex;
+            _Visualizer = new Visualizer( rootVisualElement,  _LevelGeneral.LevelField);
+            _EditorValueFields.OnEditValue += _Visualizer.RefreshContainer;
             
             _CurrentPathDataId = -1;
             OnPathIndexChange?.Invoke(-1);
@@ -522,6 +756,7 @@ namespace WASD.Editors
             int newIndex = _CurrentPathDataId == -1 ? 0 : _CurrentPathDataId + (isBefore ? 0 : 1);
             _LevelGeneral.Level.Data.Insert(newIndex, new LevelInformation.PathData());
             HandleCurrentPathIndexChange(newIndex);
+            _Visualizer.GenerateVisualizer();
         }
 
         private LevelInformation.PathData CopyData()
@@ -532,11 +767,14 @@ namespace WASD.Editors
         private void PasteData(LevelInformation.PathData data)
         {
             _LevelGeneral.Level.Data[_CurrentPathDataId] = data.Copy();
+            _Visualizer.RefreshContainer(_CurrentPathDataId);
+            HandleCurrentPathIndexChange(_CurrentPathDataId);
         }
 
         private void RemoveCurrentData()
         {
             _LevelGeneral.Level.Data.RemoveAt(_CurrentPathDataId);
+            _Visualizer.GenerateVisualizer();
             HandleCurrentPathIndexChange(_CurrentPathDataId);
         }
 
@@ -547,7 +785,15 @@ namespace WASD.Editors
 
         private void MoveCurrentData(bool isBefore)
         {
+            int movedToIndex = isBefore ? _CurrentPathDataId - 1 : _CurrentPathDataId + 1;
+            LevelInformation.PathData currentCopy = _LevelGeneral.Level.Data[_CurrentPathDataId].Copy();
+            LevelInformation.PathData otherCopy = _LevelGeneral.Level.Data[movedToIndex];
+            _LevelGeneral.Level.Data[movedToIndex] = currentCopy;
+            _LevelGeneral.Level.Data[_CurrentPathDataId] = otherCopy;
+            HandleCurrentPathIndexChange(movedToIndex);
             
+            _Visualizer.RefreshContainer(movedToIndex);
+            _Visualizer.RefreshContainer(_CurrentPathDataId);
         }
 
         /**

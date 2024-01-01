@@ -97,7 +97,7 @@ MonoBehaviour:
     SetLeftSideHeight: 0
     SetRightSideHeight: 0
   - Type: 0
-    Size: 2
+    Size: 1
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
     UseCustomObstaclePath: 0

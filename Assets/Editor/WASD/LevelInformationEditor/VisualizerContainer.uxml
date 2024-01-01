@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Editor/WASD/LevelInformationEditor/VisualizerContainer.uss?fileID=7433441132597879392&amp;guid=0fa6e57030ee7e5468d6c5af9bb08431&amp;type=3#VisualizerContainer" />
+    <ui:VisualElement name="path-visual" class="mainContainer" style="display: flex;">
+        <ui:VisualElement name="left-path" class="pathContainer" />
+        <ui:VisualElement name="right-path" class="pathContainer" />
+    </ui:VisualElement>
+    <ui:VisualElement name="path-info-visual" class="mainContainer" style="display: none;">
+        <ui:Label text="Info" name="path-info-label" class="infoLabel" />
+    </ui:VisualElement>
+    <ui:Label text="Id: 99 | Path | Normal" display-tooltip-when-elided="true" name="info-label" class="topLabel" />
+</ui:UXML>
