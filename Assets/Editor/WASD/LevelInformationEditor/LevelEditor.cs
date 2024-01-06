@@ -438,6 +438,9 @@ namespace WASD.Editors
                 public Label PathInfoLabel;
                 public Label MainInfoLabel;
 
+                public int Index;
+                public event Action<int> OnSelect;
+
                 public Container(VisualElement parent)
                 {
                     _Parent = parent;
@@ -455,6 +458,10 @@ namespace WASD.Editors
 
                     PathInfoLabel = _Root.Q<Label>("path-info-label");
                     MainInfoLabel = _Root.Q<Label>("info-label");
+                    MainInfoLabel.RegisterCallback<ClickEvent>(ctx =>
+                    {
+                        OnSelect?.Invoke(Index);
+                    });
                     
                     _Parent.Add(_Root);
                 }
@@ -478,7 +485,9 @@ namespace WASD.Editors
 
             private VisualElement _ParentVisualElement;
 
-            public Visualizer(VisualElement root, ObjectField levelField)
+            private Action<int> _SelectIndexDelegate;
+            
+            public Visualizer(VisualElement root, ObjectField levelField, Action<int> selectIndexDelegate)
             {
                 _LevelField = levelField;
                 _ColorRed = new Color(.6f, .2f, .2f);
@@ -489,6 +498,9 @@ namespace WASD.Editors
                 _LongSize = 2f;
                 _Containers = new List<Container>();
                 _ParentVisualElement = root.Q<VisualElement>("visualizer-parent");
+                _SelectIndexDelegate = selectIndexDelegate;
+
+                root.Q<Button>("visualizer-force-refresh").clicked += GenerateVisualizer;
             }
 
             public void GenerateVisualizer()
@@ -501,7 +513,9 @@ namespace WASD.Editors
 
                 for (int index = 0; index < Level.Data.Count; index++)
                 {
-                    _Containers.Add(new Container(_ParentVisualElement));
+                    Container newContainer = new Container(_ParentVisualElement);
+                    newContainer.OnSelect += _SelectIndexDelegate;
+                    _Containers.Add(newContainer);
                     RefreshContainer(index);
                 }
             }
@@ -520,6 +534,7 @@ namespace WASD.Editors
                 if (Level == null) return;
                 if (index >= Level.Data.Count) return;
                 Container container = _Containers[index];
+                container.Index = index;
                 LevelInformation.PathData data = Level.Data[index];
 
                 container.MainInfoLabel.text = $"Id: {index}";
@@ -693,7 +708,7 @@ namespace WASD.Editors
             OnPathIndexChange += _EditorPathSelect.HandlePathIndexChange;
             _EditorValueFields = new EditorValueFields(rootVisualElement, _LevelGeneral.LevelField);
             OnPathIndexChange += _EditorValueFields.HandleSwitchPathIndex;
-            _Visualizer = new Visualizer( rootVisualElement,  _LevelGeneral.LevelField);
+            _Visualizer = new Visualizer( rootVisualElement,  _LevelGeneral.LevelField, HandleCurrentPathIndexChange);
             _EditorValueFields.OnEditValue += _Visualizer.RefreshContainer;
             
             _CurrentPathDataId = -1;

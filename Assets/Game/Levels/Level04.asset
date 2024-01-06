@@ -30,7 +30,7 @@ MonoBehaviour:
     Size: 1
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
+    UseCustomObstaclePath: 1
     CustomLeftSide:
     - Type: 1
       AutomaticPosition: 1
@@ -78,7 +78,7 @@ MonoBehaviour:
     Size: 0
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
+    UseCustomObstaclePath: 1
     CustomLeftSide:
     - Type: 0
       AutomaticPosition: 0
@@ -116,7 +116,7 @@ MonoBehaviour:
     Size: 1
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
+    UseCustomObstaclePath: 1
     CustomLeftSide:
     - Type: 3
       AutomaticPosition: 1
@@ -134,34 +134,34 @@ MonoBehaviour:
     Size: 3
     PathCustomSize: 0.7
     ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
+    UseCustomObstaclePath: 1
     CustomLeftSide:
     - Type: 1
       AutomaticPosition: 1
-      PositionOnPath: 0
+      PositionOnPath: 0.4
       OverrideSize: 0
     CustomRightSide:
     - Type: 2
       AutomaticPosition: 0
-      PositionOnPath: 0.6
+      PositionOnPath: 0.8
       OverrideSize: 0
     InvertObstacleValues: 0
     SetLeftSideHeight: 0
     SetRightSideHeight: 0
   - Type: 0
-    Size: 1
-    PathCustomSize: 0
+    Size: 3
+    PathCustomSize: 1.25
     ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
+    UseCustomObstaclePath: 1
     CustomLeftSide:
     - Type: 0
-      AutomaticPosition: 1
-      PositionOnPath: 0
+      AutomaticPosition: 0
+      PositionOnPath: 0.4
       OverrideSize: 0
     CustomRightSide:
     - Type: 1
-      AutomaticPosition: 1
-      PositionOnPath: 0
+      AutomaticPosition: 0
+      PositionOnPath: 0.6
       OverrideSize: 0
     InvertObstacleValues: 0
     SetLeftSideHeight: 0
@@ -264,20 +264,6 @@ MonoBehaviour:
     ObstaclePath: {fileID: 0}
     UseCustomObstaclePath: 0
     CustomLeftSide: []
-    CustomRightSide:
-    - Type: 0
-      AutomaticPosition: 0
-      PositionOnPath: 1
-      OverrideSize: 0
-    InvertObstacleValues: 0
-    SetLeftSideHeight: 0
-    SetRightSideHeight: 0
-  - Type: 1
-    Size: 0
-    PathCustomSize: 0
-    ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
-    CustomLeftSide: []
     CustomRightSide: []
     InvertObstacleValues: 0
     SetLeftSideHeight: 0
@@ -286,7 +272,7 @@ MonoBehaviour:
     Size: 1
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
+    UseCustomObstaclePath: 1
     CustomLeftSide: []
     CustomRightSide:
     - Type: 5
@@ -300,7 +286,7 @@ MonoBehaviour:
     Size: 1
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
+    UseCustomObstaclePath: 1
     CustomLeftSide:
     - Type: 1
       AutomaticPosition: 1
@@ -456,7 +442,7 @@ MonoBehaviour:
     Size: 1
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
+    UseCustomObstaclePath: 1
     CustomLeftSide:
     - Type: 2
       AutomaticPosition: 0
