@@ -11,7 +11,7 @@ namespace WASD.Runtime.Levels
     {
         #region Types
         [Serializable]
-        public struct Obstacle
+        public class Obstacle
         {
             public LevelObstacleType Type;
             public bool AutomaticPosition;

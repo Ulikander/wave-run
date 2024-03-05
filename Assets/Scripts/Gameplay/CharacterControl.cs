@@ -105,9 +105,14 @@ namespace WASD.Runtime.Gameplay
 
         private void OnTriggerEnterEvent(GameObject collidedObject, PlayerCollisionDetector collisionDetector)
         {
-            if (collisionDetector.Concept == CollisionConcept.Invincibility)
+            if (collisionDetector.Concept == CollisionConcept.Other)
             {
-                StartInvincibility();
+                switch (collisionDetector.OtherConcept)
+                {
+                    case Constants.COLLISION_INVINCIBILITY:
+                        StartInvincibility();
+                        break;
+                }
             }
             
             if(collisionDetector.Concept is CollisionConcept.KillPlayer)
@@ -337,18 +342,16 @@ namespace WASD.Runtime.Gameplay
 
         private async UniTaskVoid InvincibilitySequence(CancellationToken cancelToken)
         {
-            float timeAdvice = _InvincibilityDuration * 0.25f;
+            float timeAdvice = _InvincibilityDuration * Constants.INVINCIBILITY_ADVICETIME;
             
             _IsInvincible = true;
-            GameManager.Audio.FadeBgmPitch(2, 1f);
-            await UniTask.Delay((int)((_InvincibilityDuration - timeAdvice) * 1000), cancellationToken: cancelToken)
-                .SuppressCancellationThrow();
+            GameManager.Audio.FadeBgmPitch(2, Constants.INVINCIBILITY_FADETIME);
+            await Utils.UniTaskDelay(_InvincibilityDuration - timeAdvice, cancelToken).SuppressCancellationThrow();
             
-            GameManager.Audio.FadeBgmPitch(1.5f, 1f);
-            await UniTask.Delay((int)(timeAdvice * 1000), cancellationToken: cancelToken)
-                .SuppressCancellationThrow();
+            GameManager.Audio.FadeBgmPitch(1.5f, Constants.INVINCIBILITY_FADETIME);
+            await Utils.UniTaskDelay(timeAdvice, cancelToken).SuppressCancellationThrow();
             
-            GameManager.Audio.FadeBgmPitch(1, 1f);
+            GameManager.Audio.FadeBgmPitch(1, Constants.INVINCIBILITY_FADETIME);
             _IsInvincible = false;
             
             Utils.CancelTokenSourceRequestCancelAndDispose(ref _InvincibilityCancelToken);
@@ -391,14 +394,12 @@ namespace WASD.Runtime.Gameplay
             _CharacterBlueAnimator.ResetTrigger(_DeadTriggerId);
             
             _IsInvincible = true;
-            
-            await UniTask.Delay((int)(_CharacterRespawnTime * 1000), cancellationToken: cancelToken)
-                .SuppressCancellationThrow();
+
+            await Utils.UniTaskDelay(_CharacterRespawnTime, cancelToken).SuppressCancellationThrow();
             _OnRespawnTimeFinish?.Invoke();
             _IsDead = false;
 
-            await UniTask.Delay((int)(_RespawnInvincibilityDuration * 1000), cancellationToken: cancelToken)
-                .SuppressCancellationThrow();
+            await Utils.UniTaskDelay(_RespawnInvincibilityDuration, cancelToken).SuppressCancellationThrow();
             _OnRespawnInvincibilityFinish?.Invoke();
             _IsInvincible = _InvincibilityCancelToken != null;
         }

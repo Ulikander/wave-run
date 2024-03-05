@@ -340,7 +340,7 @@ MonoBehaviour:
     Size: 1
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
+    UseCustomObstaclePath: 1
     CustomLeftSide:
     - Type: 1
       AutomaticPosition: 0
@@ -394,7 +394,7 @@ MonoBehaviour:
     Size: 3
     PathCustomSize: 1.25
     ObstaclePath: {fileID: 11400000, guid: bd3c2ba304d69004ab8cbbb9a35ecdaa, type: 2}
-    UseCustomObstaclePath: 0
+    UseCustomObstaclePath: 1
     CustomLeftSide:
     - Type: 0
       AutomaticPosition: 0
@@ -468,7 +468,7 @@ MonoBehaviour:
     Size: 0
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
-    UseCustomObstaclePath: 0
+    UseCustomObstaclePath: 1
     CustomLeftSide:
     - Type: 1
       AutomaticPosition: 0

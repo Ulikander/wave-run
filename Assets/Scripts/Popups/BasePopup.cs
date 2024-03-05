@@ -73,7 +73,9 @@ namespace WASD.Runtime.Popups
 
             if (_Animate)
             {
-                FrameTransitionAsync(true);
+                _FrameTransitionCancelToken =
+                    CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
+                FrameTransitionAsync(true, _FrameTransitionCancelToken.Token).Forget();
             }
             else
             {
@@ -105,7 +107,9 @@ namespace WASD.Runtime.Popups
 
             if (_Animate)
             {
-                FrameTransitionAsync(false);
+                _FrameTransitionCancelToken =
+                    CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
+                FrameTransitionAsync(false, _FrameTransitionCancelToken.Token).Forget();
             }
             else
             {
@@ -121,9 +125,9 @@ namespace WASD.Runtime.Popups
             }
         }
 
-        protected virtual async void FrameTransitionAsync(bool isShow)
+        protected virtual async UniTaskVoid FrameTransitionAsync(bool isShow, CancellationToken cancelToken)
         {
-            _FrameTransitionCancelToken = new CancellationTokenSource();
+           
 
             _Frame.alpha = isShow ? 0f : 1f;
             _Frame.gameObject.transform.DOScale(
@@ -141,8 +145,7 @@ namespace WASD.Runtime.Popups
                     _FrameTransitionTime / 2f);
             }
 
-            await UniTask.Delay((int)(_FrameTransitionTime * 1000),
-                    cancellationToken: _FrameTransitionCancelToken.Token)
+            await Utils.UniTaskDelay(_FrameTransitionTime, cancelToken)
                 .SuppressCancellationThrow();
 
             _Frame.interactable = isShow;

@@ -48,9 +48,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Identifier: PowerUpInvincibility
   _IgnoreSimulation: 0
+  _sizeOverrideAllAxis: 0
   _EndingPoint: {fileID: 0}
   _DefaultNeonMaterial: {fileID: 2100000, guid: 21ed4e8061c65d746b29e97032f822c6,
     type: 2}
+  _DefaultLeftMaterial: {fileID: 0}
+  _DefaultRightMaterial: {fileID: 0}
   _NeonAffectedRenderer:
   - {fileID: 868810958875411809}
   _NeonAffectedRendererIndex: 00000000
@@ -116,7 +119,8 @@ MonoBehaviour:
   _Collider: {fileID: 8597981450158312068}
   _PlayerTag: Player
   _CollisionConcept: 4
-  _IgnoreInvincibility: 0
+  otherCollisionConcept: Invincibility
+  _IgnoreInvincibility: 1
 --- !u!1001 &2003881206375963109
 PrefabInstance:
   m_ObjectHideFlags: 0

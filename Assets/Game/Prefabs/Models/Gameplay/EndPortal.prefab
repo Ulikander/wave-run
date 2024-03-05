@@ -48,9 +48,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Identifier: EndPortal
   _IgnoreSimulation: 0
+  _sizeOverrideAllAxis: 0
   _EndingPoint: {fileID: 0}
   _DefaultNeonMaterial: {fileID: 2100000, guid: a9b623d40f71252498fb8ee84349dda1,
     type: 2}
+  _DefaultLeftMaterial: {fileID: 0}
+  _DefaultRightMaterial: {fileID: 0}
   _NeonAffectedRenderer:
   - {fileID: 5593034583861750538}
   _NeonAffectedRendererIndex: 00000000
@@ -116,7 +119,7 @@ MonoBehaviour:
   _Collider: {fileID: 8597981450158312068}
   _PlayerTag: Player
   _CollisionConcept: 1
-  _IgnoreInvincibility: 0
+  _IgnoreInvincibility: 1
 --- !u!1 &8498326069995150285
 GameObject:
   m_ObjectHideFlags: 0

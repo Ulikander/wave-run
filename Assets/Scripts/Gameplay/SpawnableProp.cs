@@ -22,8 +22,11 @@ namespace WASD.Runtime.Gameplay
         [Header("Prop")]
         [SerializeField] private string _Identifier;
         [SerializeField] private bool _IgnoreSimulation;
+        [SerializeField] private bool _sizeOverrideAllAxis;
         [SerializeField] private Transform _EndingPoint;
         [SerializeField] private Material _DefaultNeonMaterial;
+        [SerializeField] private Material _DefaultLeftMaterial;
+        [SerializeField] private Material _DefaultRightMaterial;
         [SerializeField] private Renderer[] _NeonAffectedRenderer;
         [SerializeField] private int[] _NeonAffectedRendererIndex;
 
@@ -32,6 +35,10 @@ namespace WASD.Runtime.Gameplay
 
         private Renderer[] _AllRenderers;
         private Collider[] _AllColliders;
+        private bool _IsDefaultLeftMaterialNotNull;
+        private bool _IsDefaultRightMaterialNotNull;
+        private bool _IsDefaultNeonMaterialNotNull;
+        private bool _IsPlayerCollisionNotNull;
         #endregion
 
         #region Events
@@ -39,8 +46,16 @@ namespace WASD.Runtime.Gameplay
         public event Action<SpawnableProp> OnSetInactive;
         #endregion
 
+        private void Start()
+        {
+            _IsDefaultNeonMaterialNotNull = _DefaultNeonMaterial != null;
+        }
+
         private void Awake()
         {
+            _IsPlayerCollisionNotNull = _PlayerCollision != null;
+            _IsDefaultRightMaterialNotNull = _DefaultRightMaterial != null;
+            _IsDefaultLeftMaterialNotNull = _DefaultLeftMaterial != null;
             _AllRenderers = GetComponentsInChildren<Renderer>(includeInactive: true);
             _AllColliders = GetComponentsInChildren<Collider>(includeInactive: true);
 
@@ -52,28 +67,43 @@ namespace WASD.Runtime.Gameplay
             SetRenderersAndCollidersEnabled(value: false);
         }
 
-        public void Show(Vector3 position, float size = 1f, Material neonMaterial = null)
+        public void Show(Vector3 position, float overrideSize = 1f, Material neonMaterial = default, bool useLeftMaterial = false)
         {
-            if(neonMaterial != null)
+            if (neonMaterial == default)
+            {
+                if (_IsDefaultLeftMaterialNotNull && _IsDefaultRightMaterialNotNull)
+                {
+                    Utils.ChangeAllMeshRenderersMaterial(
+                        _NeonAffectedRenderer,
+                        _NeonAffectedRendererIndex,
+                        useLeftMaterial ? _DefaultLeftMaterial : _DefaultRightMaterial);
+                }
+                else if (_IsDefaultNeonMaterialNotNull)
+                {
+                    Utils.ChangeAllMeshRenderersMaterial(
+                        renderers: _NeonAffectedRenderer,
+                        indexes: _NeonAffectedRendererIndex,
+                        material: _DefaultNeonMaterial);
+                }
+            }
+            else
             {
                 Utils.ChangeAllMeshRenderersMaterial(
                     renderers: _NeonAffectedRenderer,
                     indexes: _NeonAffectedRendererIndex,
                     material: neonMaterial);
             }
-            else if(_DefaultNeonMaterial != null)
-            {
-                Utils.ChangeAllMeshRenderersMaterial(
-                    renderers: _NeonAffectedRenderer,
-                    indexes: _NeonAffectedRendererIndex,
-                    material: _DefaultNeonMaterial);
-            }
-            
+
             Transform gameObjectTransform = gameObject.transform;
             gameObjectTransform.position = position;
 
             Vector3 newSize = gameObjectTransform.localScale;
-            newSize.z = 1 * size;
+            if (_sizeOverrideAllAxis)
+            {
+                newSize.x = 1 * overrideSize;
+                newSize.y = 1 * overrideSize;
+            }
+            newSize.z = 1 * overrideSize;
             gameObjectTransform.localScale = newSize;
 
             SetRenderersAndCollidersEnabled(value: true);
@@ -81,7 +111,7 @@ namespace WASD.Runtime.Gameplay
 
         public void SetPlayerCollisionConcept(CollisionConcept concept)
         {
-            if(_PlayerCollision != null)
+            if(_IsPlayerCollisionNotNull)
             {
                 _PlayerCollision.Concept = concept;
             }
@@ -113,6 +143,7 @@ namespace WASD.Runtime.Gameplay
 
 #if UNITY_EDITOR
         private string _PathElementValue;
+
         public void SetGizmoValues(string pathElement)
         {
             _PathElementValue = pathElement;

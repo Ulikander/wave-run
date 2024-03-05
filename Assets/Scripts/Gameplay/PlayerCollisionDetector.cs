@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
 
 namespace WASD.Runtime.Gameplay
 {
@@ -15,13 +11,14 @@ namespace WASD.Runtime.Gameplay
             Win,
             BluePlatform,
             RedPlatform,
-            Invincibility,
+            Other,
         }
         #endregion
 
         #region Properties
         public Collider Collider { get => _Collider; }
         public CollisionConcept Concept { get => _CollisionConcept; set => _CollisionConcept = value; }
+        public string OtherConcept => otherCollisionConcept;
         public bool IgnoresInvincibility => _IgnoreInvincibility;
         #endregion
 
@@ -29,6 +26,7 @@ namespace WASD.Runtime.Gameplay
         [SerializeField] private Collider _Collider;
         [SerializeField] private string _PlayerTag;
         [SerializeField] private CollisionConcept _CollisionConcept;
+        [SerializeField] private string otherCollisionConcept;
         [SerializeField] private bool _IgnoreInvincibility;
         #endregion
 

@@ -1,4 +1,5 @@
 using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace WASD.Runtime
@@ -71,6 +72,11 @@ namespace WASD.Runtime
             tokenSource.Dispose();
             tokenSource = null;
         }
+
+        public static async UniTask UniTaskDelay(float time) =>  await UniTask.Delay((int)(time * 1000));
+
+        public static async UniTask UniTaskDelay(float time, CancellationToken cancellationToken) =>
+            await UniTask.Delay((int)(time * 1000), cancellationToken: cancellationToken);
 
         #endregion
     }

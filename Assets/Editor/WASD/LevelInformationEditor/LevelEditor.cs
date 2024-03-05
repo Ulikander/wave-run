@@ -275,22 +275,22 @@ namespace WASD.Editors
             private readonly ObjectField _LevelField;
             private int _CurrentPathIndex;
 
-            private EnumField _PathTypeField;
+            private readonly EnumField _PathTypeField;
 
             //Path
-            private EnumField _PlatformSizeField;
-            private VisualElement _PlatformCustomSizeVisual;
-            private FloatField _PlatformCustomSizeField;
-            private Toggle _UseCustomObstaclePathField;
-            private ObjectField _PathObstacleDataField;
-            private Toggle _InvertObstacleDataValuesToggle;
-            private VisualElement _CustomObstacleDataVisual;
-            private PropertyField _CustomObstacleDataLeft;
-            private PropertyField _CustomObstacleDataRight;
+            private readonly EnumField _PlatformSizeField;
+            private readonly VisualElement _PlatformCustomSizeVisual;
+            private readonly FloatField _PlatformCustomSizeField;
+            private readonly Toggle _UseCustomObstaclePathField;
+            private readonly ObjectField _PathObstacleDataField;
+            private readonly Toggle _InvertObstacleDataValuesToggle;
+            private readonly VisualElement _CustomObstacleDataVisual;
+            private readonly PropertyField _CustomObstacleDataLeft;
+            private readonly PropertyField _CustomObstacleDataRight;
 
             //Height
-            private FloatField _LeftSideHeightField;
-            private FloatField _RightSideHeightField;
+            private readonly FloatField _LeftSideHeightField;
+            private readonly FloatField _RightSideHeightField;
 
             public EditorValueFields(VisualElement root, ObjectField levelField)
             {
@@ -428,15 +428,15 @@ namespace WASD.Editors
             private class Container
             {
                 private readonly VisualElement _Parent;
-                
                 private readonly VisualElement _Root;
-                public VisualElement PathVisual;
-                public VisualElement LeftPathElement;
-                public VisualElement RightPathElement;
-                public VisualElement InfoVisual;
+                
+                public readonly VisualElement PathVisual;
+                public readonly VisualElement LeftPathElement;
+                public readonly VisualElement RightPathElement;
+                public readonly VisualElement InfoVisual;
 
-                public Label PathInfoLabel;
-                public Label MainInfoLabel;
+                public readonly Label PathInfoLabel;
+                public readonly Label MainInfoLabel;
 
                 public int Index;
                 public event Action<int> OnSelect;
@@ -471,8 +471,8 @@ namespace WASD.Editors
                     _Parent.Remove(_Root);
                 }
             }
-            
-            public LevelInformation Level => _LevelField.value as LevelInformation;
+
+            private LevelInformation Level => _LevelField.value as LevelInformation;
             private readonly ObjectField _LevelField;
             private readonly Color _ColorBlue;
             private readonly Color _ColorRed;
@@ -710,6 +710,7 @@ namespace WASD.Editors
             OnPathIndexChange += _EditorValueFields.HandleSwitchPathIndex;
             _Visualizer = new Visualizer( rootVisualElement,  _LevelGeneral.LevelField, HandleCurrentPathIndexChange);
             _EditorValueFields.OnEditValue += _Visualizer.RefreshContainer;
+            _EditorValueFields.OnEditValue += (_) => EditorUtility.SetDirty(_LevelGeneral.Level);
             
             _CurrentPathDataId = -1;
             OnPathIndexChange?.Invoke(-1);
@@ -795,7 +796,10 @@ namespace WASD.Editors
 
         private void ClearUnusedData()
         {
-            
+            if (_LevelGeneral.Level == null) return;
+            _LevelGeneral.Level.ClearUnusedValues();
+            _EditorValueFields.HandleSwitchPathIndex(_CurrentPathDataId);
+            EditorUtility.SetDirty(_LevelGeneral.Level);
         }
 
         private void MoveCurrentData(bool isBefore)

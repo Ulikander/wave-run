@@ -2108,7 +2108,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 555950055}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
@@ -5333,6 +5333,7 @@ MonoBehaviour:
   _Collider: {fileID: 1613156716}
   _PlayerTag: Player
   _CollisionConcept: 0
+  otherCollisionConcept: 
   _IgnoreInvincibility: 1
 --- !u!1 &1613836411
 GameObject:
@@ -6445,7 +6446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5c43f818faa414bbe13c50dde1f250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ForceLevelSelectedOnEditor: 0
+  _ForceLevelSelectedOnEditor: 1
   _MaxActiveDecorations: 2
   _HeightValue: 2
   _PlatformSizeNormal: 1

@@ -78,15 +78,18 @@ namespace WASD.Runtime.Managers
             }
             else
             {
-                LoadSceneAsync(sceneId, onSceneLoaded);
+                _LoadSceneCancelToken =
+                    CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
+                LoadSceneAsync(sceneId, _LoadSceneCancelToken.Token, onSceneLoaded).Forget();
             }
-
         }
 
 
-        private async void LoadSceneAsync(string sceneId, Action onSceneLoaded = null)
+        private async UniTaskVoid LoadSceneAsync(
+            string sceneId,
+            CancellationToken cancelToken,
+            Action onSceneLoaded = null)
         {
-            _LoadSceneCancelToken = new CancellationTokenSource();
             _MainCanvasGroup.alpha = 0f;
             _TextAndSliderCanvasGroup.alpha = 0f;
             _ProgressSlider.value = 0f;
@@ -94,13 +97,11 @@ namespace WASD.Runtime.Managers
             _Canvas.enabled = true;
 
             DOTween.To(() => _MainCanvasGroup.alpha, x => _MainCanvasGroup.alpha = x, 1f, _BgFadeTime);
-            await UniTask.Delay((int)(_BgFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token)
-                .SuppressCancellationThrow();
+            await Utils.UniTaskDelay(_BgFadeTime, cancelToken).SuppressCancellationThrow();
 
             DOTween.To(() => _TextAndSliderCanvasGroup.alpha, x => _TextAndSliderCanvasGroup.alpha = x, 1f,
                 _TextAndSliderFadeTime);
-            await UniTask.Delay((int)(_TextAndSliderFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token)
-                .SuppressCancellationThrow();
+            await Utils.UniTaskDelay(_TextAndSliderFadeTime, cancelToken).SuppressCancellationThrow();
 
             AsyncOperation asyncSceneLoading = SceneManager.LoadSceneAsync(sceneName: sceneId);
             asyncSceneLoading.allowSceneActivation = false;
@@ -115,7 +116,7 @@ namespace WASD.Runtime.Managers
 
             DOTween.To(() => _TextAndSliderCanvasGroup.alpha, x => _TextAndSliderCanvasGroup.alpha = x, 0f,
                 _TextAndSliderFadeTime);
-            await UniTask.Delay((int)(_TextAndSliderFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token);
+            await Utils.UniTaskDelay(_TextAndSliderFadeTime, cancelToken).SuppressCancellationThrow();
 
             asyncSceneLoading.allowSceneActivation = true;
 
@@ -127,7 +128,7 @@ namespace WASD.Runtime.Managers
             onSceneLoaded?.Invoke();
 
             DOTween.To(() => _MainCanvasGroup.alpha, x => _MainCanvasGroup.alpha = x, 0f, _BgFadeTime);
-            await UniTask.Delay((int)(_BgFadeTime * 1000), cancellationToken: _LoadSceneCancelToken.Token);
+            await Utils.UniTaskDelay(_BgFadeTime, cancelToken).SuppressCancellationThrow();
 
             _Canvas.enabled = false;
 
@@ -145,8 +146,7 @@ namespace WASD.Runtime.Managers
             _Canvas.enabled = true;
 
             DOTween.To(() => _MainCanvasGroup.alpha, x => _MainCanvasGroup.alpha = x, 1f, timeToFade);
-            await UniTask.Delay((int)((timeToFade + 2f) * 1000))
-                .SuppressCancellationThrow();
+            await Utils.UniTaskDelay(timeToFade + 2).SuppressCancellationThrow();
             
             _MainCanvasGroup.alpha = 0f;
             _TextAndSliderCanvasGroup.alpha = 0f;

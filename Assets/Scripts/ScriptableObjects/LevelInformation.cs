@@ -65,7 +65,50 @@ namespace WASD.Runtime.Levels
         
         public void ClearUnusedValues()
         {
+            void FClearCustomObstacle(List<Obstacle> list)
+            {
+                foreach (Obstacle obstacle in list)
+                {
+                    if (obstacle.AutomaticPosition) obstacle.PositionOnPath = default;
+                }
+            }
+            
+            if (LevelDifficulty != LevelDifficulty.Core) CoreLevelValue = default;
+            foreach (PathData pathData in Data)
+            {
+                if (pathData.Type == LevelPathStep.Path)
+                {
+                    if (pathData.Size != LevelPathSize.Custom) pathData.PathCustomSize = default;
+                    switch (pathData.UseCustomObstaclePath)
+                    {
+                        case true:
+                            pathData.ObstaclePath = null;
+                            pathData.InvertObstacleValues = default;
+                            FClearCustomObstacle(pathData.CustomLeftSide);
+                            FClearCustomObstacle(pathData.CustomRightSide);
+                            break;
+                        case false:
+                            pathData.CustomLeftSide.Clear();
+                            pathData.CustomRightSide.Clear();
+                            break;
+                    }
+                }
+                else
+                {
+                    pathData.Size = default;
+                    pathData.PathCustomSize = default;
+                    pathData.ObstaclePath = null;
+                    pathData.InvertObstacleValues = default;
+                    pathData.CustomLeftSide.Clear();
+                    pathData.CustomRightSide.Clear();
+                }
 
+                if (pathData.Type != LevelPathStep.ChangeHeight)
+                {
+                    pathData.SetLeftSideHeight = default;
+                    pathData.SetRightSideHeight = default;
+                }
+            }
         }
     }
 }

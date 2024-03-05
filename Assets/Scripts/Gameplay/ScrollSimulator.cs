@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Cysharp.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using WASD.Runtime.Levels;
@@ -222,7 +217,6 @@ namespace WASD.Runtime.Gameplay
 
         private bool HandlePathLevelStep(PathData pathData)
         {
-            Debug.Log(_LastLevelInformationPathData);
             int neededGroundPlatforms = (_LevelPathDataFlags[0] == "0" ? 1 : 0) + (_LevelPathDataFlags[1] == "0" ? 1 : 0);
             int neededAirPlatforms = 2 - neededGroundPlatforms;
 
@@ -245,13 +239,16 @@ namespace WASD.Runtime.Gameplay
                 foreach (Obstacle obstacle in obstacles)
                 {
                      id =
-                        obstacle.Type == Enums.LevelObstacleType.Jump ? 0 :
-                        obstacle.Type == Enums.LevelObstacleType.Slide ? 1 :
-                        obstacle.Type == Enums.LevelObstacleType.Cubes ? 2 :
-                        obstacle.Type == Enums.LevelObstacleType.Ship ? 3 :
-                        obstacle.Type == Enums.LevelObstacleType.EndPortal ? 4 :
-                        obstacle.Type == Enums.LevelObstacleType.Invincibility ? 5 :
-                        -1;
+                        obstacle.Type switch
+                        {
+                            Enums.LevelObstacleType.Jump => 0,
+                            Enums.LevelObstacleType.Slide => 1,
+                            Enums.LevelObstacleType.Cubes => 2,
+                            Enums.LevelObstacleType.Ship => 3,
+                            Enums.LevelObstacleType.EndPortal => 4,
+                            Enums.LevelObstacleType.Invincibility => 5,
+                            _ => -1
+                        };
 
                     if(id == -1)
                     {
@@ -323,7 +320,7 @@ namespace WASD.Runtime.Gameplay
             spawnedLeft.SetPlayerCollisionConcept(concept: !invertPlatformColors ? CollisionConcept.BluePlatform : CollisionConcept.RedPlatform);
             spawnedLeft.Show(
                 position: leftPosition,
-                size: size,
+                overrideSize: size,
                 neonMaterial: !invertPlatformColors ? _LeftMaterial : _RightMaterial);
             _LastLeftPlatform = spawnedLeft;
 
@@ -333,7 +330,7 @@ namespace WASD.Runtime.Gameplay
             spawnedRight.SetPlayerCollisionConcept(concept: invertPlatformColors ? CollisionConcept.BluePlatform : CollisionConcept.RedPlatform);
             spawnedRight.Show(
                 position: rightPosition,
-                size: size,
+                overrideSize: size,
                 neonMaterial: invertPlatformColors ? _LeftMaterial : _RightMaterial);
             _LastRightPlatform = spawnedRight;
         }
@@ -350,10 +347,9 @@ namespace WASD.Runtime.Gameplay
                 ? platform.EndingPoint.localPosition.z / (obstaclesToSpawn.Count + 1)
                 : platform.EndingPoint.localPosition.z / (obstaclesToSpawn.Count - 1);
 
-            SpawnableProp obstacleFromInactiveList = null;
-
             for (int i = 0; i < obstaclesToSpawn.Count; i++)
             {
+                SpawnableProp obstacleFromInactiveList;
                 switch (obstaclesToSpawn[i].Type)
                 {
                     case Enums.LevelObstacleType.Jump:
@@ -374,6 +370,9 @@ namespace WASD.Runtime.Gameplay
                     case Enums.LevelObstacleType.Invincibility:
                         obstacleFromInactiveList = _PowerUpInvincibilityList[0];
                         break;
+                    default:
+                        Debug.LogError($"{nameof(ScrollSimulator)}: Could not select Obstacle from Inactive List");
+                        continue;
                 }
 
                 Vector3 position = platform.transform.position;
@@ -397,12 +396,14 @@ namespace WASD.Runtime.Gameplay
 #if UNITY_EDITOR
                 obstacleFromInactiveList.SetGizmoValues(_LastLevelInformationPathData.ToString());
 #endif
-                
+                bool invertPlatformColors = _LevelPathDataFlags[2] == "true";
                 obstacleFromInactiveList.Show(
                     position,
                     obstaclesToSpawn[i].OverrideSize == 0 ? 1f : obstaclesToSpawn[i].OverrideSize,
-                    obstacleFromInactiveList.Identifier == _EndPortalIdentifier ? null :
-                    platform == _LastLeftPlatform ? _RightMaterial : _LeftMaterial);
+                    obstacleFromInactiveList.Identifier == _EndPortalIdentifier ||
+                    obstacleFromInactiveList.Identifier == _ObstacleShipIdentifier ? null :
+                    platform == _LastLeftPlatform ? _RightMaterial : _LeftMaterial,
+                    useLeftMaterial: platform == _LastLeftPlatform ? invertPlatformColors : !invertPlatformColors);
             }
         }
 
@@ -481,7 +482,7 @@ namespace WASD.Runtime.Gameplay
                 return;
             }
 
-            GameManager.Audio.PlayBgm(_CurrentLevel.Music, fadeOutTime: .2f);
+            GameManager.Audio.PlayBgm(_CurrentLevel.Music, fadeOutTime: .2f, restartIfSame: true);
             _NextLevel = GameManager.CurrentCoreLevel + 1;
             _IsActive = true;
         }
