@@ -402,6 +402,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0adb0c04c3ead9349bb16d691486ac48, type: 2}
   - {fileID: 11400000, guid: 84a9169e608563a41a5570d978451ee0, type: 2}
   - {fileID: 11400000, guid: 4304e77ad4103ba4a8535566c2043e02, type: 2}
+  musicContainers:
+  - {fileID: 11400000, guid: 13a25b5809a5f1147ae460fc327a0fc0, type: 2}
+  - {fileID: 11400000, guid: d49a39cad62cc0d47ae34c4e97c3b4ea, type: 2}
+  - {fileID: 11400000, guid: fa5e1379d01a1c746a497a8b17ef2f8c, type: 2}
+  - {fileID: 11400000, guid: 813a666a119ddff46a41bd1790986338, type: 2}
+  - {fileID: 11400000, guid: 933720f102272b7479176ca4aa840487, type: 2}
+  - {fileID: 11400000, guid: 2c38c8986648e0444b5cd8de7e6e6c18, type: 2}
+  - {fileID: 11400000, guid: 453cfee9bd426ba4d988c44a6becc559, type: 2}
+  - {fileID: 11400000, guid: 9f7ba3298387d1f41b231da060d7863f, type: 2}
+  - {fileID: 11400000, guid: ac0f28da1c6c4504d9d02a7dad80c54e, type: 2}
+  - {fileID: 11400000, guid: 09ac8b11bcff0fc4194ba6098e31079f, type: 2}
 --- !u!114 &3617501214285546622
 MonoBehaviour:
   m_ObjectHideFlags: 0

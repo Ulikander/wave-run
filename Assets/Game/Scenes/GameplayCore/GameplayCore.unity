@@ -1912,7 +1912,7 @@ MonoBehaviour:
   - {fileID: 8640705849913399762, guid: f472b5d513c6d444e8500cae709029e0, type: 3}
   _PowerUpPrefabs: []
   _MinimumObstacleCount: 12
-  _MinimumPowerUpCount: 0
+  _MinimumPowerUpCount: 5
   _EndPortalPrefab: {fileID: 8640705849913399762, guid: 2577b274c46bff945988989b95f7155c,
     type: 3}
   _OnFinishSpawns:
@@ -6446,13 +6446,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5c43f818faa414bbe13c50dde1f250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ForceLevelSelectedOnEditor: 1
+  _ForceLevelSelectedOnEditor: 0
   _MaxActiveDecorations: 2
   _HeightValue: 2
   _PlatformSizeNormal: 1
   _PlatformSizeShort: 0.5
   _PlatformSizeLong: 2
-  _MaxSimulationVelocity: 10
+  _MaxSimulationVelocity: 12
   _IsActive: 0
   _LeftMaterial: {fileID: 2100000, guid: 21ed4e8061c65d746b29e97032f822c6, type: 2}
   _RightMaterial: {fileID: 2100000, guid: d68506be8ea14184088f1cc960083051, type: 2}
@@ -6477,7 +6477,7 @@ MonoBehaviour:
         m_MethodName: BeginSimulation
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 859cddfe1192c59498908dc4c5906025,
+          m_ObjectArgument: {fileID: 11400000, guid: af3331dde2f3b6b40935e4c816f16772,
             type: 2}
           m_ObjectArgumentAssemblyTypeName: WASD.Runtime.Levels.LevelInformation,
             WASD.Runtime
@@ -6519,6 +6519,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 2e12ea83f93480448bf6fe31020dd193, type: 2}
+    - target: {fileID: 5503885856744359340, guid: 4ceeea01e9311684cb48089da99316f2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5503885856744359340, guid: 4ceeea01e9311684cb48089da99316f2,
         type: 3}
       propertyPath: m_TagString

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using WASD.Runtime.Audio;
 
 namespace WASD.Data
 {
@@ -12,16 +13,10 @@ namespace WASD.Data
         {
             #region Fields
 
-            public List<bool> clearedLevels;
-            public bool hasExtrasUnlocked;
+            public List<bool> clearedLevels = new();
+            public string mainMenuMusic = "Wave Running";
 
             #endregion
-
-            public SaveData()
-            {
-                clearedLevels = new List<bool>();
-                hasExtrasUnlocked = false;
-            }
         }
 
         #endregion
@@ -37,7 +32,12 @@ namespace WASD.Data
         private SaveData _SaveData;
         
         #endregion
-        
+
+        #region Properties
+
+        public string MainMenuMusic { get => _SaveData.mainMenuMusic; }
+
+        #endregion
         
         public SaveDataContainer()
         {
@@ -91,6 +91,12 @@ namespace WASD.Data
         {
             ValidateSaveState(levelIndex);
             _SaveData.clearedLevels[levelIndex] = isCleared;
+            PerformSave();
+        }
+
+        public void SetMainMenuMusic(AudioContainer bgm)
+        {
+            _SaveData.mainMenuMusic = bgm.Name;
             PerformSave();
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using WASD.Data;
+using WASD.Runtime.Audio;
 using WASD.Runtime.Levels;
 using WASD.Runtime.Managers;
 
@@ -18,7 +19,8 @@ namespace WASD.Runtime.Managers
         public static AudioManager Audio { get => Instance._AudioManager; }
         public static ScenesManager Scenes { get => Instance._ScenesManager; }
         public static SaveDataContainer SaveData => Instance._SaveDataContainer;
-        
+        public static List<AudioContainer> MusicList { get => Instance._SortedMusicList; }
+
         public static Camera MainCamera { get => Instance._MainCamera; }
 
         public static int CurrentCoreLevel;
@@ -43,7 +45,11 @@ namespace WASD.Runtime.Managers
         [Header("Levels")]
         [SerializeField] private LevelInformation[] coreLevels;
 
+        [Header("Music")] [SerializeField]
+        private AudioContainer[] musicContainers;
+
         private SaveDataContainer _SaveDataContainer;
+        private List<AudioContainer> _SortedMusicList;
         
         #endregion
 
@@ -60,6 +66,8 @@ namespace WASD.Runtime.Managers
                 RefreshMainCamera();
 
                 _SaveDataContainer = new SaveDataContainer();
+                _SortedMusicList = musicContainers.OrderBy(music => music.UnlockLevel).ThenBy(music => music.Name)
+                    .ToList();
             }
             else
             {

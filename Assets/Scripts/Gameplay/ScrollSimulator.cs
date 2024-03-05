@@ -258,6 +258,7 @@ namespace WASD.Runtime.Gameplay
                     _PropListsCounts[id]--;
                     if (_PropListsCounts[id] <= 0)
                     {
+                        Debug.LogWarning($"Not enough Obstacles | Type: {obstacle.Type}");
                         return false;
                     }
                 }
@@ -272,9 +273,8 @@ namespace WASD.Runtime.Gameplay
                 obstacles: pathData.ObstaclePath == null || pathData.UseCustomObstaclePath ?
                 pathData.CustomRightSide : pathData.ObstaclePath.RightSide);
 
-            if(!canSpawnLeftObstacles && !canSpawnRightObstacles)
+            if(!canSpawnLeftObstacles || !canSpawnRightObstacles)
             {
-                Debug.LogWarning("Not enough Obstacles");
                 return false;
             }
 

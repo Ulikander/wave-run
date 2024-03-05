@@ -17,6 +17,8 @@ namespace WASD.Runtime.Audio
         public string Name;
         public string Author;
         public string SourceUrl;
+        public string LockedName;
+        public int UnlockLevel;
     }
 }
 

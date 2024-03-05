@@ -10,6 +10,8 @@
                 <ui:TextField picking-mode="Ignore" label="Audio Name" value="filler text" binding-path="Name" />
                 <ui:TextField picking-mode="Ignore" label="Author" value="filler text" binding-path="Author" />
                 <ui:TextField label="Source Url" binding-path="SourceUrl" />
+                <uie:IntegerField label="Unlock Level" value="0" binding-path="UnlockLevel" />
+                <ui:TextField label="Locked Name" binding-path="LockedName" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Looping">

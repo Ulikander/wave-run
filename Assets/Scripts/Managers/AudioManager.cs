@@ -34,11 +34,15 @@ namespace WASD.Runtime.Managers
                 _SfxAudioSource.mute = value;
             }
         }
+
+        public AudioContainer CurrentBgm
+        {
+            get => _CurrentBgm;
+        }
+        
+        public float DefaultFadeInTime { get => _DefaultFadeInTime; }
+        public float DefaultFadeOutTime { get => _DefaultFadeOutTime; }
         #endregion
-
-        #region Constants
-
-        #endregion 
 
         #region Fields
         [SerializeField] private AudioMixer _AudioMixer;
@@ -126,7 +130,14 @@ namespace WASD.Runtime.Managers
             PlayBgm(bgm: null, skipFadeOut: skipFadeOut);
         }
 
-        public async void PlayBgm(AudioContainer bgm, bool skipFadeIn = false, bool skipFadeOut = false, bool randomizeStart = false, bool restartIfSame = false, float fadeOutTime = 0f, float fadeInTime = 0f)
+        public async void PlayBgm(
+            AudioContainer bgm,
+            bool skipFadeIn = false,
+            bool skipFadeOut = false,
+            bool randomizeStart = false,
+            bool restartIfSame = false,
+            float fadeOutTime = 0f,
+            float fadeInTime = 0f)
         {
             if (bgm != null && bgm.AudioType != Enums.AudioContainerType.BGM)
             {
@@ -151,12 +162,17 @@ namespace WASD.Runtime.Managers
                     Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmFadeTokenSource);
                 }
             }
-            
+
             FadeBgmRoutine(bgm, skipFadeIn, skipFadeOut, randomizeStart, fadeOutTime, fadeInTime);
         }
 
-        private async void FadeBgmRoutine(AudioContainer audioContainer, bool skipFadeIn, bool skipFadeOut,
-            bool randomizeStart, float fadeOutTime = 0f, float fadeInTime = 0f)
+        private async void FadeBgmRoutine(
+            AudioContainer audioContainer,
+            bool skipFadeIn,
+            bool skipFadeOut,
+            bool randomizeStart,
+            float fadeOutTime = 0f,
+            float fadeInTime = 0f)
         {
             float counter = 0;
 
@@ -207,7 +223,7 @@ namespace WASD.Runtime.Managers
 
             if (!skipFadeIn)
             {
-                fadeInTime = fadeInTime == 0 ? _DefaultFadeOutTime : fadeInTime;
+                fadeInTime = fadeInTime == 0 ? _DefaultFadeInTime : fadeInTime;
                 
                 counter = 0;
                 while (!_BgmFadeTokenSource.IsCancellationRequested && counter < fadeInTime)
