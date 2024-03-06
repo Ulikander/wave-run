@@ -256,7 +256,7 @@ namespace WASD.Runtime.Gameplay
                     }
 
                     _PropListsCounts[id]--;
-                    if (_PropListsCounts[id] <= 0)
+                    if (_PropListsCounts[id] < 0)
                     {
                         Debug.LogWarning($"Not enough Obstacles | Type: {obstacle.Type}");
                         return false;
