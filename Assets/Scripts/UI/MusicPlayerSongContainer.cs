@@ -20,7 +20,7 @@ namespace WASD.Runtime.Gameplay
         private Canvas _Canvas;
         private GraphicRaycaster _GraphicRaycaster;
 
-        public event Action OnClickPlayEvent;
+        public event Action<AudioContainer> OnClickPlayEvent;
 
         private void Awake()
         {
@@ -63,7 +63,7 @@ namespace WASD.Runtime.Gameplay
         public void OnClickPlay()
         {
             GameManager.Audio.PlayBgm(_Audio);
-            OnClickPlayEvent?.Invoke();
+            OnClickPlayEvent?.Invoke(_Audio);
         }
 
         public void OnClickSource()

@@ -88,8 +88,8 @@ namespace WASD.Runtime.Levels
                             FClearCustomObstacle(pathData.CustomRightSide);
                             break;
                         case false:
-                            pathData.CustomLeftSide.Clear();
-                            pathData.CustomRightSide.Clear();
+                            pathData.CustomLeftSide?.Clear();
+                            pathData.CustomRightSide?.Clear();
                             break;
                     }
                 }
@@ -99,8 +99,8 @@ namespace WASD.Runtime.Levels
                     pathData.PathCustomSize = default;
                     pathData.ObstaclePath = null;
                     pathData.InvertObstacleValues = default;
-                    pathData.CustomLeftSide.Clear();
-                    pathData.CustomRightSide.Clear();
+                    pathData.CustomLeftSide?.Clear();
+                    pathData.CustomRightSide?.Clear();
                 }
 
                 if (pathData.Type != LevelPathStep.ChangeHeight)

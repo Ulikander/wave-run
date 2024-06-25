@@ -12,13 +12,12 @@ namespace WASD.Runtime
     {
         #region Fields
         [SerializeField] private Camera _MainCamera;
-        [SerializeField] private AudioContainer _Music;
         #endregion
 
         #region MonoBehaviour
         private void Start()
         {
-            GameManager.Audio.PlayBgm(bgm: _Music, skipFadeIn: true, skipFadeOut: true, restartIfSame: true);
+            GameManager.PlayMainMenuMusic(true);
             GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_MAINMENU);
         }
         #endregion

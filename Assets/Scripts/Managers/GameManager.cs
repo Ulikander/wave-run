@@ -100,6 +100,13 @@ namespace WASD.Runtime.Managers
             await UniTask.Delay((int)((delay + 0.25f) * 1000));
             Application.Quit();
         }
+
+        public static void PlayMainMenuMusic(bool forceRestart = false)
+        {
+            AudioContainer audio =
+                Instance._SortedMusicList.First(m => m.Name == Instance._SaveDataContainer.MainMenuMusic);
+            Instance._AudioManager.PlayBgm(audio, restartIfSame: forceRestart, randomizeStart: !forceRestart);
+        }
     }
 }
 

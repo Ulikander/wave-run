@@ -68,7 +68,10 @@ namespace WASD.Runtime
         public static void CancelTokenSourceRequestCancelAndDispose(ref CancellationTokenSource tokenSource)
         {
             if (tokenSource == null) return;
-            tokenSource.Cancel();
+            if (!tokenSource.IsCancellationRequested)
+            {
+                tokenSource.Cancel();
+            }
             tokenSource.Dispose();
             tokenSource = null;
         }

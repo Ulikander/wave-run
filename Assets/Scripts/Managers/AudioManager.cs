@@ -95,7 +95,7 @@ namespace WASD.Runtime.Managers
             SfxMuted = PlayerPrefs.GetInt(key: GameManager.cPprefSFXMuted, defaultValue: 0) == 1;
         }
 
-        public async UniTaskVoid FadeBgmPitch(float target, float fadeSpeed = 0f, bool immediate = false)
+        public async void FadeBgmPitch(float target, float fadeSpeed = 0f, bool immediate = false)
         {
             _TargetPitch = target;
 
@@ -103,7 +103,7 @@ namespace WASD.Runtime.Managers
             {
                 Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmFadeTokenSource);
                 _BgmAudioSource.pitch = _TargetPitch;
-                await UniTask.NextFrame(localCancelToken);
+                await UniTask.NextFrame(localCancelToken).SuppressCancellationThrow();
                 return;
             }
 
@@ -112,11 +112,11 @@ namespace WASD.Runtime.Managers
             {
                 _PitchFadeTokenSource = CancellationTokenSource.CreateLinkedTokenSource(localCancelToken);
                 BgmPitchFadeTask(fadeSpeed <= 0 ? _DefaultPitchFadeSpeed : fadeSpeed,
-                    cancelToken: _PitchFadeTokenSource.Token);
+                    cancelToken: _PitchFadeTokenSource.Token).Forget();
             }
         }
 
-        private async void BgmPitchFadeTask(float fadeSpeed, CancellationToken cancelToken)
+        private async UniTaskVoid BgmPitchFadeTask(float fadeSpeed, CancellationToken cancelToken)
         {
             while (!cancelToken.IsCancellationRequested && _BgmAudioSource.pitch != _TargetPitch)
             {
@@ -171,8 +171,7 @@ namespace WASD.Runtime.Managers
             }
             else
             {
-                FadeBgmRoutine(bgm, skipFadeIn, skipFadeOut, randomizeStart, localCancelToken, fadeOutTime, fadeInTime)
-                    .Forget();
+                FadeBgmRoutine(bgm, true, true, randomizeStart, localCancelToken, fadeOutTime, fadeInTime).Forget();
             }
             
         }

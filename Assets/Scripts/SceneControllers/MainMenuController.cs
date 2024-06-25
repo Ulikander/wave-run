@@ -16,8 +16,6 @@ namespace WASD.Runtime.SceneControllers
     public class MainMenuController : MonoBehaviour
     {
         #region Fields
-        [SerializeField] AudioContainer _Music;
-
         [Header("Main Menu (Buttons)")]
         [SerializeField] private ColliderButton[] _MainMenuButtons;
         [Header("Main Options (Neon Texts)")]
@@ -79,7 +77,7 @@ namespace WASD.Runtime.SceneControllers
                 },
             };
 
-            GameManager.Audio.PlayBgm(bgm: _Music, randomizeStart: true);
+            GameManager.PlayMainMenuMusic();
             _MusicText.IsOn = !GameManager.Audio.BgmMuted;
             _SfxText.IsOn = !GameManager.Audio.SfxMuted;
 
