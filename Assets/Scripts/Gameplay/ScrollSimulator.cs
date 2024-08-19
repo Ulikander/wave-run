@@ -492,6 +492,7 @@ namespace WASD.Runtime.Gameplay
             if (GameManager.TryGetCoreLevel(_NextLevel, out LevelInformation levelInfo))
             {
                 GameManager.CurrentCoreLevel = levelInfo.CoreLevelValue;
+                GameManager.CurrentCoreLevelRetries = 0;
                 GameManager.Scenes.LoadScene(ScenesManager.cSCENEID_GAMEPLAY);
             }
             else

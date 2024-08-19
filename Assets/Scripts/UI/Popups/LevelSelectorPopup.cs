@@ -32,6 +32,7 @@ namespace WASD.Runtime.Popups
         {
             _Frame.interactable = false;
             GameManager.CurrentCoreLevel = info.CoreLevelValue;
+            GameManager.CurrentCoreLevelRetries = 0;
             GameManager.Scenes.LoadScene(sceneId: ScenesManager.cSCENEID_GAMEPLAY);
         }
     }

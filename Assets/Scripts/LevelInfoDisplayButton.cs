@@ -15,6 +15,7 @@ namespace WASD.Runtime
         #region Fields
         [SerializeField] private Button _MainButton;
         [SerializeField] private TextMeshProUGUI _LevelText;
+        [SerializeField] private TextMeshProUGUI _RetriesText;
         [SerializeField] private Image _FrameImage;
         [SerializeField] private Color _FrameLockedColor;
         [SerializeField] private Color _FrameUnlockedColor;
@@ -37,11 +38,17 @@ namespace WASD.Runtime
             _LevelText.text = $"Nivel {info.CoreLevelValue}";
 
             bool isLevelUnlocked = _LevelInfo.CoreLevelValue == 1 ||
-                                   GameManager.SaveData.IsLevelCleared(_LevelInfo.CoreLevelValue - 1);
-
+                                   GameManager.SaveData.IsLevelCleared(_LevelInfo.CoreLevelValue -1);
+            int retryCount = GameManager.SaveData.LevelRetryCount(_LevelInfo.CoreLevelValue);
+            
             _LockedImage.enabled = !isLevelUnlocked;
             _FrameImage.color = _LockedImage.enabled ? _FrameLockedColor : _FrameUnlockedColor;
             _MainButton.interactable = !_LockedImage.enabled;
+
+            _RetriesText.text = !isLevelUnlocked ? "Bloqueado" :
+                retryCount == -1 ? "Sin Terminar" :
+                retryCount == 0 ? "Perfecto" :
+                $"Reintentos: {retryCount}";
         }
 
         public void Hide()

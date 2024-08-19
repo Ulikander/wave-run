@@ -37,6 +37,7 @@ namespace WASD.Runtime.Popups
         {
             _Animate = false;
             GameManager.Audio.FadeBgmPitch(target: 1);
+            GameManager.CurrentCoreLevelRetries++;
             _onTapExtraLife?.Invoke();
         }
     }

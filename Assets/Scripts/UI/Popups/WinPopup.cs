@@ -49,7 +49,8 @@ namespace WASD.Runtime.Popups
 
         public override void Show(Options options)
         {
-            GameManager.SaveData.SetLevelClearState(GameManager.CurrentCoreLevel, true);
+            GameManager.SaveData.SetLevelClearState(GameManager.CurrentCoreLevel, true,
+                GameManager.CurrentCoreLevelRetries);
             base.Show(options);
         }
 

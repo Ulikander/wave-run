@@ -11,9 +11,16 @@ namespace WASD.Data
         [Serializable]
         public class SaveData
         {
+            [Serializable]
+            public class Data
+            {
+                public bool isCleared;
+                public int retryCount;
+            }
+            
             #region Fields
 
-            public List<bool> clearedLevels = new();
+            public List<Data> clearedLevels = new();
             public string mainMenuMusic = "Wave Running";
 
             #endregion
@@ -84,13 +91,20 @@ namespace WASD.Data
         public bool IsLevelCleared(int levelIndex)
         {
             if (levelIndex >= _SaveData.clearedLevels.Count) return false;
-            return _SaveData.clearedLevels[levelIndex];
+            return _SaveData.clearedLevels[levelIndex].isCleared;
         }
 
-        public void SetLevelClearState(int levelIndex, bool isCleared)
+        public int LevelRetryCount(int levelIndex)
+        {
+            if (levelIndex >= _SaveData.clearedLevels.Count) return -1;
+            return !_SaveData.clearedLevels[levelIndex].isCleared ? -1 : _SaveData.clearedLevels[levelIndex].retryCount;
+        }
+
+        public void SetLevelClearState(int levelIndex, bool isCleared, int retryCount)
         {
             ValidateSaveState(levelIndex);
-            _SaveData.clearedLevels[levelIndex] = isCleared;
+            _SaveData.clearedLevels[levelIndex].isCleared = isCleared;
+            _SaveData.clearedLevels[levelIndex].retryCount = isCleared ? retryCount : 0;
             PerformSave();
         }
 
@@ -104,7 +118,7 @@ namespace WASD.Data
         {
             while (_SaveData.clearedLevels.Count <= index)
             {
-                _SaveData.clearedLevels.Add(false);
+                _SaveData.clearedLevels.Add(new SaveData.Data());
             }
         }
     }

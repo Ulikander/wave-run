@@ -160,7 +160,7 @@ namespace WASD.Runtime.Managers
                 return;
             }
 
-            
+            _CurrentBgm = null;
             Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmFadeTokenSource);
 
             if (!skipFadeIn || !skipFadeOut)
@@ -207,7 +207,7 @@ namespace WASD.Runtime.Managers
             Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmLoopTokenSource);
             
             _BgmAudioSource.clip = audioContainer != null ? audioContainer.Clip : null;
-            _CurrentBgm = audioContainer;
+            //_CurrentBgm = audioContainer;
 
             if (audioContainer == null)
             {
@@ -226,13 +226,14 @@ namespace WASD.Runtime.Managers
                 _BgmAudioSource.time = 0f;
             }
 
+            _CurrentBgm = audioContainer;
             _BgmAudioSource.loop = audioContainer.LoopType == Enums.AudioLoopType.Normal;
             _BgmAudioSource.Play();
 
             if (audioContainer.LoopType == Enums.AudioLoopType.Custom)
             {
                 _BgmLoopTokenSource = CancellationTokenSource.CreateLinkedTokenSource(localCancelToken);
-                LoopBgmRoutine(_BgmLoopTokenSource.Token).Forget();
+                LoopBgmRoutine(audioContainer, _BgmLoopTokenSource.Token).Forget();
             }
 
             if (!skipFadeIn)
@@ -252,14 +253,14 @@ namespace WASD.Runtime.Managers
             _BgmAudioSource.volume = 1f;
         }
 
-        private async UniTaskVoid LoopBgmRoutine(CancellationToken cancelToken)
+        private async UniTaskVoid LoopBgmRoutine(AudioContainer storedAudio, CancellationToken cancelToken)
         {
             while (!cancelToken.IsCancellationRequested)
             {
-                await UniTask.WaitWhile(() => _BgmAudioSource.time < _CurrentBgm.LoopEndTime,
+                await UniTask.WaitWhile(() => _BgmAudioSource.time < storedAudio.LoopEndTime,
                     cancellationToken: cancelToken).SuppressCancellationThrow();
                 if (cancelToken.IsCancellationRequested) return;
-                if (_BgmAudioSource != null) _BgmAudioSource.time = _CurrentBgm.LoopStartTime; // loopStartSamples;
+                if (_BgmAudioSource != null) _BgmAudioSource.time = storedAudio.LoopStartTime; // loopStartSamples;
             }
             
             Utils.CancelTokenSourceRequestCancelAndDispose(ref _BgmLoopTokenSource);

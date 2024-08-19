@@ -41,12 +41,9 @@ namespace WASD.Runtime.Popups
         private CancellationTokenSource localCancelToken;
         private AudioContainer _CurrentTrack;
 
-        private float playPressDelay;
-
         protected override void Awake()
         {
             canPressPlayAgain = true;
-            playPressDelay = GameManager.Audio.DefaultFadeOutTime + 0.1f;
             base.Awake();
             musicList = new List<AudioContainer>(GameManager.MusicList);
             
@@ -130,7 +127,7 @@ namespace WASD.Runtime.Popups
         {
             if (!canPressPlayAgain) return;
             GameManager.Audio.PlayBgm(_CurrentTrack, restartIfSame: true, randomizeStart: random, fadeOutTime: random ? 0.15f : 0f);
-            HandlePlayBgmButton(_CurrentTrack, random);
+            HandlePlayBgmButton(_CurrentTrack);
         }
 
         public void OnClickBrowser()
@@ -162,7 +159,7 @@ namespace WASD.Runtime.Popups
             }
         }
 
-        private void HandlePlayBgmButton(AudioContainer audioContainer, bool random)
+        private void HandlePlayBgmButton(AudioContainer audioContainer)
         {
             if (!canPressPlayAgain) return;
             canPressPlayAgain = false;
@@ -175,13 +172,14 @@ namespace WASD.Runtime.Popups
             {
                 if (!canPressPlayAgain)
                 {
-                    //playerSongName.text = "Cambiando...";
+                    playerSongName.text = "Cambiando...";
                     
                     SetAllButtonsInteractable(false);
                     SetAllBgmDependantObjects(true);
                     ShowVisibleTrackContainers();
 
-                    await Utils.UniTaskDelay(playPressDelay, cancelToken).SuppressCancellationThrow();
+                    await UniTask.WaitUntil(() => GameManager.Audio.CurrentBgm == _CurrentTrack, cancellationToken: cancelToken).SuppressCancellationThrow();
+                    await Utils.UniTaskDelay(0.1f, cancelToken).SuppressCancellationThrow();
                     await UniTask.NextFrame(cancelToken).SuppressCancellationThrow();
 
                     SetAllButtonsInteractable(true);

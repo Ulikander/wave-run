@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LevelDifficulty: 0
   CoreLevelValue: 5
-  Music: {fileID: 0}
+  Music: {fileID: 11400000, guid: 9f7ba3298387d1f41b231da060d7863f, type: 2}
   Data:
   - Type: 0
-    Size: 1
+    Size: 2
     PathCustomSize: 0
     ObstaclePath: {fileID: 0}
     UseCustomObstaclePath: 1
@@ -26,7 +26,15 @@ MonoBehaviour:
       AutomaticPosition: 1
       PositionOnPath: 0
       OverrideSize: 0
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
     CustomRightSide:
+    - Type: 1
+      AutomaticPosition: 1
+      PositionOnPath: 0
+      OverrideSize: 0
     - Type: 0
       AutomaticPosition: 1
       PositionOnPath: 0

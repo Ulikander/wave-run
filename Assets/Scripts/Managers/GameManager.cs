@@ -24,6 +24,7 @@ namespace WASD.Runtime.Managers
         public static Camera MainCamera { get => Instance._MainCamera; }
 
         public static int CurrentCoreLevel;
+        public static int CurrentCoreLevelRetries;
         
         #endregion
 
